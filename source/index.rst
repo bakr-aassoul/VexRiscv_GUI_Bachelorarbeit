@@ -10,5 +10,3 @@ Bachelorarbeit – VexRiscv GUI
    systemarchitektur
    gui_implementierung
    simulation_verifikation
-   ausblick
-   quellen
