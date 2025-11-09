@@ -3,7 +3,7 @@
 ## Overview
 
 This repository serves as a comprehensive, beginner-friendly guide to **SpinalHDL** a modern, type-safe HDL embedded in Scala. It introduces the language’s fundamentals and walks through examples covering simulation and code generation. You'll explore core concepts using small modules, all the way up to complex designs like the **VexRiscv** processor.
-
+h
 ### Highlights
 - Signal types and module creation (`Bool`, `UInt`, `Bundle`, etc.)
 - Registers vs. wires (`Reg(...)` vs. direct `val`)
