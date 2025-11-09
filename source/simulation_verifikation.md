@@ -133,9 +133,11 @@ Cycle 3  PC=0x00000008
 Cycle 4  PC=0x0000000C
 Cycle 5  PC=0x00000000  <-- Sprung zurück (Branch aktiv)
 ```
+
 Diese Ausgabe verdeutlicht das korrekte Verhalten des Program Counters
 und bestätigt die fehlerfreie Auswertung des beq-Befehls.
 Somit wird die Übereinstimmung zwischen Simulation und GTKWave-Darstellung sichergestellt.
+
 ---
 
 ### Bedeutung für die Verifikation
