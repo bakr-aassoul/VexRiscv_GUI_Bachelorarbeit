@@ -174,5 +174,31 @@ klar zu erkennen.
 Diese Darstellung bestätigt das korrekte Zusammenspiel der Pipeline-Stufen —  
 vom **Instruktionsabruf (Fetch)** über **Dekodierung (Decode)** bis zur **Speicherphase (Memory)** und unterstreicht die Zuverlässigkeit des automatisch generierten Prozessordesigns.
 
+---
 
+## Zusammenfassung der Simulationsergebnisse
+
+Die Simulation und anschließende Signalverifikation bestätigen die **funktionale Korrektheit**  
+des mit der GUI generierten VexRiscv-Prozessors.  
+Alle getesteten Instruktionen aus dem **RV32I-Befehlssatz** wurden fehlerfrei dekodiert, ausgeführt  
+und in den aufgezeichneten Wellenformen nachvollzogen.  
+
+Zusätzlich zeigte die Analyse:
+
+- stabile Pipeline-Ausführung ohne Hazard-Konflikte,  
+- korrekte Takt- und Reset-Sequenzen,  
+- konsistente Busoperationen mit synchronem Zugriff auf den Speicher,  
+- sowie deterministische Sprung- und Rücksprungverhalten der Branch-Logik.
+
+Die Kombination aus **Verilator-Simulation** und **GTKWave-Signalanalyse**  
+ermöglichte eine präzise Beobachtung des internen CPU-Verhaltens.  
+Damit konnte nachgewiesen werden, dass die durch die GUI erzeugten Prozessorvarianten  
+nicht nur syntaktisch korrekt generiert, sondern auch **funktional stabil und reproduzierbar** sind.
+
+Dieses Ergebnis belegt die Wirksamkeit der entworfenen Designumgebung als  
+**vollständige Verifikationsplattform** für den VexRiscv-Prozessor.  
+Sie ermöglicht eine effiziente Überprüfung neuer Konfigurationen,  
+ohne manuelle Anpassungen im Quellcode oder in der Build-Kette vornehmen zu müssen.
+
+---
 
