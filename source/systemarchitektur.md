@@ -8,7 +8,6 @@ Beide Komponenten arbeiten eng zusammen, um den vollständigen Hardware-Generier
 
 ## Gesamtüberblick
 
-![GUI Architektur](images/gui_overview.png)
 
 **Ablauf des Workflows:**
 
@@ -53,6 +52,40 @@ Es bietet:
 - Eine Option *„Auto-add required plugins“* (fügt automatisch essenzielle Pipeline-Plugins hinzu)  
 - Einen Button *„Clear Log“* zum Zurücksetzen der Konsolenausgabe
 
-### Datenfluss
+---
+
+## Abbildung der GUI
+
+In der folgenden Abbildung ist die entwickelte grafische Benutzeroberfläche dargestellt.  
+Über diese kann der Benutzer die gewünschten VexRiscv-Plugins auswählen, 
+den Verilog-Code erzeugen, eine Simulation starten oder die Ergebnisse in **GTKWave** anzeigen.
+
+![GUI Architektur](images/gui_overview.png)
+
+*Abbildung 1: Grafische Benutzeroberfläche des VexRiscv-Konfigurators mit Plugin-Auswahl, Build-Steuerung und Log-Ausgabe.*
+
+Die Oberfläche wurde mit **Python** unter Verwendung des **Tkinter-Frameworks** implementiert.  
+Sie stellt die zentrale Steuerungseinheit der Designumgebung dar und bietet alle wesentlichen Funktionen für:
+- die Konfiguration der Prozessor-Plugins,  
+- die automatische Verilog-Generierung,  
+- das Ausführen der Simulation über **Verilator**,  
+- sowie die Anzeige der Signale in **GTKWave**.
+
+---
+
+## Datenfluss der Designumgebung
+
+Der Gesamtprozess von der grafischen Auswahl bis zur Hardwarebeschreibung kann durch den folgenden Ablauf beschrieben werden:
+
 ```text
-[GUI] → (gui_config.json) → [Backend] → Scala → Verilog → Simulation → GTKWave
+[GUI] 
+   ↓
+(gui_config.json)
+   ↓
+[Backend-Skript]
+   ↓
+[SpinalHDL / SBT] → Verilog-Generierung
+   ↓
+[Verilator Simulation]
+   ↓
+[GTKWave Analyse]
