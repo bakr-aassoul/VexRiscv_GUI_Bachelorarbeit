@@ -172,8 +172,7 @@ der Program Counter (`iBus_cmd_payload_pc`) sowie die Datenbus-Aktivitäten (`dB
 klar zu erkennen.  
 
 Diese Darstellung bestätigt das korrekte Zusammenspiel der Pipeline-Stufen —  
-vom **Instruktionsabruf (Fetch)** über **Dekodierung (Decode)** bis zur **Speicherphase (Memory)** —  
-und unterstreicht die Zuverlässigkeit des automatisch generierten Prozessordesigns.
+vom **Instruktionsabruf (Fetch)** über **Dekodierung (Decode)** bis zur **Speicherphase (Memory)** und unterstreicht die Zuverlässigkeit des automatisch generierten Prozessordesigns.
 
 
 
