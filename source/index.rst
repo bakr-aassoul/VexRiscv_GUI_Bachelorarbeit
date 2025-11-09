@@ -1,11 +1,14 @@
-.. spinalHDL Documention master file
-
-Welcome to SpinalHDL Documention
-====================================
+Bachelorarbeit – VexRiscv GUI
+==============================
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
-   :caption: Contents:
+   :caption: Inhalt
 
-   spinalHDL.md
+   einleitung
+   grundlagen
+   systemarchitektur
+   gui_implementierung
+   simulation_verifikation
+   ausblick
+   quellen
