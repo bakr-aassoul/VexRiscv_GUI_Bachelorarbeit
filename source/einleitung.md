@@ -13,16 +13,20 @@ Jedes Plugin implementiert eine klar abgegrenzte Funktionalität wie beispielswe
 
 ## Ziel der Arbeit
 
-Ziel dieser Bachelorarbeit ist die Entwicklung einer **grafischen Benutzeroberfläche (GUI)**,  
-mit der sich der **VexRiscv-Prozessor** komfortabel konfigurieren und automatisch bis hin zum lauffähigen Verilog-Design erzeugen lässt.  
-Der Fokus liegt auf der **Automatisierung des Designprozesses** – von der Plugin-Auswahl über die Verilog-Generierung bis zur Simulation und Signalvisualisierung mit **GTKWave**.
+Ziel dieser Bachelorarbeit ist die Entwicklung einer grafischen Benutzeroberfläche (GUI), mit der sich der VexRiscv-Prozessor komfortabel konfigurieren und automatisch bis hin zum lauffähigen Verilog-Design erzeugen lässt.  
+Der Fokus liegt auf der Automatisierung des Designprozesses von der Plugin-Auswahl über die Verilog-Generierung bis zur Simulation und Signalvisualisierung mit GTKWave.
 
-Die GUI soll insbesondere Studierenden und Forschern den Einstieg in SpinalHDL erleichtern,  
-da sich komplexe Konfigurationsschritte damit intuitiv über Checkboxen und Buttons ausführen lassen, ohne die Scala-Quelltexte manuell zu bearbeiten.
+Die GUI soll insbesondere Studierenden und Forschern den Einstieg in SpinalHDL erleichtern, da sich komplexe Konfigurationsschritte damit intuitiv über Checkboxen und Buttons ausführen lassen, ohne die Scala-Quelltexte manuell zu bearbeiten.
 
 ## Vorgehensweise
 
-Im Verlauf der Arbeit wird zunächst die **VexRiscv-Architektur** analysiert und die Funktionsweise der wichtigsten Plugins beschrieben.  
-Anschließend wird die grafische Designumgebung implementiert und um Funktionen wie  
-*„Auto-add required plugins“*, *Simulation (Verilator)* und *Signalvisualisierung (GTKWave)* ergänzt.  
-Zum Abschluss erfolgt eine Simulation des generierten Prozessors zur Verifikation der Funktionalität.
+Im Verlauf dieser Arbeit wird zunächst die VexRiscv-Architektur im Detail analysiert und die Funktionsweise ihrer zentralen Plugins beschrieben.  
+Darauf aufbauend erfolgt die Implementierung einer grafischen Designumgebung, die den Entwurfsprozess automatisiert und benutzerfreundlich gestaltet.  
+
+Die entwickelte GUI wird schrittweise um Funktionen erweitert, darunter:  
+- *„Auto-add required plugins“* zur automatischen Ergänzung essenzieller Pipeline-Komponenten,  
+- *Simulation (Verilator)* zur funktionalen Überprüfung des generierten Prozessors,  
+- sowie *Signalvisualisierung (GTKWave)* zur Analyse der internen CPU-Aktivitäten.  
+
+Zum Abschluss wird der mit der GUI erzeugte Prozessor simuliert,  
+um seine Funktionsfähigkeit und Korrektheit anhand der Signalverläufe und Testprogramme zu verifizieren.
