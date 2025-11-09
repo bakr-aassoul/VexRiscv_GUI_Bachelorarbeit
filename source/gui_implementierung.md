@@ -146,7 +146,6 @@ den kompletten Instruktionsfluss in **GTKWave** visuell zu verfolgen.
 
 ### Beispielhafter Signalverlauf
 
-![GTKWave Signalverlauf](images/gtkwave_trace.png)
 
 *Abbildung 1: GTKWave-Darstellung der CPU-Signale während der Simulation.*
 
@@ -155,7 +154,7 @@ Im dargestellten Programm werden einfache Instruktionen des RISC-V-Befehlssatzes
 Das Programm dient zur Überprüfung der grundlegenden CPU-Funktionalität wie **ALU-Operationen**,  
 **Program-Counter-Inkrementierung**, **Verzweigungen** und **Speicherzugriffe**.
 
-```assembly
+```cpp
 0x0000: addi x1, x0, 1      # Schreibe den Wert 1 in Register x1
 0x0004: addi x2, x2, 1      # Erhöhe x2 um 1
 0x0008: beq  x2, x0, -8     # Springe zurück, falls x2 == 0
