@@ -2,8 +2,11 @@
 
 ## Motivation
 
-In den letzten Jahren hat sich **RISC-V** als offene Prozessorarchitektur zu einem zentralen Bestandteil moderner Forschungs- und Entwicklungsprojekte etabliert.  
-Ihre modulare und lizenzfreie Struktur ermöglicht es, maßgeschneiderte CPU-Designs zu entwickeln und an spezifische Anwendungen anzupassen von eingebetteten Systemen bis hin zu KI-Beschleunigern.
+Ein Chip ist die Grundlage der gesamten Informations- und Elektronikindustrie, wobei die **ISA (Instruction Set Architecture)** die zentrale technische Basis eines jeden Prozessors darstellt. 
+
+In den letzten Jahrzehnten haben sich zwei wichtige Befehlssatzarchitekturen (ISAs) auf dem Mikroprozessormarkt durchgesetzt: **ARM** und **x86**. Beide sind jedoch geschlossen und lizenzpflichtig. Dies stellt für bestimmte industrielle und akademische Andendungsbereiche einen Nachteil dar, etwa für individuelles Chipdesign oder für die Forschung, die volle Transparenz erfordern. 
+Im Gegensatz dazu bietet **RISC-V** eine offene, lizenzgebührenfreie ISA, die jeder ohne solche Einschränkungen nutzen, modifizieren und für eigene Hardware Designs verwenden kann. 
+Diese Offenheit hat RISC-V in den letzten Jahren zu einem wichtigen Treiber für Innovation, Forschung und Lehre im Bereich der Prozessorentwicklung gemacht.
 
 **SpinalHDL** stellt dabei eine moderne Hardwarebeschreibungssprache dar, die die Produktivität bei der Prozessorentwicklung erheblich steigert.  
 Sie kombiniert die Vorteile von **Scala** (objektorientiert und funktional) mit der Möglichkeit, effizienten **Verilog-Code** zu generieren.
