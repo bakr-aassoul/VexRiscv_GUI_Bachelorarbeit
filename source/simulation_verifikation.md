@@ -163,7 +163,6 @@ vollständig im Einklang mit den Architekturprinzipien des RISC-V-Standards steh
 Im Folgenden ist ein Ausschnitt der simulierten Signale dargestellt,  
 wie sie in **GTKWave** beobachtet wurden:
 
-![Simulationsergebnisse in GTKWave](images/gtkwave_zoom.png)
 
 *Abbildung 1: Ausschnitt aus dem GTKWave-Verlauf mit sichtbaren Fetch-, Decode- und Speicherzugriffen.*
 
