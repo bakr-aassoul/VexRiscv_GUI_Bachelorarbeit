@@ -1,10 +1,8 @@
 # Theoretische Grundlagen
 
 
-.. raw:: latex
-
-   {
-   \Large 
+```{raw} latex
+\Large 
    Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen, auf
    denen die im Rahmen dieser Arbeit entwickelte GUI- und Simulationsumgebung
    basiert.  
@@ -12,8 +10,7 @@
    sowie der **VexRiscv Prozessor** mit seinem modularen Plugin-System.  
    Abschließend werden die genutzten Software-Tools für die Codegenerierung und
    Simulation erläutert.
-   }
-   
+```
 ```{raw} latex
 \clearpage
 ```
@@ -149,6 +146,10 @@ In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelement
 Diese Plugin-Auswahl entspricht einem kompakten, aber voll funktionsfähigen Single-Issue-RISC-V-Kern, der sich besonders für eingebettete Systeme und FPGA-basierte Demonstratoren eignet.
 Da keine Cache- oder MMU-Plugins integriert sind, erfolgt jeder Speicherzugriff direkt über die einfachen Bus-Interfaces. Dies vereinfacht sowohl die Hardwarestruktur als auch die spätere Integration in LiteX.
 
+```{raw} latex
+\clearpage
+```
+
 Neben dieser minimalistischen Variante existieren in der VexRiscv-Ökosystem zahlreiche optionale Plugins, wie sie etwa in LiteX-SoCs eingesetzt werden können. Beispiele hierfür sind:
 
 
@@ -172,6 +173,9 @@ Der Prozessorkern ist kein statisches Design, sondern ein baukastenartiges Frame
 Durch diese Architektur kann der VexRiscv je nach Anwendungsfall als **minimaler Kern** (nur Basis-Instruktionen, keine Pipeline-Optimierungen, kein Multiplikations-/Divisionsmodul) oder als **leistungsfähiger SoC-Prozessor** mit Cache-Hierarchie, MMU, Interrupt-Controller und Debug-Schnittstelle konfiguriert werden.  
 
 
+```{raw} latex
+\clearpage
+```
 
 Die in dieser Arbeit entwickelte GUI automatisiert genau diesen Konfigurationsprozess.
 Anstatt die einzelnen Plugins manuell im Scala/SpinalHDL-Code zusammenzustellen, ermöglicht die Oberfläche eine intuitive Auswahl der gewünschten Komponenten, beispielsweise ALU-Erweiterungen, Branch-Units, Speicher-Interfaces oder CSR-Optionen.
