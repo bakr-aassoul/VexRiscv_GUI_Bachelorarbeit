@@ -45,16 +45,16 @@ Sie besteht aus:
    Die Basis-ISA ist bewusst klein gehalten, um Implementierungen möglichst einfach
    und energieeffizient zu gestalten.
 2. **Standarderweiterungen (M, A, F, D, C, V usw.)**
-   •	Jede Erweiterung ist vollständig optional, wodurch sich RISC-V besser an
+   - Jede Erweiterung ist vollständig optional, wodurch sich RISC-V besser an
    Anwendungsfälle anpassen lässt als viele andere ISAs.
-   •	Kombinationen der Basis-ISA mit Erweiterungen werden als Variants bezeichnet,
+   -Kombinationen der Basis-ISA mit Erweiterungen werden als Variants bezeichnet,
    z. B. RV32IMC.
 3. **Privilegierte Architektur**
-   •	RISC-V definiert mehrere Ausführungsmodi (Machine, Supervisor, User) und eine
+   - RISC-V definiert mehrere Ausführungsmodi (Machine, Supervisor, User) und eine
    Reihe von Control and Status Registers (CSRs).
-   •	Diese sind für Interrupt-Handling, Exceptions, Speicherverwaltung und
+   - Diese sind für Interrupt-Handling, Exceptions, Speicherverwaltung und
    Betriebssystemunterstützung zuständig.
-   •	Der modulare Aufbau ermöglicht Implementierungen mit oder ohne
+   - Der modulare Aufbau ermöglicht Implementierungen mit oder ohne
    Betriebssystem, von Bare-Metal-Systemen bis hin zu Linux-fähigen SoCs.
 
 ---
@@ -91,40 +91,40 @@ Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Gr
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
-	- IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
+- IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
 	Schnittstellen für Speicherzugriffe ohne Cache.
-	- DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
+- DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
 	den jeweiligen Funktionseinheiten zu.
-	- RegFilePlugin: implementiert das Registerfile mit Lese-/Schreibzugriffen.
-	- SrcPlugin: wählt und liefert die Operanden für ALU, Branch- und Shifter
+- RegFilePlugin: implementiert das Registerfile mit Lese-/Schreibzugriffen.
+- SrcPlugin: wählt und liefert die Operanden für ALU, Branch- und Shifter
 	Einheiten.
-	- IntAluPlugin: realisiert arithmetische und logische Grundoperationen.
-	- LightShifterPlugin: implementiert rechte/links Shifts mit geringer
+- IntAluPlugin: realisiert arithmetische und logische Grundoperationen.
+- LightShifterPlugin: implementiert rechte/links Shifts mit geringer
 	Ressourcenkomplexität.
-	- HazardSimplePlugin: behandelt Pipeline-Hazards und stellt
+- HazardSimplePlugin: behandelt Pipeline-Hazards und stellt
 	Forwarding/Bypassing sicher.
-	- BranchPlugin: führt Sprungberechnungen und einfache Branch-Vorhersage durch.
-	- CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs)
+- BranchPlugin: führt Sprungberechnungen und einfache Branch-Vorhersage durch.
+- CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs)
 	bereit und bildet den Kern der privilegierten Architektur.
-	- MulPlugin / DivPlugin: implementieren Multiplikation und Division und
+- MulPlugin / DivPlugin: implementieren Multiplikation und Division und
 	erweitern damit die Basis-ISA um die M-Extension.
 
 Diese Plugin-Auswahl entspricht einem kompakten, aber voll funktionsfähigen Single-Issue-RISC-V-Kern, der sich besonders für eingebettete Systeme und FPGA-basierte Demonstratoren eignet.
 Da keine Cache- oder MMU-Plugins integriert sind, erfolgt jeder Speicherzugriff direkt über die einfachen Bus-Interfaces. Dies vereinfacht sowohl die Hardwarestruktur als auch die spätere Integration in LiteX.
 
 Neben dieser minimalistischen Variante existieren in der VexRiscv-Ökosystem zahlreiche optionale Plugins, wie sie etwa in LiteX-SoCs eingesetzt werden können. Beispiele hierfür sind:
-	•	IBusCachedPlugin / DBusCachedPlugin: Instruktions- und Datencaches für höhere
+- IBusCachedPlugin / DBusCachedPlugin: Instruktions- und Datencaches für höhere
   Leistung.
-	•	MmuPlugin + StaticMemoryTranslatorPlugin: Unterstützung für virtuelle
+- MmuPlugin + StaticMemoryTranslatorPlugin: Unterstützung für virtuelle
   Speicherverwaltung und Betriebssysteme wie Linux.
-	•	PmpPlugin: Physical Memory Protection gemäß der RISC-V-Spezifikation.
-	•	FullBarrelShifterPlugin: hardwareseitig schneller Shifter.
-	•	MulDivIterativePlugin: iterative Implementierung für ressourcenschonende
+- PmpPlugin: Physical Memory Protection gemäß der RISC-V-Spezifikation.
+- FullBarrelShifterPlugin: hardwareseitig schneller Shifter.
+- MulDivIterativePlugin: iterative Implementierung für ressourcenschonende
   Multiplikation/Division.
-	•	ExternalInterruptArrayPlugin: Unterstützung externer Interruptquellen.
-	•	DebugPlugin: JTAG-Debugging und Hardware-Breakpoints.
-	•	CfuPlugin: Custom Function Units für benutzerdefinierte Instruktionen.
-	•	YamlPlugin: generiert Metadaten zur Kernkonfiguration.
+- ExternalInterruptArrayPlugin: Unterstützung externer Interruptquellen.
+- DebugPlugin: JTAG-Debugging und Hardware-Breakpoints.
+- CfuPlugin: Custom Function Units für benutzerdefinierte Instruktionen.
+- YamlPlugin: generiert Metadaten zur Kernkonfiguration.
 
 Diese Vielfalt verdeutlicht die Stärke des VexRiscv-Ansatzes:
 Der Prozessorkern ist kein statisches Design, sondern ein baukastenartiges Framework, das Entwicklungs- und Forschungsprojekte ermöglicht, in denen gezielt einzelne Architekturmerkmale untersucht oder erweitert werden können.
@@ -143,10 +143,10 @@ Im Rahmen dieser Arbeit kamen mehrere Tools zum Einsatz, die für den Build, Sim
 ### Scala Build Tool (SBT)
 
 Das **Scala Build Tool (SBT)** ist das Standard-Buildsystem für Scala-Projekte und wird von SpinalHDL genutzt, um:
-	•	den SpinalHDL-Code zu kompilieren,
-	•	Plugin-Konfigurationen zu laden,
-	•	den VexRiscv-Codegenerator auszuführen,
-	•	Verilog- oder VHDL-Dateien zu erzeugen.
+- den SpinalHDL-Code zu kompilieren,
+- Plugin-Konfigurationen zu laden,
+- den VexRiscv-Codegenerator auszuführen,
+- Verilog- oder VHDL-Dateien zu erzeugen.
 
 ### Verilator
 
@@ -167,11 +167,11 @@ Die Kombination aus Verilator und GTKWave bildet somit ein vollständiges Werkze
 LiteX ist ein modulares Framework zur Erstellung von System-on-Chip-(SoC) Architekturen auf FPGAs. Es abstrahiert viele der typischen Aufgaben der SoC-Integration (Bus-Infrastruktur, Peripherieanbindung, Speichercontroller oder Simulation) und ermöglicht dadurch einen schnellen Aufbau komplexer Systeme.
 
 Im Kontext dieser Arbeit erfüllt LiteX zwei zentrale Funktionen:
-	•	**Integration des VexRiscv-Prozessors:**
+- **Integration des VexRiscv-Prozessors:**
   LiteX stellt fertige Infrastrukturmodule bereit (Wishbone/AXI-Bus,
   Speicherinterfaces, UART, Timer usw.), über die der erzeugte VexRiscv-Core
   nahtlos in ein vollständiges SoC eingebettet werden kann.
-	•	**Simulation und Testing:**
+- **Simulation und Testing:**
   LiteX kann automatisch Simulationen mit Verilator erzeugen, wodurch ein
   vollständiges SoC (inklusive CPU, Speicher und Peripherie) getestet werden kann.
   Dies ist besonders wertvoll, um zu prüfen, ob der neu generierte Prozessor (mit
@@ -183,18 +183,18 @@ Xilinx Vivado ist die proprietäre Toolchain zur Synthese, Analyse und Implement
 Während SpinalHDL und Verilator primär für die funktionale Simulation genutzt werden, übernimmt Vivado die hardwareseitige Umsetzung der erzeugten Verilog-Dateien.
 
 Die wichtigsten Aufgaben von Vivado in dieser Arbeit sind:
-	•	**Synthese:**
+- **Synthese:**
   Der generierte VexRiscv-Core wird in eine FPGA-Netzliste übersetzt. Dabei werden
   Timing, Logikressourcen und Pipeline-Strukturen optimiert.
-	•	**Implementierung:**
+- **Implementierung:**
   Platzierung (Placement) und Verdrahtung (Routing) der Schaltung auf dem FPGA
   Gewebe. Vivado stellt sicher, dass die Designvorgaben (z. B. maximale
   Taktfrequenz) eingehalten werden.
-	•	**Bitstream-Erzeugung:**
+- **Bitstream-Erzeugung:**
   Aus der finalen Implementierung wird die Bitstream-Datei erstellt, die
   anschließend auf ein Board wie das Pynq-Z1 oder Artix-7-Boards geladen werden
   kann.
-	•	**Debugging:**
+- **Debugging:**
   Tools wie Vivado Logic Analyzer (ILA) können genutzt werden, um interne Signale
   auf dem FPGA in Echtzeit zu beobachten – hilfreich für tiefergehende Tests des
   Prozessorkerns.
@@ -202,37 +202,37 @@ Die wichtigsten Aufgaben von Vivado in dieser Arbeit sind:
 Vivado bildet damit den letzten Schritt im Hardware-Workflow:
 Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Verilator/GTKWave) erfolgt über Vivado die physische Implementierung auf dem FPGA.
 
-## Verwendete Hardwareplattform
+# Verwendete Hardwareplattform
 
 Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde eine FPGA-basierte Entwicklungsumgebung eingesetzt. Diese ermöglicht sowohl die Überprüfung der synthetisierten Hardware als auch die Interaktion mit externen Peripheriegeräten.
 
-### Pynq-Z1 FPGA-Board
+## Pynq-Z1 FPGA-Board
 
 Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
 Der Chip kombiniert:
-	•	einen Dual-Core ARM Cortex-A9 (Processing System, PS)
-	•	ein Artix-7 FPGA-Fabric (Programmable Logic, PL)
+- einen Dual-Core ARM Cortex-A9 (Processing System, PS)
+- ein Artix-7 FPGA-Fabric (Programmable Logic, PL)
 
 Damit eignet sich das Board sowohl für klassische FPGA-Designs als auch für heterogene Systeme, in denen Software und Hardware eng miteinander interagieren.
 
 Für diese Arbeit wurde das Pynq-Z1 genutzt, um den durch die GUI generierten VexRiscv-Core in der programmierbaren Logik (PL) zu implementieren.
 Das Board bietet dafür:
-	•	ausreichend logische Ressourcen für RISC-V-Kerne,
-	•	mehrere PMOD-Schnittstellen für Peripherie,
-	•	integrierte Taktquellen,
-	•	UART, LEDs, Schalter und Speicher.
+- ausreichend logische Ressourcen für RISC-V-Kerne,
+- mehrere PMOD-Schnittstellen für Peripherie,
+- integrierte Taktquellen,
+- UART, LEDs, Schalter und Speicher.
 
 Die Implementierung auf einem realen FPGA ermöglicht es, den generierten Kern nicht nur zu simulieren, sondern auch unter realen Betriebsbedingungen zu testen.
 
-### UART-PMOD Modul
+## UART-PMOD Modul
 
 Für die serielle Kommunikation mit dem Prozessor wurde ein UART-PMOD verwendet.
 Dieses Modul wird typischerweise über eine der PMOD-Schnittstellen des Pynq-Z1 angeschlossen und stellt einen einfach nutzbaren UART-Transceiver bereit.
 
-Hauptfunktionen:
-	•	serielle Übertragung über RX/TX-Leitungen,
-	•	Kommunikation mit dem Host-PC (z. B. über USB-Seriell-Adapter),
-	•	Debugging und Konsolenausgabe des RISC-V-Kerns,
-	•	Übertragung kleiner Testprogramme oder Statusmeldungen.
+**Hauptfunktionen:**
+- serielle Übertragung über RX/TX-Leitungen,
+- Kommunikation mit dem Host-PC (z. B. über USB-Seriell-Adapter),
+- Debugging und Konsolenausgabe des RISC-V-Kerns,
+- Übertragung kleiner Testprogramme oder Statusmeldungen.
 
 In Kombination mit LiteX oder einer eigenen SoC-Top-Level-Beschreibung dient der UART-PMOD als Standard-Interface, um den generierten Kern in Betrieb zu nehmen und sein Verhalten zu beobachten.
