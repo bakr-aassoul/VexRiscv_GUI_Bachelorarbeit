@@ -16,6 +16,9 @@
 ```
 ---
 
+```{raw} latex
+\normalsize
+```
 ## RISC-V
 
 **RISC-V** (Reduced Instruction Set Computer – Fifth Generation) ist eine offene, modulare und lizenzfreie **Befehlssatzarchitektur (ISA)**,  die 2010 an der University of California, Berkeley, entwickelt wurde.  
