@@ -39,9 +39,9 @@ Die RISC-V Instruction Set Architecture (ISA) ist hierarchisch und modular aufge
 Sie besteht aus:
 
 1. **Basis-ISA (RV32I, RV64I, RV128I)**
-   •	Definiert die Register (32 allgemeine Register, PC),
-   •	Instruktionsformate (R-, I-, S-, B-, U- und J-Format),
-   •	elementare Operationen wie ADD, SUB, AND, OR, LW, SW, BEQ, JAL usw.
+   - Definiert die Register (32 allgemeine Register, PC),
+   - Instruktionsformate (R-, I-, S-, B-, U- und J-Format),
+   - elementare Operationen wie ADD, SUB, AND, OR, LW, SW, BEQ, JAL usw.
    Die Basis-ISA ist bewusst klein gehalten, um Implementierungen möglichst einfach
    und energieeffizient zu gestalten.
 2. **Standarderweiterungen (M, A, F, D, C, V usw.)**
@@ -91,22 +91,22 @@ Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Gr
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
-	• IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
+	- IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
 	Schnittstellen für Speicherzugriffe ohne Cache.
-	• DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
+	- DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
 	den jeweiligen Funktionseinheiten zu.
-	•	RegFilePlugin – implementiert das Registerfile mit Lese-/Schreibzugriffen.
-	•	SrcPlugin: wählt und liefert die Operanden für ALU, Branch- und Shifter
+	- RegFilePlugin: implementiert das Registerfile mit Lese-/Schreibzugriffen.
+	- SrcPlugin: wählt und liefert die Operanden für ALU, Branch- und Shifter
 	Einheiten.
-	•	IntAluPlugin: realisiert arithmetische und logische Grundoperationen.
-	•	LightShifterPlugin: implementiert rechte/links Shifts mit geringer
+	- IntAluPlugin: realisiert arithmetische und logische Grundoperationen.
+	- LightShifterPlugin: implementiert rechte/links Shifts mit geringer
 	Ressourcenkomplexität.
-	•	HazardSimplePlugin: behandelt Pipeline-Hazards und stellt
+	- HazardSimplePlugin: behandelt Pipeline-Hazards und stellt
 	Forwarding/Bypassing sicher.
-	•	BranchPlugin: führt Sprungberechnungen und einfache Branch-Vorhersage durch.
-	•	CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs)
+	- BranchPlugin: führt Sprungberechnungen und einfache Branch-Vorhersage durch.
+	- CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs)
 	bereit und bildet den Kern der privilegierten Architektur.
-	•	MulPlugin / DivPlugin: implementieren Multiplikation und Division und
+	- MulPlugin / DivPlugin: implementieren Multiplikation und Division und
 	erweitern damit die Basis-ISA um die M-Extension.
 
 Diese Plugin-Auswahl entspricht einem kompakten, aber voll funktionsfähigen Single-Issue-RISC-V-Kern, der sich besonders für eingebettete Systeme und FPGA-basierte Demonstratoren eignet.
