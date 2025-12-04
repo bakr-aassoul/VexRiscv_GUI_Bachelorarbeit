@@ -91,23 +91,23 @@ Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Gr
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
-	•	IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
-  Schnittstellen für Speicherzugriffe ohne Cache.
-	•	DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
-  den jeweiligen Funktionseinheiten zu.
+	• IBusSimplePlugin / DBusSimplePlugin: einfache Instruktions- und Datenbus
+	Schnittstellen für Speicherzugriffe ohne Cache.
+	• DecoderSimplePlugin: steuert das Instruktions-Decode und ordnet Instruktionen
+	den jeweiligen Funktionseinheiten zu.
 	•	RegFilePlugin – implementiert das Registerfile mit Lese-/Schreibzugriffen.
 	•	SrcPlugin: wählt und liefert die Operanden für ALU, Branch- und Shifter
-  Einheiten.
+	Einheiten.
 	•	IntAluPlugin: realisiert arithmetische und logische Grundoperationen.
 	•	LightShifterPlugin: implementiert rechte/links Shifts mit geringer
-  Ressourcenkomplexität.
-	•	HazardSimplePlugin: behandelt Pipeline-Hazards und stellt Forwarding/Bypassing
-  sicher.
+	Ressourcenkomplexität.
+	•	HazardSimplePlugin: behandelt Pipeline-Hazards und stellt
+	Forwarding/Bypassing sicher.
 	•	BranchPlugin: führt Sprungberechnungen und einfache Branch-Vorhersage durch.
-	•	CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs) bereit
-  und bildet den Kern der privilegierten Architektur.
-	•	MulPlugin / DivPlugin: implementieren Multiplikation und Division und erweitern
-  damit die Basis-ISA um die M-Extension.
+	•	CsrPlugin: stellt die Verwaltung der Control-and-Status-Register (CSRs)
+	bereit und bildet den Kern der privilegierten Architektur.
+	•	MulPlugin / DivPlugin: implementieren Multiplikation und Division und
+	erweitern damit die Basis-ISA um die M-Extension.
 
 Diese Plugin-Auswahl entspricht einem kompakten, aber voll funktionsfähigen Single-Issue-RISC-V-Kern, der sich besonders für eingebettete Systeme und FPGA-basierte Demonstratoren eignet.
 Da keine Cache- oder MMU-Plugins integriert sind, erfolgt jeder Speicherzugriff direkt über die einfachen Bus-Interfaces. Dies vereinfacht sowohl die Hardwarestruktur als auch die spätere Integration in LiteX.
