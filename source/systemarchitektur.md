@@ -1,92 +1,73 @@
 # Systemarchitektur
-
-Die entworfene Umgebung besteht aus zwei Hauptkomponenten:  
-einem **Backend-Skript (`gui_backend.py`)** und einer **grafischen Oberfläche (Tkinter-Frontend)**.  
-Beide Komponenten arbeiten eng zusammen, um den vollständigen Hardware-Generierungsprozess von der Plugin-Auswahl bis zur Simulation zu automatisieren.
-
----
-
-## Gesamtüberblick
-
-
-**Ablauf des Workflows:**
-
-1. **Plugin-Auswahl** –  
-   Der Benutzer wählt im GUI aus, welche VexRiscv-Plugins aktiviert werden sollen  
-   (z. B. `IntAluPlugin`, `BranchPlugin`, `CsrPlugin`, `DBusSimplePlugin`).
-
-2. **Konfigurationsspeicherung** –  
-   Die Auswahl wird als JSON-Datei (`gui_config.json`) gespeichert, die vom Backend verarbeitet wird.
-
-3. **Scala-Generierung** –  
-   Das Backend erzeugt automatisch die Scala-Datei `VexRiscvTopFromGui.scala`,  
-   in der die ausgewählten Plugins als Konstruktorparameter an `VexRiscvConfig` übergeben werden.
-
-4. **Verilog-Erzeugung** –  
-   Über den Aufruf `sbt "runMain vexriscv.demo.VexRiscvTopFromGui"` wird das SpinalHDL-Buildsystem gestartet,  
-   welches aus der Scala-Beschreibung den Verilog-Code (`VexRiscv.v`) generiert.
-
-5. **Simulation und Signalanalyse** –  
-   Die GUI bietet Schaltflächen zum Starten der Simulation (Verilator) sowie zum Öffnen der erzeugten Wellenformdatei (`trace.vcd`) in GTKWave.
-
----
-
-## Architekturkomponenten
-
-### Backend
-Das Python-Skript `gui_backend.py` übernimmt alle systemnahen Aufgaben:
-- Lesen und Schreiben der JSON-Konfiguration  
-- Generierung der Scala-Topdatei  
-- Aufruf von **SpinalHDL/SBT** zur Verilog-Erzeugung  
-- Durchführung der **Simulation** über Verilator  
-- Öffnen der **GTKWave-Oberfläche**
-
-Es ist so aufgebaut, dass es auch ohne GUI auf der Kommandozeile genutzt werden kann.
-
-### GUI-Frontend
-Das **Tkinter-Frontend** dient als Benutzeroberfläche und kommuniziert direkt mit dem Backend.  
-Es bietet:
-- Checkboxen zur Plugin-Auswahl  
-- Schaltflächen für „Generate Verilog“, „Run Simulation“, „Open GTKWave“  
-- Einen Log-Bereich zur Laufzeit-Ausgabe  
-- Eine Option *„Auto-add required plugins“* (fügt automatisch essenzielle Pipeline-Plugins hinzu)  
-- Einen Button *„Clear Log“* zum Zurücksetzen der Konsolenausgabe
-
----
-
-## Abbildung der GUI
-
-In der folgenden Abbildung ist die entwickelte grafische Benutzeroberfläche dargestellt.  
-Über diese kann der Benutzer die gewünschten VexRiscv-Plugins auswählen, 
-den Verilog-Code erzeugen, eine Simulation starten oder die Ergebnisse in **GTKWave** anzeigen.
-
-![GUI Architektur](images/gui_overview.png)
-
-*Abbildung 1: Grafische Benutzeroberfläche des VexRiscv-Konfigurators mit Plugin-Auswahl, Build-Steuerung und Log-Ausgabe.*
-
-Die Oberfläche wurde mit **Python** unter Verwendung des **Tkinter-Frameworks** implementiert.  
-Sie stellt die zentrale Steuerungseinheit der Designumgebung dar und bietet alle wesentlichen Funktionen für:
-- die Konfiguration der Prozessor-Plugins,  
-- die automatische Verilog-Generierung,  
-- das Ausführen der Simulation über **Verilator**,  
-- sowie die Anzeige der Signale in **GTKWave**.
-
----
-
-## Datenfluss der Designumgebung
-
-Der Gesamtprozess von der grafischen Auswahl bis zur Hardwarebeschreibung kann durch den folgenden Ablauf beschrieben werden:
-
-```text
-[GUI] 
-   ↓
-(gui_config.json)
-   ↓
-[Backend-Skript]
-   ↓
-[SpinalHDL / SBT] → Verilog-Generierung
-   ↓
-[Verilator Simulation]
-   ↓
-[GTKWave Analyse]
+```{raw} latex
+\Large
 ```
+In diesem Kapitel wird die Architektur des gesamten Entwicklungs- und Evaluierungssystems beschrieben, das im Rahmen dieser Arbeit realisiert wurde. Dabei werden sowohl die GUI-basierte Konfigurationsumgebung, der Aufbau des VexRiscv-Prozessors, die Integration in ein LiteX-SoC als auch die Umsetzung auf einer FPGA-Plattform betrachtet. Ziel ist es, die Zusammenhänge zwischen den einzelnen Systemkomponenten darzustellen und zu erläutern, wie aus einer benutzerdefinierten Konfiguration ein lauffähiges Hardwaredesign entsteht, das auf dem FPGA getestet und analysiert werden kann.
+
+Die Systemarchitektur dieser Arbeit basiert auf einem modularen Softcore-Design, das durch eine eigens entwickelte grafische Benutzeroberfläche zur Konfiguration des VexRiscv-Prozessors ergänzt wird. Ziel ist es, unterschiedliche Varianten des Prozessorkerns automatisiert zu erzeugen, in einer SoC-Umgebung einzubetten und schließlich auf einer FPGA-Plattform zu evaluieren. Die einzelnen Komponenten – GUI, Codegenerierung, SoC-Integration, Simulation und FPGA-Implementierung – greifen dabei eng ineinander und bilden einen durchgängigen Entwicklungs- und Evaluierungsworkflow.
+
+```{raw} latex
+\clearpage
+```
+---
+
+```{raw} latex
+\normalsize
+```
+## GUI-basierte Konfigurationsschicht
+
+
+Den Ausgangspunkt der Systemarchitektur bildet die im Rahmen dieser Arbeit entwickelte GUI. 
+Sie dient als abstrahierende Schicht, über die der VexRiscv-Prozessor konfiguriert werden kann, ohne direkt in den SpinalHDL-Quellcode eingreifen zu müssen. 
+Der Benutzer wählt in der Oberfläche die gewünschten Architekturmerkmale und Plugins aus, etwa die Aktivierung von Multiplikations- und Divisionsmodulen, die Art des Shifters, die Ausgestaltung der Branch-Logik oder die Nutzung des CSR-Plugins.
+
+Auf Basis dieser Auswahl generiert die GUI eine angepasste Top-Level-Definition des Prozessors (z. B. `VexRiscvTopFromGui.scala`) sowie optionale Konfigurationsdateien, die die aktuelle Architekturvariante beschreiben. 
+Darüber hinaus ist die GUI mit der Build-Toolchain verknüpft: 
+Sie kann den SBT-Buildprozess anstoßen, SpinalHDL ausführen und die Erzeugung von Verilog-Code automatisieren. 
+Dadurch wird der Übergang von der architekturellen Beschreibung zu einer synthetisierbaren Hardwareimplementierung weitgehend entkoppelt und für den Benutzer stark vereinfacht.
+
+```{raw} latex
+\clearpage
+```
+
+## Prozessor- und SoC-Ebene
+
+Die durch die GUI generierte Konfiguration beschreibt einen konkreten VexRiscv-Prozessorkern, der aus einer Kombination verschiedener Plugins besteht. 
+Dazu gehören insbesondere Einheiten für Instruktions- und Datenzugriffe, die arithmetisch-logische Einheit, Shifter und Branch-Logik, das Registerfile, die Hazard-Behandlung sowie die Verwaltung der Control-and-Status-Register. 
+Je nach gewählter Konfiguration können zusätzliche Funktionseinheiten wie Multiplikation und Division oder weitere Spezialfunktionen integriert werden. 
+Auf diese Weise lässt sich der Umfang des Prozessors gezielt an den gewünschten Einsatzzweck anpassen von einer kompakten, ressourcenschonenden Ausführung bis hin zu einer leistungsfähigeren Variante mit erweitertem Befehlssatz.
+
+Um den Prozessor in einem lauffähigen Gesamtsystem zu betreiben, wird er mithilfe von LiteX in eine System-on-Chip-Struktur eingebettet. 
+LiteX stellt dabei die notwendige Systeminfrastruktur bereit. 
+Es generiert eine einheitliche Busarchitektur, verbindet den Prozessor mit Speicherressourcen wie internem SRAM oder externem DRAM und bindet grundlegende Peripheriefunktionen wie UART, Timer oder GPIO an. 
+Gleichzeitig übernimmt LiteX die Adressierung und die Systeminitialisierung, sodass aus der Kombination von VexRiscv-Core und LiteX-Modulen ein voll funktionsfähiges SoC entsteht, das sowohl simuliert als auch auf einem FPGA ausgeführt werden kann.
+
+```{raw} latex
+\clearpage
+```
+
+## FPGA-Implementierung und Peripherieanbindung
+
+Die physische Ausführung des Systems erfolgt auf dem in Abschnitt „Verwendete Hardwareplattform“ beschriebenen Pynq-Z1-Board. 
+Der durch SpinalHDL und LiteX erzeugte Verilog-Code wird anschließend in Vivado synthetisiert, platziert und geroutet, sodass ein Bitstream entsteht, der auf die programmierbare Logik des Zynq-SoCs geladen werden kann. 
+In der FPGA-Fabric laufen der konfigurierte VexRiscv-Prozessor und die LiteX-SoC-Struktur unter realen Timing-Bedingungen, was eine praxisnahe Bewertung der erzeugten Konfigurationen ermöglicht.
+
+Für die Interaktion mit dem System wird ein UART-PMOD an eine PMOD-Schnittstelle des Pynq-Z1 angeschlossen. 
+Über diese serielle Schnittstelle können Bootmeldungen, Debug-Ausgaben und Testergebnisse an einen Host-PC übertragen werden. 
+Gleichzeitig erlaubt sie das Einspielen kleiner Testprogramme oder Firmware, die auf dem VexRiscv-Prozessor ausgeführt werden. 
+Die Kombination aus grafischer Konfiguration, automatisierter Hardwaregenerierung, LiteX-SoC, FPGA-Implementierung und UART-basierter Kommunikation bildet damit eine vollständige Umgebung zur systematischen Evaluierung unterschiedlicher Prozessorvarianten.
+
+```{raw} latex
+\clearpage
+```
+
+## Zusammenfassung des Workflows
+
+Zusammenfassend lässt sich der Gesamtworkflow wie folgt beschreiben: 
+Die GUI definiert die Architekturvarianten und erzeugt die zugehörigen Konfigurationsdateien. 
+SpinalHDL und SBT übersetzen diese Konfigurationen in synthetisierbaren Verilog-Code. 
+LiteX erweitert den Prozessorkern zu einem vollständigen SoC, das anschließend sowohl simuliert als auch auf der FPGA-Plattform ausgeführt werden kann. 
+Vivado übernimmt die Synthese und Implementierung des Designs, während das Pynq-Z1-Board in Verbindung mit dem UART-PMOD als physische Testumgebung dient.
+Auf dieser Basis können verschiedene Prozessorarchitekturen unter identischen Bedingungen verglichen und hinsichtlich ihrer Funktionalität und Effizienz bewertet werden.
+
+---
