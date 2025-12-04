@@ -3,7 +3,7 @@
 Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen,  
 auf denen die im Rahmen dieser Arbeit entwickelte GUI- und Simulationsumgebung basiert.  
 Dazu gehören die **RISC-V-Architektur**, das **Hardware-Framework SpinalHDL**,  
-sowie der **VexRiscv-Prozessor** mit seinem modularen Plugin-System.  
+sowie der **VexRiscv Prozessor** mit seinem modularen Plugin-System.  
 Abschließend werden die genutzten Software-Tools für die Codegenerierung und Simulation erläutert.
 
 ---
