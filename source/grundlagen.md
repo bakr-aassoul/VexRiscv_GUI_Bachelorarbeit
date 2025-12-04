@@ -2,7 +2,8 @@
 
 
 ```{raw} latex
-\Large 
+\Large
+```
    Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen, auf
    denen die im Rahmen dieser Arbeit entwickelte GUI- und Simulationsumgebung
    basiert.  
@@ -10,7 +11,7 @@
    sowie der **VexRiscv Prozessor** mit seinem modularen Plugin-System.  
    Abschließend werden die genutzten Software-Tools für die Codegenerierung und
    Simulation erläutert.
-```
+
 ```{raw} latex
 \clearpage
 ```
@@ -259,16 +260,28 @@ Vivado bildet damit den letzten Schritt im Hardware-Workflow:
 Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Verilator/GTKWave) erfolgt über Vivado die physische Implementierung auf dem FPGA.
 
 # Verwendete Hardwareplattform
+```{raw} latex
+\Large
+```
 
-Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde eine FPGA-basierte Entwicklungsumgebung eingesetzt. Diese ermöglicht sowohl die Überprüfung der synthetisierten Hardware als auch die Interaktion mit externen Peripheriegeräten.
 
+Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde eine FPGA-basierte Entwicklungsumgebung eingesetzt. Diese ermöglicht sowohl die Überprüfung der synthetisierten Hardware als auch die Interaktion mit externen Peripheriegeräten. Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in realen Betriebsbedingungen getestet, verglichen und hinsichtlich ihrer Funktionalität verifiziert werden.
+
+```{raw} latex
+\clearpage
+```
+---
+
+```{raw} latex
+\normalsize
+```
 ## Pynq-Z1 FPGA-Board
 
 Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
 Der Chip kombiniert:
 
-- einen Dual-Core ARM Cortex-A9 (Processing System, PS)
-- ein Artix-7 FPGA-Fabric (Programmable Logic, PL)
+- einen Dual-Core ARM Cortex-A9 (Processing System, PS),
+- ein Artix-7 FPGA-Fabric (Programmable Logic, PL).
 
 Damit eignet sich das Board sowohl für klassische FPGA-Designs als auch für heterogene Systeme, in denen Software und Hardware eng miteinander interagieren.
 
