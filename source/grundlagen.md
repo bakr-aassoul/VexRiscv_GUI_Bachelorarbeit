@@ -4,6 +4,9 @@ Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen, auf dene
 Dazu gehören die **RISC-V-Architektur**, das **Hardware-Framework SpinalHDL**, sowie der **VexRiscv Prozessor** mit seinem modularen Plugin-System.  
 Abschließend werden die genutzten Software-Tools für die Codegenerierung und Simulation erläutert.
 
+```{raw} latex
+\clearpage
+```
 ---
 
 ## RISC-V
