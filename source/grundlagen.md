@@ -2,7 +2,7 @@
 
 
 ```{raw} latex
-\Large
+\large
 ```
    Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen, auf
    denen die im Rahmen dieser Arbeit entwickelte GUI- und Simulationsumgebung
@@ -261,7 +261,7 @@ Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Veril
 
 # Verwendete Hardwareplattform
 ```{raw} latex
-\Large
+\large
 ```
 
 
