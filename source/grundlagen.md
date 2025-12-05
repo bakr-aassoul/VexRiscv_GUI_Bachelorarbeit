@@ -265,7 +265,9 @@ Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Veril
 ```
 
 
-Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde eine FPGA-basierte Entwicklungsumgebung eingesetzt. Diese ermöglicht sowohl die Überprüfung der synthetisierten Hardware als auch die Interaktion mit externen Peripheriegeräten. Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in realen Betriebsbedingungen getestet, verglichen und hinsichtlich ihrer Funktionalität verifiziert werden.
+Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde eine FPGA-basierte Entwicklungsumgebung eingesetzt. 
+Diese ermöglicht sowohl die Überprüfung der synthetisierten Hardware als auch die Interaktion mit externen Peripheriegeräten. 
+Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in realen Betriebsbedingungen getestet, verglichen und hinsichtlich ihrer Funktionalität verifiziert werden.
 
 ```{raw} latex
 \clearpage
@@ -278,6 +280,7 @@ Für die praktische Evaluierung des konfigurierbaren VexRiscv-Prozessors wurde e
 ## Pynq-Z1 FPGA-Board
 
 Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
+
 Der Chip kombiniert:
 
 - einen Dual-Core ARM Cortex-A9 (Processing System, PS),
