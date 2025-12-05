@@ -53,15 +53,16 @@ latex_elements = {
         \vspace*{2cm}
         \centering
         
-        {\Large Bachelorarbeit \par}  % <-- Added line
+        {\Huge Bachelorarbeit \par}  % <-- Added line
         \vspace{0.5cm}
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
-        {\Large Bakr Aassoul \par}
-        \vspace{0.5cm}
+       
         {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
         {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
         \vfill
+        {\Large Bakr Aassoul \par}
+        \vspace{0.5cm}
         {\large \today \par}
     \end{titlepage}
 
