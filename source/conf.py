@@ -53,11 +53,11 @@ latex_elements = {
         \vspace*{2cm}
         \centering
         
-        
+        {\Huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
+        \vspace{0.5cm}
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
-        {\Huge \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
-        \vspace{0.5cm}
+        
 
         \vfill
         {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
@@ -83,7 +83,7 @@ language = 'de'
 
 latex_documents = [
     ('index',
-     'SpinalHDL.tex',
+     'Bachelorarbeit.tex',
      'Bachelorarbeit',
      'Bakr Aassoul',
      'manual'),
