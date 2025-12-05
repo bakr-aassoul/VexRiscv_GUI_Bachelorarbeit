@@ -1,6 +1,6 @@
 # Systemarchitektur
 ```{raw} latex
-\Large
+\large
 ```
 In diesem Kapitel wird die Architektur des gesamten Entwicklungs- und           Evaluierungssystems beschrieben, das im Rahmen dieser Arbeit realisiert wurde. 
 Dabei werden sowohl die GUI-basierte Konfigurationsumgebung, der Aufbau des VexRiscv-Prozessors, die Integration in ein LiteX-SoC als auch die Umsetzung auf einer FPGA-Plattform betrachtet. 
