@@ -23,7 +23,7 @@ html_static_path = ['_static']
 latex_engine = 'xelatex'
 
 # Tell Sphinx to copy the logo into the LaTeX build dir
-latex_additional_files = ['spinalhdl-logo.png']
+latex_additional_files = ['fh-dortmund-logo.png']
 
 latex_elements = {
     'sphinxsetup': 'verbatimwithframe=true, verbatimwrapslines=true',
@@ -45,17 +45,21 @@ latex_elements = {
     ''',
     'maketitle': r'''
     \begin{titlepage}
+        \begin{flushleft}
+            % Replace 'fh-dortmund-logo.png' with the actual filename of your image.
+            % Adjust 'width=0.4\textwidth' to change the logo's size.
+            \includegraphics[width=0.4\textwidth]{fh-dortmund-logo.png}
+        \end{flushleft}
+        \vspace*{2cm}
         \centering
-        \vspace*{3cm}
-        \includegraphics[width=0.5\textwidth]{spinalhdl-logo.png}\par
-        \vspace{2cm}
+        
         {\Large Bachelorarbeit \par}  % <-- Added line
         \vspace{0.5cm}
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
         {\Large Bakr Aassoul \par}
         \vspace{0.5cm}
-        {\large Betreuer: Prof.\ Dr.\ Jens Rettkowski \par}
+        {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
         \vfill
         {\large \today \par}
     \end{titlepage}
@@ -72,7 +76,7 @@ language = 'de'
 latex_documents = [
     ('index',
      'SpinalHDL.tex',
-     'SpinalHDL Dokumentation',
+     'Bachelorarbeit',
      'Bakr Aassoul',
      'manual'),
 ]
