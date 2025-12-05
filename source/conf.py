@@ -60,16 +60,17 @@ latex_elements = {
         
 
         \vfill
-        {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
-        {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
-        \vspace{1cm}
+        
         {\Large Bakr Aassoul \par}
-        \vspace{0.5cm}
         {\large Matrikelnummer: 7215705 \par}
-        \vspace{1cm}
+        \vspace{2cm}
         {\large \today \par}
-        \vspace{0.5cm}
         {\large an der Fachhochschule Dortmund \par}
+        \vspace{3cm}
+        \begin{flushleft}
+            {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
+            {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
+        \end{flushleft}
     \end{titlepage}
 
     \clearpage
