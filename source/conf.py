@@ -26,7 +26,7 @@ latex_engine = 'xelatex'
 latex_additional_files = ['fh-dortmund-logo.jpg']
 
 latex_elements = {
-    'pointsize': '12pt',
+    'pointsize': '13pt',
     'sphinxsetup': 'verbatimwithframe=true, verbatimwrapslines=true',
     'preamble': r'''
         % XeLaTeX handles UTF-8 natively, so inputenc/fontenc not needed
