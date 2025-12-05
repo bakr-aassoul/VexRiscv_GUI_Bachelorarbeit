@@ -48,7 +48,7 @@ latex_elements = {
         \begin{flushleft}
             % Replace 'fh-dortmund-logo.png' with the actual filename of your image.
             % Adjust 'width=0.2\textwidth' to change the logo's size.
-            \includegraphics[width=0.2\textwidth]{fh-dortmund-logo.jpg}
+            \includegraphics[width=0.3\textwidth]{fh-dortmund-logo.jpg}
         \end{flushleft}
         \vspace*{2cm}
         \centering
@@ -61,15 +61,15 @@ latex_elements = {
 
         \vfill
         
-        {\Large Bakr Aassoul \par}
+        {\Large \textbf{Bakr Aassoul} \par}
         {\large Matrikelnummer: 7215705 \par}
         \vspace{2cm}
         {\large \today \par}
         {\large an der Fachhochschule Dortmund \par}
         \vspace{3cm}
         \begin{flushleft}
-            {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
-            {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
+            {\large \textbf{Erstprüfer:} Prof.\ Dr.\ Jens Rettkowski \par}
+            {\large \textbf{Zweitprüfer:} Dipl.\ -Ing.\ Sebastian Kindler \par}
         \end{flushleft}
     \end{titlepage}
 
