@@ -60,6 +60,7 @@ latex_elements = {
         {\Large Bakr Aassoul \par}
         \vspace{0.5cm}
         {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
+        {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
         \vfill
         {\large \today \par}
     \end{titlepage}
