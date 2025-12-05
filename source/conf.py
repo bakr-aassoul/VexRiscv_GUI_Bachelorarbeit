@@ -24,9 +24,12 @@ latex_engine = 'xelatex'
 
 # Tell Sphinx to copy the logo into the LaTeX build dir
 latex_additional_files = ['fh-dortmund-logo.jpg']
+latex_docclass = {
+   'manual': 'extreport',
+}
 
 latex_elements = {
-    'pointsize': '12pt',
+    'pointsize': '14pt',
     'sphinxsetup': 'verbatimwithframe=true, verbatimwrapslines=true',
     'preamble': r'''
         % XeLaTeX handles UTF-8 natively, so inputenc/fontenc not needed
