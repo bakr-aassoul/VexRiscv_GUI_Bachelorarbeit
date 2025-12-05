@@ -2,7 +2,7 @@
 
 
 ```{raw} latex
-\Large
+\large
 ```
 In diesem Abschnitt wird die Implementierung der im Rahmen dieser Arbeit entwickelten grafischen Benutzeroberfläche beschrieben. 
 Ziel der GUI ist es, die Konfiguration und Generierung des VexRiscv-Prozessors deutlich zu vereinfachen und Anwenderinnen und Anwendern eine intuitive Möglichkeit zu bieten, unterschiedliche Architekturvarianten zu erstellen und zu evaluieren. Die GUI bildet damit die zentrale Interaktionsschicht des gesamten Systems und vereint sowohl Eingabe- als auch Automatisierungslogik in einer einzigen Anwendung.
