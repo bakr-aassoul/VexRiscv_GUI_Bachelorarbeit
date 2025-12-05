@@ -58,9 +58,11 @@ latex_elements = {
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
        
+
+        \vfill
         {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
         {\large Zweitprüfer: Dipl.\ -Ing.\ Sebastian Kindler \par}
-        \vfill
+        \vspace{1cm}
         {\Large Bakr Aassoul \par}
         \vspace{0.5cm}
         {\large \today \par}
