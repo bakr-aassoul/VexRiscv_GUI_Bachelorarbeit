@@ -81,10 +81,10 @@ latex_elements = {
     
     \thispagestyle{plain} % Allows a page number here (optional)
     \begin{center}
-        {\Large \bfseries Abstract \par}
+        {\LARGE \bfseries Abstract \par}
     \end{center}
     \vspace{1cm}
-
+    {\large
     % REPLACE THE TEXT BELOW WITH YOUR OWN ABSTRACT
     Diese Bachelorarbeit beschäftigt sich mit der Konfiguration, Simulation und FPGA-basierten Evaluierung eines modularen RISC-V-Prozessors auf Basis des in SpinalHDL entwickelten VexRiscv-Kerns. 
     Ziel der Arbeit ist die Entwicklung einer grafischen Benutzeroberfläche, die es ermöglicht, den Prozessor über ein flexibles Plugin-System zu konfigurieren und automatisch bis hin zu einem lauffähigen Verilog-Design zu generieren. 
@@ -97,7 +97,7 @@ latex_elements = {
     Die Arbeit leistet damit einen Beitrag zur benutzerfreundlichen Exploration von RISC-V-Prozessorarchitekturen und stellt eine vollständige Entwicklungsumgebung für Lehre, Forschung und prototypische Hardwareentwicklung bereit.
     
     % %% --- END OF ABSTRACT SECTION --- %%
-
+    }
     \clearpage
 ''',
     
