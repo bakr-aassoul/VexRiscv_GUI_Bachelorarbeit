@@ -48,7 +48,8 @@ Der folgende Auszug zeigt, wie die GUI zu Beginn die gespeicherten Einstellungen
 :caption: 
 
 import gui_backend as be
-cfg = be.load_config()     # lädt Plugins, Pfade, LiteX-Mode, Auto-Complete
+cfg = be.load_config()     # lädt Plugins, Pfade, LiteX-Mode,
+Auto-Complete
 ```
 
 ```{raw} latex
@@ -69,7 +70,8 @@ Die Plugin-Auswahl wird dynamisch aus einer Liste erzeugt. Jede Option wird an e
 plugin_vars = {}
 for name in plugin_names:
     var = BooleanVar(value=(name in cfg["plugins"]))
-    ttk.Checkbutton(frm_plugins, text=name, variable=var).pack(anchor="w")
+    ttk.Checkbutton(frm_plugins, text=name
+    , variable=var).pack(anchor="w")
     plugin_vars[name] = var
 ```
 
@@ -204,7 +206,8 @@ Ein weiteres zentrales Snippet ist die Konfigurationsverwaltung:
 def load_config():
     if CFG.exists():
         return json.loads(CFG.read_text())
-    return {"plugins": [], "path": str(DEFAULT_OUT), "complete": False, "litex_mode": False}
+    return {"plugins": [], "path": str(DEFAULT_OUT),
+    "complete": False, "litex_mode": False}
 ```
 
 ```{raw} latex
