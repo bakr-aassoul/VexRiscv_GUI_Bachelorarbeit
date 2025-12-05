@@ -27,6 +27,10 @@ Die GUI soll insbesondere Studierenden und Forschern den Einstieg in SpinalHDL e
 
 Darüber hinaus umfasst die Arbeit eine FPGA-basierte Evaluierung der generierten Prozessorkonfigurationen, um deren Funktionsfähigkeit unter realen Hardwarebedingungen zu überprüfen.
 
+```{raw} latex
+\clearpage
+```
+
 ## Vorgehensweise
 
 Im Verlauf dieser Arbeit wird die Architektur des VexRiscv-Prozessors analysiert und die Funktionalität seiner zentralen Plugins erläutert.
