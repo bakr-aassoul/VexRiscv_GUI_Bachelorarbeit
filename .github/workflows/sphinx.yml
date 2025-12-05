@@ -37,7 +37,7 @@ jobs:
       - name: Build PDF documentation
         run: |
           sphinx-build -b latex ./source ./latex
-          cd latex && latexmk -xelatex -f SpinalHDL.tex
+          cd latex && latexmk -xelatex -f Bachelorarbeit.tex
 
       # Step 6: Upload PDF artifact
       - name: Upload PDF artifact
