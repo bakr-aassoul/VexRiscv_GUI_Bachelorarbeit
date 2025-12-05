@@ -53,7 +53,7 @@ latex_elements = {
         \vspace*{2cm}
         \centering
         
-        {\Huge Bachelorarbeit \par}  % <-- Added line
+        {\Huge \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
         \vspace{0.5cm}
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
