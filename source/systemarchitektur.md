@@ -2,9 +2,12 @@
 ```{raw} latex
 \Large
 ```
-In diesem Kapitel wird die Architektur des gesamten Entwicklungs- und Evaluierungssystems beschrieben, das im Rahmen dieser Arbeit realisiert wurde. Dabei werden sowohl die GUI-basierte Konfigurationsumgebung, der Aufbau des VexRiscv-Prozessors, die Integration in ein LiteX-SoC als auch die Umsetzung auf einer FPGA-Plattform betrachtet. Ziel ist es, die Zusammenhänge zwischen den einzelnen Systemkomponenten darzustellen und zu erläutern, wie aus einer benutzerdefinierten Konfiguration ein lauffähiges Hardwaredesign entsteht, das auf dem FPGA getestet und analysiert werden kann.
+In diesem Kapitel wird die Architektur des gesamten Entwicklungs- und           Evaluierungssystems beschrieben, das im Rahmen dieser Arbeit realisiert wurde. 
+Dabei werden sowohl die GUI-basierte Konfigurationsumgebung, der Aufbau des VexRiscv-Prozessors, die Integration in ein LiteX-SoC als auch die Umsetzung auf einer FPGA-Plattform betrachtet. 
+Ziel ist es, die Zusammenhänge zwischen den einzelnen Systemkomponenten darzustellen und zu erläutern, wie aus einer benutzerdefinierten Konfiguration ein lauffähiges Hardwaredesign entsteht, das auf dem FPGA getestet und analysiert werden kann.
 
-Die Systemarchitektur dieser Arbeit basiert auf einem modularen Softcore-Design, das durch eine eigens entwickelte grafische Benutzeroberfläche zur Konfiguration des VexRiscv-Prozessors ergänzt wird. Ziel ist es, unterschiedliche Varianten des Prozessorkerns automatisiert zu erzeugen, in einer SoC-Umgebung einzubetten und schließlich auf einer FPGA-Plattform zu evaluieren. Die einzelnen Komponenten – GUI, Codegenerierung, SoC-Integration, Simulation und FPGA-Implementierung – greifen dabei eng ineinander und bilden einen durchgängigen Entwicklungs- und Evaluierungsworkflow.
+Die Systemarchitektur dieser Arbeit basiert auf einem modularen Softcore-Design, das durch eine eigens entwickelte grafische Benutzeroberfläche zur Konfiguration des VexRiscv-Prozessors ergänzt wird. 
+Ziel ist es, unterschiedliche Varianten des Prozessorkerns automatisiert zu erzeugen, in einer SoC-Umgebung einzubetten und schließlich auf einer FPGA-Plattform zu evaluieren. Die einzelnen Komponenten: GUI, Codegenerierung, SoC-Integration, Simulation und FPGA-Implementierung, greifen dabei eng ineinander und bilden einen durchgängigen Entwicklungs- und Evaluierungsworkflow.
 
 ```{raw} latex
 \clearpage
@@ -23,6 +26,7 @@ Der Benutzer wählt in der Oberfläche die gewünschten Architekturmerkmale und 
 
 Auf Basis dieser Auswahl generiert die GUI eine angepasste Top-Level-Definition des Prozessors (z. B. `VexRiscvTopFromGui.scala`) sowie optionale Konfigurationsdateien, die die aktuelle Architekturvariante beschreiben. 
 Darüber hinaus ist die GUI mit der Build-Toolchain verknüpft: 
+
 Sie kann den SBT-Buildprozess anstoßen, SpinalHDL ausführen und die Erzeugung von Verilog-Code automatisieren. 
 Dadurch wird der Übergang von der architekturellen Beschreibung zu einer synthetisierbaren Hardwareimplementierung weitgehend entkoppelt und für den Benutzer stark vereinfacht.
 
@@ -64,10 +68,14 @@ Die Kombination aus grafischer Konfiguration, automatisierter Hardwaregenerierun
 ## Zusammenfassung des Workflows
 
 Zusammenfassend lässt sich der Gesamtworkflow wie folgt beschreiben: 
+
 Die GUI definiert die Architekturvarianten und erzeugt die zugehörigen Konfigurationsdateien. 
 SpinalHDL und SBT übersetzen diese Konfigurationen in synthetisierbaren Verilog-Code. 
+
 LiteX erweitert den Prozessorkern zu einem vollständigen SoC, das anschließend sowohl simuliert als auch auf der FPGA-Plattform ausgeführt werden kann. 
+
 Vivado übernimmt die Synthese und Implementierung des Designs, während das Pynq-Z1-Board in Verbindung mit dem UART-PMOD als physische Testumgebung dient.
+
 Auf dieser Basis können verschiedene Prozessorarchitekturen unter identischen Bedingungen verglichen und hinsichtlich ihrer Funktionalität und Effizienz bewertet werden.
 
 ---
