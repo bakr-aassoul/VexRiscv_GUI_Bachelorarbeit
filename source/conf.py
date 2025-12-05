@@ -6,14 +6,9 @@ copyright = '2025, Bakr Aassoul'
 author = 'Bakr Aassoul'
 
 # -- General Configuration ---------------------------------------------------
-extensions = ['myst_parser']  # Markdown via MyST
-
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-}
-
-exclude_patterns = []  # Nothing excluded
+extensions = ['myst_parser']
+source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
+exclude_patterns = []
 
 # -- Options for HTML Output -------------------------------------------------
 html_theme = 'alabaster'
@@ -21,22 +16,32 @@ html_static_path = ['_static']
 
 # -- LaTeX Configurations ----------------------------------------------------
 latex_engine = 'xelatex'
-
-# Tell Sphinx to copy the logo into the LaTeX build dir
 latex_additional_files = ['fh-dortmund-logo.jpg']
+
+# 1. SWITCH TO KOMA-SCRIPT (Better for German Theses)
 latex_docclass = {
-   'manual': 'extreport',
+   'manual': 'scrreprt',
 }
 
 latex_elements = {
-    'pointsize': '14pt',
+    # 2. SET EXACTLY 13pt HERE
+    # KOMA-Script allows 'fontsize=13pt'
+    'pointsize': 'fontsize=13pt',
+    
+    # 3. KOMA-Script specific settings to make it look like a standard report
+    # 'classoptions': ',twoside,openright', # Optional: for double-sided printing
+    
     'sphinxsetup': 'verbatimwithframe=true, verbatimwrapslines=true',
+    
     'preamble': r'''
-        % XeLaTeX handles UTF-8 natively, so inputenc/fontenc not needed
         \usepackage{lmodern}
         \usepackage{fancyhdr}
         \usepackage{graphicx}
-    
+        \usepackage{xcolor}
+
+        % Force serif font for headings (KOMA defaults to Sans Serif)
+        \addtokomafont{disposition}{\rmfamily}
+
         \makeatletter
         \fancypagestyle{normal}{
             \fancyhf{}
@@ -47,22 +52,20 @@ latex_elements = {
         }
         \makeatother
     ''',
+    
     'maketitle': r'''
     \begin{titlepage}
         \begin{flushleft}
-            % Replace 'fh-dortmund-logo.png' with the actual filename of your image.
-            % Adjust 'width=0.2\textwidth' to change the logo's size.
             \includegraphics[width=0.3\textwidth]{fh-dortmund-logo.jpg}
         \end{flushleft}
         \vspace*{2cm}
         \centering
         
-        {\Huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
+        {\Huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}
         \vspace{0.5cm}
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
         
-
         \vfill
         
         {\Large \textbf{Bakr Aassoul} \par}
@@ -81,15 +84,13 @@ latex_elements = {
     \null
     \thispagestyle{empty}
     \clearpage
-    % %% --- START OF ABSTRACT SECTION --- %%
     
-    \thispagestyle{plain} % Allows a page number here (optional)
+    \thispagestyle{plain} 
     \begin{center}
         {\LARGE \bfseries Abstract \par}
     \end{center}
     \vspace{1cm}
     {\large
-    % REPLACE THE TEXT BELOW WITH YOUR OWN ABSTRACT
     Diese Bachelorarbeit beschäftigt sich mit der Konfiguration, Simulation und FPGA-basierten Evaluierung eines modularen RISC-V-Prozessors auf Basis des in SpinalHDL entwickelten VexRiscv-Kerns. 
     Ziel der Arbeit ist die Entwicklung einer grafischen Benutzeroberfläche, die es ermöglicht, den Prozessor über ein flexibles Plugin-System zu konfigurieren und automatisch bis hin zu einem lauffähigen Verilog-Design zu generieren. 
     Die GUI abstrahiert die Komplexität der zugrunde liegenden Toolchain und führt Anwender schrittweise durch den gesamten Entwicklungsprozess, von der Auswahl der Architekturkomponenten über die Codegenerierung bis zur Simulation.
@@ -99,12 +100,9 @@ latex_elements = {
     Die Ergebnisse zeigen, dass sich der VexRiscv durch die modulare Architektur und die entwickelte GUI effizient an unterschiedliche Anforderungen anpassen lässt und sowohl in Simulation als auch auf Hardware ein reproduzierbares und nachvollziehbares Verhalten aufweist.
 
     Die Arbeit leistet damit einen Beitrag zur benutzerfreundlichen Exploration von RISC-V-Prozessorarchitekturen und stellt eine vollständige Entwicklungsumgebung für Lehre, Forschung und prototypische Hardwareentwicklung bereit.
-    
-    % %% --- END OF ABSTRACT SECTION --- %%
     }
     \clearpage
 ''',
-    
 }
 
 language = 'de'
