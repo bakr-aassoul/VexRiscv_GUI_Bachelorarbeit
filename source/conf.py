@@ -56,27 +56,27 @@ latex_elements = {
     'maketitle': r'''
     \begin{titlepage}
         \begin{flushleft}
-            \includegraphics[width=0.3\textwidth]{fh-dortmund-logo.jpg}
+            \includegraphics[width=0.2\textwidth]{fh-dortmund-logo.jpg}
         \end{flushleft}
         \vspace*{2cm}
         \centering
         
-        {\Huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}
+        {\huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}
         \vspace{0.5cm}
-        {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
+        {\huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
         
         \vfill
         
-        {\Large \textbf{Bakr Aassoul} \par}
-        {\large Matrikelnummer: 7215705 \par}
+        {\large \textbf{Bakr Aassoul} \par}
+        {\normalsize Matrikelnummer: 7215705 \par}
         \vspace{2cm}
-        {\large \today \par}
-        {\large an der Fachhochschule Dortmund \par}
+        {\normalsize \today \par}
+        {\normalsize an der Fachhochschule Dortmund \par}
         \vspace{3cm}
         \begin{flushleft}
-            {\large \textbf{Erstprüfer:} Prof.\ Dr.\ Jens Rettkowski \par}
-            {\large \textbf{Zweitprüfer:} Dipl.\ -Ing.\ Sebastian Kindler \par}
+            {\normalsize \textbf{Erstprüfer:} Prof.\ Dr.\ Jens Rettkowski \par}
+            {\normalsize \textbf{Zweitprüfer:} Dipl.\ -Ing.\ Sebastian Kindler \par}
         \end{flushleft}
     \end{titlepage}
 
