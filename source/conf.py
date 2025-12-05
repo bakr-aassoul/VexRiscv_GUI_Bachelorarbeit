@@ -47,17 +47,17 @@ latex_elements = {
     \begin{titlepage}
         \begin{flushleft}
             % Replace 'fh-dortmund-logo.png' with the actual filename of your image.
-            % Adjust 'width=0.4\textwidth' to change the logo's size.
-            \includegraphics[width=0.4\textwidth]{fh-dortmund-logo.png}
+            % Adjust 'width=0.2\textwidth' to change the logo's size.
+            \includegraphics[width=0.2\textwidth]{fh-dortmund-logo.png}
         \end{flushleft}
         \vspace*{2cm}
         \centering
         
-        {\Huge \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
-        \vspace{0.5cm}
+        
         {\Huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
-       
+        {\Huge \textcolor{orange}{Bachelorarbeit} \par}  % <-- Added line
+        \vspace{0.5cm}
 
         \vfill
         {\large Erstprüfer: Prof.\ Dr.\ Jens Rettkowski \par}
@@ -65,7 +65,11 @@ latex_elements = {
         \vspace{1cm}
         {\Large Bakr Aassoul \par}
         \vspace{0.5cm}
+        {\large Matrikelnummer: 7215705 \par}
+        \vspace{1cm}
         {\large \today \par}
+        \vspace{0.5cm}
+        {\large an der Fachhochschule Dortmund \par}
     \end{titlepage}
 
     \clearpage
