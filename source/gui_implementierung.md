@@ -1,4 +1,4 @@
-# GUI-Implementierung
+# GUI-gestützte Prozessorerzeugung
 
 
 ```{raw} latex
