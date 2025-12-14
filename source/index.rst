@@ -8,7 +8,7 @@ Bachelorarbeit – VexRiscv GUI
    einleitung
    grundlagen
    systemarchitektur
-   GUI-Implementierung
+   gui_implementierung
    simulation_verifikation
    Systemintegration und FPGA-Evaluierung
    Zusammenfassung und Ausblick
