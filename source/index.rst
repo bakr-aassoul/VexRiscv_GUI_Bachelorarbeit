@@ -8,7 +8,7 @@ Bachelorarbeit – VexRiscv GUI
    einleitung
    grundlagen
    systemarchitektur
-   GUI-gestützte Prozessorerzeugung
+   GUI-Implementierung
    simulation_verifikation
    Systemintegration und FPGA-Evaluierung
    Zusammenfassung und Ausblick
