@@ -1,4 +1,5 @@
 Diese Bachelorarbeit beschäftigt sich mit der Konfiguration, Simulation und FPGA-basierten Evaluierung eines modularen RISC-V-Prozessors auf Basis des in SpinalHDL entwickelten VexRiscv-Kerns. 
+
 Ziel der Arbeit ist die Entwicklung einer grafischen Benutzeroberfläche (GUI), die über die reine Selektion vorhandener Komponenten hinausgeht: Sie ermöglicht es, den Prozessor durch einen integrierten Code-Generator um anwendungsspezifische Befehlssatzerweiterungen (Custom Instructions) zu ergänzen. 
 Die GUI abstrahiert dabei die Komplexität der zugrunde liegenden Hardwarebeschreibungssprache und transformiert benutzerdefinierte Logik vollautomatisch in synthetisierbaren SpinalHDL-Code. 
 Anwender werden so schrittweise durch den gesamten Entwicklungsprozess geführt, von der Definition eigener Recheneinheiten über die Generierung des Prozessordesigns bis zur Simulation.
