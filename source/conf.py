@@ -63,7 +63,7 @@ latex_elements = {
         
         {\huge \bfseries \textcolor{orange}{Bachelorarbeit} \par}
         \vspace{0.5cm}
-        {\huge \bfseries Konfiguration, Simulation und FPGA-basierte Evaluierung eines modularen Risc-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
+        {\huge \bfseries Konfiguration, Erweiterung und FPGA-basierte Evaluierung eines modularen RISC-V Prozessors mittels einer GUI-gestützten Entwicklungsumgebung \par}
         \vspace{1cm}
         
         \vfill
