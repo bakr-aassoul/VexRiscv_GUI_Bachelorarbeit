@@ -362,11 +362,31 @@ class {name} extends Plugin[VexRiscv] {{
 ```{raw} latex
 \end{minipage}
 ```
-Dieser Ansatz ermöglicht es, beliebige kombinatorische Logik (z. B. rs1 + rs2 oder (rs1 & rs2) ^ rs1) direkt in die CPU-Pipeline zu injizieren, ohne dass der Benutzer Scala beherrschen muss.
+Dieser Generierungsprozess nutzt tiefgreifende Mechanismen des SpinalHDL-Frameworks, um die Hardware zur Kompilierzeit zu modifizieren. Zunächst definiert das Skript ein *instructionPattern* , das dem Decoder mitteilt, welche Bitfolge dem neuen Befehl entspricht. Dabei werden die Operanden-Bits für *rs1*, *rs2* und *rd* maskiert (*-*), während der Opcode und das benutzerdefinierte Suffix fest codiert sind.
+
+Der entscheidende Schritt ist die Interaktion mit dem *DecoderService*. Anstatt den Haupt-Decoder des VexRiscv manuell zu verändern, registriert sich das neue Plugin dynamisch für dieses Bitmuster. Über die Liste der Steuersignale (*values*) wird definiert, wie sich die Pipeline verhalten soll, wenn dieser Opcode erkannt wird:
+
+- *IS_NAME -> True*: Aktiviert das Plugin in der Pipeline.
+
+- *REGFILE_WRITE_VALID -> True*: Signalisiert, dass diese Instruktion ein Ergebnis in das Registerfile zurückschreibt.
+
+- *RS1_USE / RS2_USE -> True*: Weist die Pipeline an, die Quellregister aus der Registerbank zu lesen, bevor die Instruktion die Execute-Stufe erreicht.
+
+Die eigentliche Rechenlogik wird schließlich über *execute plug new Area* direkt in die Execute-Stufe der CPU injiziert. Dies ist ein „Hardware-Injection“-Pattern: Der Scala-Code der *logic_body*-Variable (z. B. *rs1 + rs2*) wird an dieser Stelle als Hardware-Schaltung instanziiert. Das Ergebnis wird auf den *REGFILE_WRITE_DATA*-Pfad gelegt, wodurch es im WriteBack-Stage im Zielregister landet. Durch diesen Aufbau garantiert der Generator, dass die benutzerdefinierte Logik vollzyklisch in die Pipeline integriert ist, ohne Timing-Probleme oder Ressourcenkonflikte mit der Standard-ALU zu verursachen.
 
 ### Generierung der Scala-Topdatei
 
-Die wichtigste Funktion im Backend ist **write_top()**, welche den kompletten VexRiscv-Code erzeugt:
+Die Funktion write_top() fungiert als Orchestrator des Generierungsprozesses. Ihre Aufgabe ist es, die abstrakte Konfiguration aus der Python-Umgebung in eine valide, kompilierbare Scala-Anwendung zu überführen, die anschließend von der SpinalHDL-Toolchain ausgeführt werden kann.
+
+Dieser Prozess verläuft in drei logischen Phasen:
+
+- **Materialisierung der Custom-Instruktionen:** Zunächst iteriert das Backend über alle definierten Custom ALUs. Für jede ALU wird die in Abschnitt 5.5 beschriebene Funktion write_custom_alu_file() aufgerufen, um die logische Definition in eine physische .scala-Quelldatei im Projektverzeichnis zu schreiben. Erst durch diesen Schritt stehen die neuen Klassen dem Build-System zur Verfügung.
+
+- **Aggregation der Komponenten:** Im nächsten Schritt wird die vollständige Liste der CPU-Plugins zusammengestellt. Hierbei werden die Standard-Plugins (basierend auf der Checkbox-Auswahl) und die Konstruktoren der soeben generierten Custom-ALU-Klassen (new MyAlu()) zu einer gemeinsamen Liste vereinigt. Das Backend stellt dabei sicher, dass die Reihenfolge der Plugins den Anforderungen des VexRiscv-Frameworks entspricht.
+
+- **Synthese des Entry-Points:** Abschließend generiert die Funktion den eigentlichen Einstiegspunkt für das Build-System: das Scala-Singleton-Objekt VexRiscvTopFromGui. Diese Datei enthält die main-Methode, welche die VexRiscv-Klasse mit der konfigurierten Plugin-Liste instanziiert und den Aufruf SpinalConfig(...).generateVerilog(...) tätigt.
+
+Durch diesen Ansatz wird die Python-Laufzeitumgebung sauber von der JVM-basierten Hardware-Generierung entkoppelt. Das Python-Skript erzeugt lediglich den Quellcode, während SBT und SpinalHDL im anschließenden Schritt die eigentliche Elaborierung der Schaltung übernehmen.
 
 ```{raw} latex
 \begin{minipage}{\linewidth}
@@ -496,11 +516,17 @@ SpinalConfig(targetDirectory = "{out_dir}" ).generateVerilog {
 \end{minipage}
 ```
 
-Im LiteX-Mode erfolgen mehrere essenzielle Schritte, die für die korrekte Einbindung des Prozessors in die LiteX-Infrastruktur erforderlich sind. Zunächst wird eine feste, vordefinierte Plugin-Kombination (LITEX_FIXED) verwendet, die garantiert mit LiteX kompatibel ist (u. a. mit dem IBusCachedPlugin und dem DBusCachedPlugin). 
-Die freie Plugin-Auswahl der GUI wird in diesem Modus bewusst ignoriert, um eine stabile und reproduzierbare SoC-Integration sicherzustellen. Anschließend wird der Prozessor innerhalb eines cpu.rework { ... }-Blocks nach seiner Konstruktion nochmals strukturell angepasst. 
-Dieser Mechanismus erlaubt es, interne Bus-Schnittstellen umzuleiten oder zusätzliche Signale einzuführen, ohne den ursprünglichen Plugin-Code zu verändern. Für jedes Plugin im cpuConfig wird geprüft, ob es sich um einen Instruktions- oder Datenbus-Plugin handelt. Beim IBusCachedPlugin wird die Schnittstelle p.iBus zunächst mittels setAsDirectionLess() von einer gerichteten Master-Schnittstelle entkoppelt und anschließend über toWishbone() in eine Wishbone-Schnittstelle konvertiert. Diese wird als master(...) deklariert und explizit in iBusWishbone umbenannt. Analog wird beim DBusCachedPlugin die Datenbus-Schnittstelle dBus in einen Wishbone-Master dBusWishbone überführt. Die Namen iBusWishbone und dBusWishbone sind dabei nicht zufällig gewählt, sondern entsprechen den von LiteX erwarteten Wishbone-Master-Signalen, über welche der Prozessor an den Systembus sowie an dessen generische SoC-Komponenten (z. B. Cache, SDRAM-Controller und Peripherie) angebunden wird. 
-Ohne diesen Konvertierungsschritt würde der generierte VexRiscv zwar synthetisierbaren Verilog-Code erzeugen, könnte jedoch nicht ohne Weiteres in ein LiteX-SoC integriert werden, da die Bus-Schnittstellen weder dem Wishbone-Protokoll noch der von LiteX vorausgesetzten Namenskonvention entsprechen. 
-Der LiteX-Mode der GUI stellt somit sicher, dass aus derselben Konfigurationsoberfläche heraus sowohl standalone simulierte CPU-Konfigurationen als auch vollständig LiteX-kompatible SoC-Varianten erzeugt werden können.
+Die Integration des generierten Prozessors in ein LiteX-SoC stellt besondere Anforderungen an die Hardwareschnittstellen, die über die bloße Auswahl von Plugins hinausgehen. Während VexRiscv intern eigene Schnittstellenprotokolle für Instruktions- und Datenbusse verwendet, basiert die LiteX-Systemarchitektur primär auf dem Wishbone-Standard. Damit der VexRiscv-Kern als Master in diesem Bus-System agieren kann, ist eine explizite Adaptierung der Schnittstellen notwendig.
+
+Im LiteX-Mode der GUI wird dieser Prozess automatisiert. Um eine stabile SoC-Integration zu gewährleisten, wird zunächst die freie Plugin-Wahl durch eine vordefinierte, validierte Konfiguration (*LITEX_FIXED*) ersetzt, die unter anderem Caches (Instruction- und Data-Cache) beinhaltet.
+
+Der entscheidende technische Schritt erfolgt jedoch nach der Initialisierung der CPU im sogenannten rework-Block des generierten Scala-Codes. Dieser Mechanismus erlaubt es, die Hardware-Struktur nachträglich zu modifizieren, bevor der Verilog-Code erzeugt wird. Das Backend iteriert dabei über die konfigurierten Plugins und identifiziert die Bus-Schnittstellen:
+
+- **Entkopplung:** Die internen Interfaces (*p.iBus*, *p.dBus*) werden mittels *setAsDirectionLess()* von ihrer ursprünglichen Hierarchie gelöst.
+- **Transformation:** Die Methode *toWishbone()* konvertiert die nativen VexRiscv-Schnittstellen in standardkonforme Wishbone-Signale (Adress-, Daten-, Strobe- und Acknowledge-Leitungen).
+- **Benennung:** LiteX setzt spezifische Signalnamen voraus, um die CPU-Ports automatisch mit dem System-Interconnect verbinden zu können. Daher werden die neuen Wishbone-Master explizit als *iBusWishbone* (für Befehle) und dBusWishbone (für Daten) benannt.
+
+Ohne diesen Transformationsschritt würde der generierte Prozessor zwar intern korrekt arbeiten, besäße jedoch keine kompatiblen Anschlüsse, um mit dem Speichercontroller oder der Peripherie des LiteX-SoCs zu kommunizieren. Der LiteX-Mode stellt somit sicher, dass der generierte Verilog-Kern "Drop-in"-kompatibel für die FPGA-Gesamtsysteme ist.
 
 
 ### Build- und Simulationsablauf
