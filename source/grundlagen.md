@@ -7,8 +7,7 @@
    Dieses Kapitel beschreibt die theoretischen und technischen Grundlagen, auf
    denen die im Rahmen dieser Arbeit entwickelte GUI- und Simulationsumgebung
    basiert.  
-   Dazu gehören die **RISC-V-Architektur**, das **Hardware-Framework SpinalHDL**,
-   sowie der **VexRiscv Prozessor** mit seinem modularen Plugin-System.  
+   Dazu gehören die **RISC-V-Architektur**,das Konzept der **Domain-Specific           Architectures**, das **Hardware-Framework SpinalHDL**, sowie der **VexRiscv         Prozessor** mit seinem modularen Plugin-System.  
    Abschließend werden die genutzten Software-Tools für die Codegenerierung und
    Simulation erläutert.
 
@@ -69,6 +68,10 @@ Sie besteht aus:
    - elementare Operationen wie ADD, SUB, AND, OR, LW, SW, BEQ, JAL usw.
    Die Basis-ISA ist bewusst klein gehalten, um Implementierungen möglichst einfach
    und energieeffizient zu gestalten.
+
+**Abbildung 1: diagram showing the R-Type, I-Type, etc. This proves you understand where the "Opcode" bits are located.**
+
+
 2. **Standarderweiterungen (M, A, F, D, C, V usw.)**
    - Jede Erweiterung ist vollständig optional, wodurch sich RISC-V besser an
    Anwendungsfälle anpassen lässt als viele andere ISAs.
@@ -82,11 +85,32 @@ Sie besteht aus:
    - Der modulare Aufbau ermöglicht Implementierungen mit oder ohne
    Betriebssystem, von Bare-Metal-Systemen bis hin zu Linux-fähigen SoCs.
 
+```{raw} latex
+\clearpage
+```
+### Benutzerdefinierte Erweiterungen (Custom Extensions)
+
+Eine Besonderheit der RISC-V-Spezifikation ist die explizite Reservierung von Opcodes für proprietäre oder experimentelle Erweiterungen. 
+Im 32-Bit-Befehlssatz sind vier Hauptbereiche (Custom-0 bis Custom-3) definiert, die nicht durch Standardinstruktionen belegt werden. 
+Dies ermöglicht es Chip-Designern, spezialisierte Hardware-Beschleuniger (Domain-Specific Accelerators) direkt in die Pipeline zu integrieren und über eigene Opcodes anzusprechen, ohne die Kompatibilität zum Basis-Standard zu verletzen.
+Diese Offenheit ist die theoretische Grundlage für die in dieser Arbeit entwickelte Generierung von Custom ALUs.
+
+
 ---
 ```{raw} latex
 \clearpage
 ```
 
+
+## Domain-Specific Architectures (DSA)
+
+Die Grenzen der Skalierung klassischer General-Purpose-Prozessoren (Moore’s Law) führen zunehmend zum Einsatz von Domain-Specific Architectures (DSA). Hierbei wird die Hardware-Architektur an die spezifischen Anforderungen einer Anwendungsdomäne (z. B. Signalverarbeitung, Kryptografie oder KI) angepasst.
+
+Durch die Implementierung spezialisierter Rechenwerke (Custom Instructions), die häufig benötigte komplexe Operationen in Hardware abbilden, lassen sich signifikante Effizienzgewinne gegenüber einer reinen Softwarelösung erzielen. Der VexRiscv-Prozessor in Kombination mit einem FPGA bietet eine ideale Plattform für das Rapid Prototyping solcher heterogenen Architekturen.
+
+```{raw} latex
+\clearpage
+```
 ## SpinalHDL
 
 SpinalHDL ist eine moderne HDL (Hardwarebeschreibungssprache), die im Jahr 2014 eingeführt wurde und als Domain-Specific Language (DSL) in Scala implementiert ist. Sie bietet die Möglichkeit, digitale Schaltungen zu entwerfen. 
@@ -123,6 +147,8 @@ Diese Plugins können beim Aufbau des Prozessors dynamisch hinzugefügt, entfern
 
 Durch das Plugin-System lässt sich der VexRiscv gezielt an unterschiedliche Anforderungen anpassen, von sehr kleinen, ressourcenschonenden Implementierungen bis hin zu leistungsfähigeren Varianten mit Cache, MMU oder Debug-Schnittstellen.
 Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Grundstruktur des Prozessors zu verändern. Somit entsteht eine hochgradig modulare Mikroarchitektur, deren Umfang und Fähigkeiten präzise steuerbar sind.
+
+**Abbildung 2: VexRiscv Pipeline : a block diagram of the 5-stage pipeline. Crucial: You should ideally edit this image (e.g., in Paint or PowerPoint) to draw an arrow pointing to the "Execute" stage labeled "Plugin Injection". This visually explains your text.**
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
@@ -176,6 +202,16 @@ Diese Vielfalt verdeutlicht die Stärke des VexRiscv-Ansatzes:
 Der Prozessorkern ist kein statisches Design, sondern ein baukastenartiges Framework, das Entwicklungs- und Forschungsprojekte ermöglicht, in denen gezielt einzelne Architekturmerkmale untersucht oder erweitert werden können.
 Durch diese Architektur kann der VexRiscv je nach Anwendungsfall als **minimaler Kern** (nur Basis-Instruktionen, keine Pipeline-Optimierungen, kein Multiplikations-/Divisionsmodul) oder als **leistungsfähiger SoC-Prozessor** mit Cache-Hierarchie, MMU, Interrupt-Controller und Debug-Schnittstelle konfiguriert werden.  
 
+```{raw} latex
+\clearpage
+```
+### Pipeline-Injection und Decoder-Service
+
+Die Modularität des VexRiscv basiert technisch auf dem *Plugin-Interface* von SpinalHDL. Ein Plugin ist dabei nicht nur ein abgeschlossenes Modul, sondern Code, der sich während der Hardware-Generierung in verschiedene Stufen der CPU-Pipeline (Fetch, Decode, Execute, Memory, WriteBack) **einhängen** kann.
+
+Besonders relevant für Erweiterungen ist der DecoderService. Plugins können diesem Service spezifische Bitmuster (Instruktions-Opcodes) übergeben. Erkennt der Decoder zur Laufzeit dieses Muster, aktiviert er automatisch die entsprechenden Steuersignale für das Plugin in der Execute-Stufe. 
+Dieser Mechanismus erlaubt es, neue Recheneinheiten (ALUs) hinzuzufügen, ohne den Kern-Decoder manuell umschreiben zu müssen. Die entwickelte GUI nutzt genau diesen Mechanismus zur automatischen Code-Generierung.
+
 
 ```{raw} latex
 \clearpage
@@ -194,17 +230,16 @@ Damit wird die inhärente Modularität des VexRiscv nicht nur sichtbar, sondern 
 
 Im Rahmen dieser Arbeit kamen mehrere Tools zum Einsatz, die für den Build, Simulation und Analyseprozess eines konfigurierbaren VexRiscv-Kerns notwendig sind. Diese Werkzeuge bilden die Grundlage für den Entwicklungsworkflow der GUI sowie für die Validierung des generierten Prozessordesigns.
 
+**Abbildung 3 : Toolchain Flow (Figure 2.3): A simple diagram showing: SpinalHDL -> Verilog -> Verilator -> GTKWave.**
+
 ### Scala Build Tool (SBT)
 
-Das **Scala Build Tool (SBT)** ist das Standard-Buildsystem für Scala-Projekte und wird von SpinalHDL genutzt, um:
-- den SpinalHDL-Code zu kompilieren,
-- Plugin-Konfigurationen zu laden,
-- den VexRiscv-Codegenerator auszuführen,
-- Verilog- oder VHDL-Dateien zu erzeugen.
+Das **Scala Build Tool (SBT)** ist das Standard-Buildsystem für Scala-Projekte. 
+Es wird genutzt, um den SpinalHDL-Code zu kompilieren und den VexRiscv-Codegenerator auszuführen, der letztlich den Verilog-Code erzeugt.
 
 ### Verilator
 
-Verilator ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten C++-Code übersetzt und als ausführbares Programm simuliert.
+**Verilator** ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten C++-Code übersetzt und als ausführbares Programm simuliert.
 Im Gegensatz zu klassischen eventbasierten Simulatoren arbeitet Verilator mit einem statischen Zeitschritt-Modell, was deutlich höhere Simulationsgeschwindigkeit ermöglicht.
 In dieser Arbeit wird Verilator genutzt, um den mit SpinalHDL erzeugten Verilog-Code zu simulieren und Korrektheitstests in Kombination mit LiteX oder eigenständigen Testbenches auszuführen.
 
@@ -259,6 +294,8 @@ Die wichtigsten Aufgaben von Vivado in dieser Arbeit sind:
 Vivado bildet damit den letzten Schritt im Hardware-Workflow:
 Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Verilator/GTKWave) erfolgt über Vivado die physische Implementierung auf dem FPGA.
 
+
+
 # Verwendete Hardwareplattform
 ```{raw} latex
 \large
@@ -281,33 +318,41 @@ Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in 
 
 Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
 
-Der Chip kombiniert:
+**Abbildung 4 : Foto des Boards**
 
-- einen Dual-Core ARM Cortex-A9 (Processing System, PS),
-- ein Artix-7 FPGA-Fabric (Programmable Logic, PL).
+### Zynq-Architektur (PS und PL)
+Der Zynq-Chip vereint zwei Welten auf einem Die:
 
-Damit eignet sich das Board sowohl für klassische FPGA-Designs als auch für heterogene Systeme, in denen Software und Hardware eng miteinander interagieren.
+- **Processing System (PS):** Ein Dual-Core ARM Cortex-A9 Prozessor, der typischerweise ein Betriebssystem (Linux) ausführt.
+- **Programmable Logic (PL):** Ein Artix-7 basierter FPGA-Bereich, in dem benutzerdefinierte digitale Schaltungen realisiert werden können.
 
-Für diese Arbeit wurde das Pynq-Z1 genutzt, um den durch die GUI generierten VexRiscv-Core in der programmierbaren Logik (PL) zu implementieren.
-Das Board bietet dafür:
+Für diese Arbeit ist primär die Programmable Logic (PL) von Bedeutung. Der generierte VexRiscv-Prozessor wird als *Soft-Core* vollständig in diesen FPGA-Bereich synthetisiert.
+Das PS dient dabei lediglich zur Stromversorgung und Konfiguration oder wird ( je nach LiteX-Setup ) komplett umgangen.
 
-- ausreichend logische Ressourcen für RISC-V-Kerne,
-- mehrere PMOD-Schnittstellen für Peripherie,
-- integrierte Taktquellen,
-- UART, LEDs, Schalter und Speicher.
+**Abbildung 5: (Fügen Sie hier das Blockschaltbild des Zynq-7000 ein)**
 
-Die Implementierung auf einem realen FPGA ermöglicht es, den generierten Kern nicht nur zu simulieren, sondern auch unter realen Betriebsbedingungen zu testen.
+### Verfügbare Ressourcen
 
-## UART-PMOD Modul
+Der XC7Z020-Chip bietet ausreichende Ressourcen, um auch komplexe VexRiscv-Konfigurationen (z. B. mit Caches, Multipliern und Custom ALUs) zu implementieren. Die wichtigsten Kenndaten sind:
 
-Für die serielle Kommunikation mit dem Prozessor wurde ein UART-PMOD verwendet.
-Dieses Modul wird typischerweise über eine der PMOD-Schnittstellen des Pynq-Z1 angeschlossen und stellt einen einfach nutzbaren UART-Transceiver bereit.
+- Logic Cells: 85.000
+- Look-Up Tables (LUTs): 53.200
+- Flip-Flops: 106.400
+- Block RAM: 4,9 Mbit (wichtig für den internen Speicher des VexRiscv)
+- DSP Slices: 220 (wichtig für mathematische Custom Instructions)
 
-**Hauptfunktionen:**
+Diese Ressourcen bieten genügend Spielraum, um neben dem Standard-Prozessor auch umfangreiche benutzerdefinierte Logik-Erweiterungen zu platzieren, ohne in Platzprobleme (Fitting Issues) zu geraten
 
-- serielle Übertragung über RX/TX-Leitungen,
-- Kommunikation mit dem Host-PC (z. B. über USB-Seriell-Adapter),
-- Debugging und Konsolenausgabe des RISC-V-Kerns,
-- Übertragung kleiner Testprogramme oder Statusmeldungen.
+## Peripherieanbindung (UART-PMOD)
 
-In Kombination mit LiteX oder einer eigenen SoC-Top-Level-Beschreibung dient der UART-PMOD als Standard-Interface, um den generierten Kern in Betrieb zu nehmen und sein Verhalten zu beobachten.
+Die Kommunikation zwischen dem VexRiscv-Softcore und dem Entwickler-PC erfolgt über eine serielle Schnittstelle. Da die internen UART-Pins des Pynq-Boards hardwareseitig fest mit dem ARM-Prozessor (PS) verbunden sind, wurde für den VexRiscv ein dediziertes UART-PMOD-Modul verwendet.
+
+Dieses Modul wird an einen der PMOD-Ports (Peripheral Module Interface) des Boards angeschlossen und direkt mit den generierten IO-Pins des VexRiscv in der Programmable Logic (PL) verdrahtet.
+
+**Funktion im System:**
+
+- Terminal-Ausgabe (RX): Nach dem Laden des Bitstreams über Vivado dient das Modul als Standard-Ausgabekanal (stdout). Hier werden Systemmeldungen, Ergebnisse der Custom-ALU-Berechnungen oder *printf*-Ausgaben der C-Software angezeigt.
+- Benutzer-Interaktion (TX): Über die Sende-Leitung können zur Laufzeit Eingaben an den Prozessor gesendet werden, um beispielsweise verschiedene Testmodi zu starten oder Parameter für die Custom Instructions dynamisch zu verändern.
+- Debugging: Das Terminal ermöglicht eine direkte Überwachung des Programmablaufs in Echtzeit, was die Fehlersuche bei der Integration neuer Instruktionen erheblich erleichtert.
+
+Die Verwendung des externen PMODs gewährleistet somit eine saubere physikalische Trennung: Die Konfiguration des FPGAs erfolgt über JTAG (Vivado), während die operative Kommunikation mit dem Soft-Core exklusiv über den UART-PMOD läuft.
