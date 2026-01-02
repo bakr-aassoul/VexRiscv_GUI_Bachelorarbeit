@@ -461,12 +461,6 @@ object VexRiscvTopFromGui {{
 ```{raw} latex
 \end{minipage}
 ```
-Hier passiert Folgendes:
-
-- Die ausgewählten Plugins werden in echte Scala-Klassen umgewandelt
-- Eine komplette Datei **VexRiscvTopFromGui.scala** wird generiert
-- Diese Datei enthält eine sofort lauffähige **generateVerilog()**-Instruktion
-- SpinalHDL übersetzt später genau diese Datei in Verilog
 
 ```{raw} latex
 \clearpage
