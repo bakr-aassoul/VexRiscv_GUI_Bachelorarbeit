@@ -304,48 +304,40 @@ Dies erfolgt über eine Template-basierte Codegenerierung im Backend. Die Funkti
 
 ```{code-block} python
 :linenos:
-:caption: Generierung der Custom-ALU-Klasse (gui_backend.py)
+:caption: Generierung der Custom-ALU-Klasse (gekürzt)
 
-def write_custom_alu_file(name: str, opcode_suffix: str, logic_body: str):
-    # Template für ein VexRiscv-Plugin
+def write_custom_alu_file(name: str, opcode_suffix: str, 
+                          logic_body: str):
+    # Template für ein VexRiscv-Plugin (Importe gekürzt)
     scala_code = f"""
 package vexriscv.demo
-import spinal.core._
-import spinal.lib._
-import vexriscv._
-import vexriscv.plugin._
+// ... (Importe: spinal.core, vexriscv, etc.) ...
 
 class {name} extends Plugin[VexRiscv] {{
   object IS_{name.upper()} extends Stageable(Bool)
 
   override def setup(pipeline: VexRiscv): Unit = {{
     import pipeline.config._
-    // Opcode pattern: 0000000----------000-----{opcode_suffix}
     val instructionPattern = M"0000000----------000-----{opcode_suffix}"
-    val decoderService = pipeline.service(classOf[DecoderService])
 
-    decoderService.add(
+    pipeline.service(classOf[DecoderService]).add(
       key = instructionPattern,
       values = List(
         IS_{name.upper()}        -> True,
         REGFILE_WRITE_VALID      -> True,
-        BYPASSABLE_EXECUTE_STAGE -> True,
-        BYPASSABLE_MEMORY_STAGE  -> True,
-        RS1_USE                  -> True,
-        RS2_USE                  -> True
+        // ... (Weitere Signale: RS1_USE, RS2_USE, etc.)
       )
     )
   }}
 
   override def build(pipeline: VexRiscv): Unit = {{
-      import pipeline._
-      import pipeline.config._
+      import pipeline._; import pipeline.config._
       execute plug new Area {{
           import execute._
-          val rs1 = input(RS1)
-          val rs2 = input(RS2)
+          val rs1 = input(RS1); val rs2 = input(RS2)
+          
           // Injection der User-Logik
-          {indented_logic}
+          {logic_body}
           
           when(input(IS_{name.upper()})) {{
              output(REGFILE_WRITE_DATA) := result.asBits
@@ -354,7 +346,6 @@ class {name} extends Plugin[VexRiscv] {{
   }}
 }}
 """
-    # Schreiben der Datei in das Source-Verzeichnis
     with open(filename, "w") as f:
         f.write(scala_code)
 ```
@@ -396,66 +387,51 @@ Durch diesen Ansatz wird die Python-Laufzeitumgebung sauber von der JVM-basierte
 :linenos:
 :caption: Dynamische Top-Level-Generierung
 
-def write_top(selected_plugins, litex_mode: bool):
-    cfg = load_config()
-    custom_instances = cfg.get("custom_instances", [])
-    custom_alus = cfg.get("custom_alus", [])
+:linenos:
+:caption: Generierung der Custom-ALU-Klasse (gekürzt)
 
-    # 1. Generiere alle Custom-ALU Dateien
-    custom_alu_constructors = []
-    for alu in custom_alus:
-        name = alu.get("name")
-        opcode = alu.get("opcode")
-        logic = alu.get("logic")
-        if name and opcode and logic:
-            write_custom_alu_file(name, opcode, logic)
-            custom_alu_constructors.append(f"new {name}()")
-...
-
-    if not litex_mode:
-
-...
-    # 2. Kombiniere Standard- und Custom-Plugins
-    ordered_keys = order_plugins(list(by_class.keys()))
-    standard_plugin_lines = [by_class[p] for p in ordered_keys]
-
-    all_plugin_lines = standard_plugin_lines + custom_alu_constructors
-    full_plugin_list_str = ",\n      ".join(all_plugin_lines)
-
-
-    body = f"""\
-val cpuConfig = VexRiscvConfig(plugins = List(
-   {full_plugin_list_str}
-))
-
-SpinalConfig(targetDirectory = "{out_dir}").generateVerilog(
-  new VexRiscv(cpuConfig)
-)
-"""
-    else:
-   # LiteX-Mode und Wishbone-Busanbindung
-        body=...
-...
-
-    # 3. Erzeuge den Scala-Code
-    scala = f"""
+def write_custom_alu_file(name: str, opcode_suffix: str, 
+                          logic_body: str):
+    # Template für ein VexRiscv-Plugin (Importe gekürzt)
+    scala_code = f"""
 package vexriscv.demo
+// ... (Importe: spinal.core, vexriscv, etc.) ...
 
-import vexriscv._
-import vexriscv.plugin._
-import spinal.core._
-import spinal.lib._
-import vexriscv.ip.{{InstructionCacheConfig, DataCacheConfig}}
+class {name} extends Plugin[VexRiscv] {{
+  object IS_{name.upper()} extends Stageable(Bool)
 
-object VexRiscvTopFromGui {{
-  def main(args: Array[String]) {{
-{body}
+  override def setup(pipeline: VexRiscv): Unit = {{
+    import pipeline.config._
+    val instructionPattern = M"0000000----------000-----{opcode_suffix}"
+
+    pipeline.service(classOf[DecoderService]).add(
+      key = instructionPattern,
+      values = List(
+        IS_{name.upper()}        -> True,
+        REGFILE_WRITE_VALID      -> True,
+        // ... (Weitere Signale: RS1_USE, RS2_USE, etc.)
+      )
+    )
+  }}
+
+  override def build(pipeline: VexRiscv): Unit = {{
+      import pipeline._; import pipeline.config._
+      execute plug new Area {{
+          import execute._
+          val rs1 = input(RS1); val rs2 = input(RS2)
+          
+          // Injection der User-Logik
+          {logic_body}
+          
+          when(input(IS_{name.upper()})) {{
+             output(REGFILE_WRITE_DATA) := result.asBits
+          }}
+      }}
   }}
 }}
 """
-    with open(LAUNCHER, "w") as f:
-        f.write(scala)
-
+    with open(filename, "w") as f:
+        f.write(scala_code)
 ```
 
 ```{raw} latex
