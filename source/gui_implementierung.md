@@ -49,6 +49,7 @@ Der folgende Auszug zeigt, wie die GUI zu Beginn die gespeicherten Einstellungen
 :caption: Laden der Konfiguration im Frontend
 
 import gui_backend as be
+from plugin_registry import PLUGIN_PARAM_REGISTRY
 cfg = be.load_config()  # Plugins, Custom-ALUs,
 # Instanzen, Auto-Complete, LiteX-Mode
 ```
@@ -58,6 +59,7 @@ cfg = be.load_config()  # Plugins, Custom-ALUs,
 ```
 
 **Dynamische Plugin-Konfiguration**
+
 Die Plugin-Auswahl wird dynamisch aus einer Liste erzeugt. Jede Option wird an eine BooleanVar gebunden, sodass die GUI später den Zustand aller Checkboxen auslesen kann:
 
 ```{raw} latex
@@ -85,6 +87,7 @@ Dieser Code zeigt, wie die GUI den Nutzerentscheid direkt in Python-Variablen ab
 Der Auto-Complete-Mechanismus ergänzt fehlende Pflicht-Plugins und stellt sicher, dass ausschließlich architektonisch gültige CPU-Konfigurationen erzeugt werden.
 
 **Thread-sichere Laufzeitprotokollierung**
+
 Der Log-Bereich wird als Textfeld implementiert. Die Methode append_log() fügt neue Nachrichten hinzu und hält den Scrollbereich immer am Ende:
 
 ```{raw} latex
@@ -129,7 +132,8 @@ def run_in_thread(fn):
         try:
             with io.StringIO() as buf, contextlib.redirect_stdout(buf):
                 fn()
-                append_log(buf.getvalue() or "[done]\n")
+                out = buf.getvalue()
+            append_log(out if out else "[done]\n")
         except Exception as e:
             append_log(repr(e) + "\n")
             messagebox.showerror("Error", repr(e))
@@ -203,6 +207,55 @@ plugins = List(
 ```{raw} latex
 \end{minipage}
 ```
+
+### Parametrierbare Plugin-Instanzen (plugin_registry.py)
+
+Neben der reinen Ein-/Auswahl über Checkboxen unterstützt das System parametrisierbare Plugin-Instanzen. Hierzu wird eine separate Registry verwendet, die den Aufbau der Parameter beschreibt:
+
+```{raw} latex
+\begin{minipage}{\linewidth}
+```
+
+```{code-block} python
+:linenos:
+:caption: Parametrisierung über plugin\_registry.py
+
+from dataclasses import dataclass
+from typing import Any, Optional, List, Dict
+
+@dataclass(frozen=True)
+class ParamSpec:
+    typ: str                 # "bool", "int", "hex_long", "enum", "string", "null"
+    default: Any = None
+    allowed: Optional[List[str]] = None   # für Enums
+    nullable: bool = False
+    min: Optional[int] = None
+    max: Optional[int] = None
+
+PLUGIN_PARAM_REGISTRY: Dict[str, Dict[str, ParamSpec]] = {
+    "IBusSimplePlugin": {
+        "resetVector": ParamSpec("hex_long", default="0x00000000l"),
+        "cmdForkOnSecondStage": ParamSpec("bool", default=False),
+        # weitere Parameter ...
+    },
+    "BranchPlugin": {
+        "earlyBranch": ParamSpec("bool", default=True),
+        "catchAddressMisaligned": ParamSpec("bool", default=False),
+    },
+    # weitere Plugins ...
+}
+```
+
+```{raw} latex
+\end{minipage}
+```
+
+Im Frontend wird auf Basis dieser Registry dynamisch ein Formular aufgebaut („Custom plugin instances (normal mode)“), in dem der Benutzer für eine gewählte Plugin-Klasse konkrete Parameterwerte festlegen kann. Diese Instanzen werden als *custom_instances* in der Konfiguration gespeichert und von *write_top()* später in konkrete Scala-Konstruktoren übersetzt.
+
+```{raw} latex
+\clearpage
+```
+
 ### Konfigurationsverwaltung
 Ein weiteres zentrales Snippet ist die Konfigurationsverwaltung:
 
@@ -269,13 +322,15 @@ class {name} extends Plugin[VexRiscv] {{
     import pipeline.config._
     // Opcode pattern: 0000000----------000-----{opcode_suffix}
     val instructionPattern = M"0000000----------000-----{opcode_suffix}"
+    val decoderService = pipeline.service(classOf[DecoderService])
 
-    pipeline.service(classOf[DecoderService]).add(
+    decoderService.add(
       key = instructionPattern,
       values = List(
         IS_{name.upper()}        -> True,
         REGFILE_WRITE_VALID      -> True,
         BYPASSABLE_EXECUTE_STAGE -> True,
+        BYPASSABLE_MEMORY_STAGE  -> True,
         RS1_USE                  -> True,
         RS2_USE                  -> True
       )
@@ -290,7 +345,7 @@ class {name} extends Plugin[VexRiscv] {{
           val rs1 = input(RS1)
           val rs2 = input(RS2)
           // Injection der User-Logik
-          {logic_body}
+          {indented_logic}
           
           when(input(IS_{name.upper()})) {{
              output(REGFILE_WRITE_DATA) := result.asBits
@@ -322,29 +377,60 @@ Die wichtigste Funktion im Backend ist **write_top()**, welche den kompletten Ve
 :caption: Dynamische Top-Level-Generierung
 
 def write_top(selected_plugins, litex_mode: bool):
+    cfg = load_config()
+    custom_instances = cfg.get("custom_instances", [])
+    custom_alus = cfg.get("custom_alus", [])
+
     # 1. Generiere alle Custom-ALU Dateien
     custom_alu_constructors = []
     for alu in custom_alus:
-        write_custom_alu_file(alu["name"], alu["opcode"], alu["logic"])
-        custom_alu_constructors.append(f"new {alu['name']}()")
+        name = alu.get("name")
+        opcode = alu.get("opcode")
+        logic = alu.get("logic")
+        if name and opcode and logic:
+            write_custom_alu_file(name, opcode, logic)
+            custom_alu_constructors.append(f"new {name}()")
+
+...
 
     # 2. Kombiniere Standard- und Custom-Plugins
-    standard_plugin_lines = [PLUGIN_CTORS[p] for p in selected_plugins]
+    ordered_keys = order_plugins(list(by_class.keys()))
+    standard_plugin_lines = [by_class[p] for p in ordered_keys]
+
     all_plugin_lines = standard_plugin_lines + custom_alu_constructors
-    
     full_plugin_list_str = ",\n      ".join(all_plugin_lines)
+
+
+    body = f"""\
+val cpuConfig = VexRiscvConfig(plugins = List(
+   {full_plugin_list_str}
+))
+
+SpinalConfig(targetDirectory = "{out_dir}").generateVerilog(
+  new VexRiscv(cpuConfig)
+)
+"""
+   else:
+   # LiteX-Mode und Wishbone-Busanbindung
+        body=...
+...
 
     # 3. Erzeuge den Scala-Code
     scala = f"""
-    object VexRiscvTopFromGui {{
-      def main(args: Array[String]) {{
-        val cpuConfig = VexRiscvConfig(plugins = List(
-            {full_plugin_list_str}
-        ))
-        SpinalConfig(...).generateVerilog(new VexRiscv(cpuConfig))
-      }}
-    }}
-    """
+package vexriscv.demo
+
+import vexriscv._
+import vexriscv.plugin._
+import spinal.core._
+import spinal.lib._
+import vexriscv.ip.{{InstructionCacheConfig, DataCacheConfig}}
+
+object VexRiscvTopFromGui {{
+  def main(args: Array[String]) {{
+{body}
+  }}
+}}
+"""
     with open(LAUNCHER, "w") as f:
         f.write(scala)
 
@@ -363,6 +449,61 @@ Hier passiert Folgendes:
 ```{raw} latex
 \clearpage
 ```
+### LiteX-Mode und Wishbone-Busanbindung
+
+Für die Integration des erzeugten Prozessors in ein LiteX-SoC reicht es nicht aus, lediglich eine feste, kompatible Plugin-Liste zu verwenden. LiteX basiert intern auf einem Wishbone-Bus, während die VexRiscv-Plugins ihre eigenen Bus-Schnittstellen (z. B. `iBus` und `dBus`) bereitstellen. Damit LiteX den Prozessor als Wishbone-Master einbinden kann, müssen diese internen Busse in Wishbone-Interfaces konvertiert und entsprechend benannt werden.
+
+Genau dies geschieht im LiteX-Mode im Rahmen eines `rework`-Blocks im generierten Scala-Code:
+```{raw} latex
+\begin{minipage}{\linewidth}
+```
+
+```{code-block} python
+:linenos:
+:caption: Wishbone-Anbindung im LiteX-Mode (Scala)
+else:
+     body = f"""\
+SpinalConfig(targetDirectory = "out_dir" ).generateVerilog {
+  val cpuConfig = VexRiscvConfig(plugins = List(
+    /* LITEX\_FIXED Pluginliste, u. a. IBusCachedPlugin, DBusCachedPlugin */
+  ))
+
+  val cpu = new VexRiscv(cpuConfig)
+
+  cpu.rework {
+    for (p <- cpuConfig.plugins) p match {
+      case p: IBusCachedPlugin =>
+        p.iBus.setAsDirectionLess()
+        master(p.iBus.toWishbone()).setName("iBusWishbone")
+
+      case p: DBusCachedPlugin =>
+        p.dBus.setAsDirectionLess()
+        master(p.dBus.toWishbone()).setName("dBusWishbone")
+
+      case _ =>
+    }
+  }
+
+  cpu
+}
+"""
+
+```
+
+```{raw} latex
+\end{minipage}
+```
+Sure — here is the text rewritten as a continuous, formal paragraph while preserving all technical meaning:
+
+⸻
+
+Im LiteX-Mode erfolgen mehrere essenzielle Schritte, die für die korrekte Einbindung des Prozessors in die LiteX-Infrastruktur erforderlich sind. Zunächst wird eine feste, vordefinierte Plugin-Kombination (LITEX_FIXED) verwendet, die garantiert mit LiteX kompatibel ist (u. a. mit dem IBusCachedPlugin und dem DBusCachedPlugin). 
+Die freie Plugin-Auswahl der GUI wird in diesem Modus bewusst ignoriert, um eine stabile und reproduzierbare SoC-Integration sicherzustellen. Anschließend wird der Prozessor innerhalb eines cpu.rework { ... }-Blocks nach seiner Konstruktion nochmals strukturell angepasst. 
+Dieser Mechanismus erlaubt es, interne Bus-Schnittstellen umzuleiten oder zusätzliche Signale einzuführen, ohne den ursprünglichen Plugin-Code zu verändern. Für jedes Plugin im cpuConfig wird geprüft, ob es sich um einen Instruktions- oder Datenbus-Plugin handelt. Beim IBusCachedPlugin wird die Schnittstelle p.iBus zunächst mittels setAsDirectionLess() von einer gerichteten Master-Schnittstelle entkoppelt und anschließend über toWishbone() in eine Wishbone-Schnittstelle konvertiert. Diese wird als master(...) deklariert und explizit in iBusWishbone umbenannt. Analog wird beim DBusCachedPlugin die Datenbus-Schnittstelle dBus in einen Wishbone-Master dBusWishbone überführt. Die Namen iBusWishbone und dBusWishbone sind dabei nicht zufällig gewählt, sondern entsprechen den von LiteX erwarteten Wishbone-Master-Signalen, über welche der Prozessor an den Systembus sowie an dessen generische SoC-Komponenten (z. B. Cache, SDRAM-Controller und Peripherie) angebunden wird. 
+Ohne diesen Konvertierungsschritt würde der generierte VexRiscv zwar synthetisierbaren Verilog-Code erzeugen, könnte jedoch nicht ohne Weiteres in ein LiteX-SoC integriert werden, da die Bus-Schnittstellen weder dem Wishbone-Protokoll noch der von LiteX vorausgesetzten Namenskonvention entsprechen. 
+Der LiteX-Mode der GUI stellt somit sicher, dass aus derselben Konfigurationsoberfläche heraus sowohl standalone simulierte CPU-Konfigurationen als auch vollständig LiteX-kompatible SoC-Varianten erzeugt werden können.
+
+
 ### Build- und Simulationsablauf
 
 Die Funktion generate() steuert den gesamten Buildprozess:
@@ -376,10 +517,13 @@ Die Funktion generate() steuert den gesamten Buildprozess:
 :caption: Starten der Codegenerierung
 
 def generate():
+    _, verilog, _ = get_paths()
     selected = read_selected()
     cfg = load_config()
+    litex_mode = cfg.get("litex_mode", False)
     write_top(selected, cfg["litex_mode"])
-    run('sbt "runMain vexriscv.demo.VexRiscvTopFromGui"', cwd=ROOT)
+    run('sbt "runMain vexriscv.demo.VexRiscvTopFromGui"', cwd=ROOT
+    run(f'ls -lh "{verilog}"')
 ```
 
 ```{raw} latex
