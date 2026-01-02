@@ -390,9 +390,11 @@ def write_top(selected_plugins, litex_mode: bool):
         if name and opcode and logic:
             write_custom_alu_file(name, opcode, logic)
             custom_alu_constructors.append(f"new {name}()")
-
 ...
 
+    if not litex_mode:
+
+...
     # 2. Kombiniere Standard- und Custom-Plugins
     ordered_keys = order_plugins(list(by_class.keys()))
     standard_plugin_lines = [by_class[p] for p in ordered_keys]
@@ -410,7 +412,7 @@ SpinalConfig(targetDirectory = "{out_dir}").generateVerilog(
   new VexRiscv(cpuConfig)
 )
 """
-   else:
+    else:
    # LiteX-Mode und Wishbone-Busanbindung
         body=...
 ...
@@ -463,7 +465,7 @@ Genau dies geschieht im LiteX-Mode im Rahmen eines `rework`-Blocks im generierte
 :caption: Wishbone-Anbindung im LiteX-Mode (Scala)
 else:
      body = f"""\
-SpinalConfig(targetDirectory = "out_dir" ).generateVerilog {
+SpinalConfig(targetDirectory = "{out_dir}" ).generateVerilog {
   val cpuConfig = VexRiscvConfig(plugins = List(
     /* LITEX\_FIXED Pluginliste, u. a. IBusCachedPlugin, DBusCachedPlugin */
   ))
@@ -493,9 +495,6 @@ SpinalConfig(targetDirectory = "out_dir" ).generateVerilog {
 ```{raw} latex
 \end{minipage}
 ```
-Sure — here is the text rewritten as a continuous, formal paragraph while preserving all technical meaning:
-
-⸻
 
 Im LiteX-Mode erfolgen mehrere essenzielle Schritte, die für die korrekte Einbindung des Prozessors in die LiteX-Infrastruktur erforderlich sind. Zunächst wird eine feste, vordefinierte Plugin-Kombination (LITEX_FIXED) verwendet, die garantiert mit LiteX kompatibel ist (u. a. mit dem IBusCachedPlugin und dem DBusCachedPlugin). 
 Die freie Plugin-Auswahl der GUI wird in diesem Modus bewusst ignoriert, um eine stabile und reproduzierbare SoC-Integration sicherzustellen. Anschließend wird der Prozessor innerhalb eines cpu.rework { ... }-Blocks nach seiner Konstruktion nochmals strukturell angepasst. 
@@ -522,7 +521,7 @@ def generate():
     cfg = load_config()
     litex_mode = cfg.get("litex_mode", False)
     write_top(selected, cfg["litex_mode"])
-    run('sbt "runMain vexriscv.demo.VexRiscvTopFromGui"', cwd=ROOT
+    run('sbt "runMain vexriscv.demo.VexRiscvTopFromGui"', cwd=ROOT)
     run(f'ls -lh "{verilog}"')
 ```
 
@@ -584,7 +583,7 @@ Damit bildet das Backend die gesamte technische Toolchain ab:
 - Scala-Generierung
 - SBT-Kompilierung
 - Verilog-Übersetzung
-- Simulation mit verilaor
+- Simulation mit verilator
 - Wellenform-Analyse mit GTKWave
 
 ```{raw} latex
