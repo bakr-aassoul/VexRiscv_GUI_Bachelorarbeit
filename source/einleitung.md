@@ -31,9 +31,6 @@ Die entwickelte GUI soll insbesondere Studierenden und Forschern den Einstieg in
 
 Darüber hinaus umfasst die Arbeit eine FPGA-basierte Evaluierung der generierten Prozessorkonfigurationen, um deren Funktionsfähigkeit und Effizienz unter realen Hardwarebedingungen zu überprüfen.
 
-```{raw} latex
-\clearpage
-```
 
 ## Vorgehensweise
 
