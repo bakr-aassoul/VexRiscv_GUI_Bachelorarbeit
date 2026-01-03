@@ -63,9 +63,7 @@ In der FPGA-Fabric laufen der konfigurierte VexRiscv-Prozessor und die LiteX-SoC
 
 Für die Interaktion mit dem System wird ein UART-PMOD an eine PMOD-Schnittstelle des Pynq-Z1 angeschlossen. Über diese serielle Schnittstelle können Bootmeldungen, Debug-Ausgaben und Testergebnisse an einen Host-PC übertragen werden (RX). Gleichzeitig erlaubt der Sendekanal (TX) die Laufzeit-Interaktion mit dem Prozessor, etwa um Parameter zu ändern oder Testroutinen zu starten, während die Hardware läuft. Die Kombination aus grafischer Konfiguration, automatisierter Hardwaregenerierung, LiteX-SoC und UART-basierter Kommunikation bildet damit eine vollständige Umgebung zur systematischen Evaluierung unterschiedlicher Prozessorvarianten.
 
-```{raw} latex
-\clearpage
-```
+
 
 ## Zusammenfassung des Workflows
 
