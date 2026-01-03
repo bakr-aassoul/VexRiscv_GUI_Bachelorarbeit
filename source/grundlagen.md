@@ -14,7 +14,6 @@
 ```{raw} latex
 \clearpage
 ```
----
 
 ```{raw} latex
 \normalsize
@@ -37,12 +36,9 @@ Typische Eigenschaften sind:
 - ein einfacher, gleichmäßiger Befehlspfad.
    
 Dadurch wird ein effizienter Pipeline-Aufbau und eine klare Trennung zwischen **Fetch**, **Decode**, **Execute**, **Memory** und **Write-Back** ermöglicht.
-
 Durch die geringe Komplexität der Basisinstruktionen lassen sich RISC-V-Prozessoren in sehr unterschiedlichen Leistungs- und Energieklassen realisieren von kleinen Mikrocontrollern bis hin zu High-Performance-Kernen.
-
-Die Grundmenge des RISC-V-Befehlssatzes, **RV32I**,  
-enthält alle Basisoperationen für arithmetische, logische und Speicherbefehle.  
-Darauf aufbauend existieren optionale Erweiterungen,z. B:
+Die Grundmenge des RISC-V-Befehlssatzes, **RV32I**, enthält alle Basisoperationen für arithmetische, logische und Speicherbefehle.  
+Darauf aufbauend existieren optionale Erweiterungen, z.B:
 
 - Multiplikation und Division (M-Extension),  
 - Atomare Operationen (A),
@@ -96,11 +92,6 @@ Dies ermöglicht es Chip-Designern, spezialisierte Hardware-Beschleuniger (Domai
 Diese Offenheit ist die theoretische Grundlage für die in dieser Arbeit entwickelte Generierung von Custom ALUs.
 
 
----
-```{raw} latex
-\clearpage
-```
-
 
 ## Domain-Specific Architectures (DSA)
 
@@ -138,9 +129,7 @@ Ein bekanntes Beispiel hierfür ist der **VexRiscv-Prozessor**, der vollständig
 
 Der **VexRiscv** ist ein in SpinalHDL geschriebener, **konfigurierbarer RISC-V-Prozessor**, der sich durch seine modulare Struktur und flexible Architektur auszeichnet.  
 Er wird in zahlreichen Forschungs- und Lehrprojekten eingesetzt und dient als Referenzdesign für anpassbare RISC-V-Kerne.
-
-Das Besondere am VexRiscv ist sein **Plugin-System**.  
-Jede Funktionseinheit (z. B. ALU, Branch-Unit, CSR-Verwaltung oder Speicherinterface) wird als separates Plugin implementiert.  
+Das Besondere am VexRiscv ist sein **Plugin-System**. Jede Funktionseinheit (z. B. ALU, Branch-Unit, CSR-Verwaltung oder Speicherinterface) wird als separates Plugin implementiert.  
 Diese Plugins können beim Aufbau des Prozessors dynamisch hinzugefügt, entfernt oder parametrisiert werden.  
 
 ### Plugins im VexRiscv
@@ -176,9 +165,6 @@ In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelement
 Diese Plugin-Auswahl entspricht einem kompakten, aber voll funktionsfähigen Single-Issue-RISC-V-Kern, der sich besonders für eingebettete Systeme und FPGA-basierte Demonstratoren eignet.
 Da keine Cache- oder MMU-Plugins integriert sind, erfolgt jeder Speicherzugriff direkt über die einfachen Bus-Interfaces. Dies vereinfacht sowohl die Hardwarestruktur als auch die spätere Integration in LiteX.
 
-```{raw} latex
-\clearpage
-```
 
 Neben dieser minimalistischen Variante existieren in der VexRiscv-Ökosystem zahlreiche optionale Plugins, wie sie etwa in LiteX-SoCs eingesetzt werden können. Beispiele hierfür sind:
 
@@ -213,9 +199,7 @@ Besonders relevant für Erweiterungen ist der DecoderService. Plugins können di
 Dieser Mechanismus erlaubt es, neue Recheneinheiten (ALUs) hinzuzufügen, ohne den Kern-Decoder manuell umschreiben zu müssen. Die entwickelte GUI nutzt genau diesen Mechanismus zur automatischen Code-Generierung.
 
 
-```{raw} latex
-\clearpage
-```
+
 
 Die in dieser Arbeit entwickelte GUI automatisiert genau diesen Konfigurationsprozess.
 Anstatt die einzelnen Plugins manuell im Scala/SpinalHDL-Code zusammenzustellen, ermöglicht die Oberfläche eine intuitive Auswahl der gewünschten Komponenten, beispielsweise ALU-Erweiterungen, Branch-Units, Speicher-Interfaces oder CSR-Optionen.
@@ -239,7 +223,7 @@ Es wird genutzt, um den SpinalHDL-Code zu kompilieren und den VexRiscv-Codegener
 
 ### Verilator
 
-**Verilator** ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten C++-Code übersetzt und als ausführbares Programm simuliert.
+**Verilator** ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten *C++*-Code übersetzt und als ausführbares Programm simuliert.
 Im Gegensatz zu klassischen eventbasierten Simulatoren arbeitet Verilator mit einem statischen Zeitschritt-Modell, was deutlich höhere Simulationsgeschwindigkeit ermöglicht.
 In dieser Arbeit wird Verilator genutzt, um den mit SpinalHDL erzeugten Verilog-Code zu simulieren und Korrektheitstests in Kombination mit LiteX oder eigenständigen Testbenches auszuführen.
 
@@ -294,7 +278,9 @@ Die wichtigsten Aufgaben von Vivado in dieser Arbeit sind:
 Vivado bildet damit den letzten Schritt im Hardware-Workflow:
 Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Verilator/GTKWave) erfolgt über Vivado die physische Implementierung auf dem FPGA.
 
-
+```{raw} latex
+\clearpage
+```
 
 # Verwendete Hardwareplattform
 ```{raw} latex
@@ -309,7 +295,7 @@ Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in 
 ```{raw} latex
 \clearpage
 ```
----
+
 
 ```{raw} latex
 \normalsize
