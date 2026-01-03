@@ -11,7 +11,6 @@ Ein besonderer Fokus liegt auf dem Custom ALU Generator. Es wird detailliert erl
 ```{raw} latex
 \clearpage
 ```
----
 
 ```{raw} latex
 \normalsize
@@ -89,7 +88,6 @@ Der Auto-Complete-Mechanismus ergänzt fehlende Pflicht-Plugins und stellt siche
 **Thread-sichere Laufzeitprotokollierung**
 
 Der Log-Bereich wird als Textfeld implementiert. Die Methode append_log() fügt neue Nachrichten hinzu und hält den Scrollbereich immer am Ende:
-
 ```{raw} latex
 \begin{minipage}{\linewidth}
 ```
@@ -111,9 +109,6 @@ def append_log(msg: str):
 
 Dadurch verhält sich der Log ähnlich wie eine klassische Build-Konsole.
 
-```{raw} latex
-\clearpage
-```
 
 ## Ereignissteuerung und Threading
 
@@ -225,7 +220,8 @@ from typing import Any, Optional, List, Dict
 
 @dataclass(frozen=True)
 class ParamSpec:
-    typ: str                 # "bool", "int", "hex_long", "enum", "string", "null"
+    typ: str                 # "bool", "int", "hex_long",
+  "enum", "string", "null"
     default: Any = None
     allowed: Optional[List[str]] = None   # für Enums
     nullable: bool = False
@@ -289,9 +285,6 @@ def load_config():
 ```
 Damit bleibt die gesamte GUI zwischen Sitzungen konsistent.
 
-```{raw} latex
-\clearpage
-```
 ### Implementierung des Custom ALU Generators
 
 Die Kerninnovation dieser Arbeit ist die dynamische Erzeugung von Hardware-Code. Während Standard-Plugins lediglich instanziiert werden, muss für Custom Instructions neuer Scala-Quellcode generiert werden. Dies erfolgt über eine Template-Engine im Backend.
@@ -444,7 +437,6 @@ Im nächsten Schritt wird der Scala-Quellcode zusammengesetzt. Die Standard-Plug
 ```
 
 ```{code-block} python
-
 :linenos:
 :caption: Top-Level Teil 2: Aggregation und Entry-Point
 
@@ -633,9 +625,6 @@ Damit bildet das Backend die gesamte technische Toolchain ab:
 - Simulation mit verilator
 - Wellenform-Analyse mit GTKWave
 
-```{raw} latex
-\clearpage
-```
 
 ## Zusammenfassung
 
