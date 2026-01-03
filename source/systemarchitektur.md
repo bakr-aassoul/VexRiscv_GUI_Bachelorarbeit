@@ -15,7 +15,6 @@ Diese GUI fungiert als zentrale Steuerzentrale, um unterschiedliche Varianten de
 ```{raw} latex
 \clearpage
 ```
----
 
 ```{raw} latex
 \normalsize
@@ -30,12 +29,9 @@ Das System unterscheidet architektonisch zwischen zwei Arten der Benutzerinterak
 - **Statische Konfiguration:** Der Benutzer wählt in der Oberfläche gewünschte Architekturmerkmale aus, etwa die Aktivierung von Multiplikations- und Divisionsmodulen, die Art des Shifters oder die Nutzung des CSR-Plugins. Hierbei werden lediglich Parameter in der bestehenden VexRiscv-Klasse gesetzt.
 - **Dynamische Generierung:** Für benutzerdefinierte Recheneinheiten (Custom ALUs) erweitert die GUI den Entwurfsprozess um eine generative Komponente. Anstatt nur vorhandene Module zu aktivieren, nimmt die GUI Logik-Definitionen (z. B. rs1 + rs2) entgegen. Das Backend generiert daraus vollautomatisch neuen Quellcode und injiziert diesen in die Dateistruktur des Prozessors.
 
-Auf Basis dieser Eingaben erstellt die GUI eine angepasste Top-Level-Definition (z. B. *VexRiscvTopFromGui.scala*) und stößt den SBT-Buildprozess an. 
+Auf Basis dieser Eingaben erstellt die GUI eine angepasste Top-Level-Definition (z.B. *VexRiscvTopFromGui.scala*) und stößt den SBT-Buildprozess an. 
 Dadurch wird der Übergang von der architekturellen Beschreibung zu einer synthetisierbaren Hardwareimplementierung weitgehend entkoppelt und für den Benutzer stark vereinfacht.
 
-```{raw} latex
-\clearpage
-```
 
 ## Prozessor- und SoC-Ebene
 
@@ -82,4 +78,4 @@ Zusammenfassend lässt sich der Gesamtworkflow wie folgt beschreiben:
 
 Auf dieser Basis können verschiedene Prozessorarchitekturen unter identischen Bedingungen verglichen und hinsichtlich ihrer Funktionalität und Effizienz bewertet werden.
 
----
+
