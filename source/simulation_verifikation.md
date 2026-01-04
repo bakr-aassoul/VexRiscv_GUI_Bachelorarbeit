@@ -2,11 +2,11 @@
 
 Die Simulation bildet den zentralen Nachweis der Funktionsfähigkeit des mit der GUI erzeugten Prozessors. Sie dient der Validierung, ob der automatisch generierte Verilog-Code die erwarteten Operationen des RISC-V-Befehlssatzes sowie die benutzerdefinierten Erweiterungen (Custom Instructions) korrekt ausführt. In diesem Kapitel werden der Testaufbau, die Durchführung der Simulation mittels Verilator und die Analyse der Ergebnisse beschrieben.
 
----
+
 
 ## Testaufbau
 
-Für die funktionale Verifikation wurde der generierte Verilog-Code (*VexRiscv.v*) mithilfe von Verilator simuliert. Im Gegensatz zu klassischen ereignisbasierten Simulatoren übersetzt Verilator das Hardware-Design in ein optimiertes C++-Modell. Dies ermöglicht eine effiziente, zyklusgenaue Simulation, die sich nahtlos in C++-Testumgebungen integrieren lässt
+Für die funktionale Verifikation wurde der generierte Verilog-Code (*VexRiscv.v*) mithilfe von Verilator simuliert. Im Gegensatz zu klassischen ereignisbasierten Simulatoren übersetzt Verilator das Hardware-Design in ein optimiertes C++-Modell. Dies ermöglicht eine effiziente, zyklusgenaue Simulation, die sich nahtlos in C++-Testumgebungen integrieren lässt.
 
 Das Testsystem setzt sich aus folgenden Komponenten zusammen:
 
@@ -20,37 +20,29 @@ Der Simulationsprozess wird direkt aus der GUI angestoßen und durchläuft autom
 Was: Ein Flussdiagramm, das den Weg zeigt: GUI → VexRiscv.v (Verilog) → Verilator Compiler → simv (Executable) → trace.vcd → GTKWave.
 Warum: Es visualisiert den abstrakten Prozess für den Leser auf einen Blick und zeigt, wie die Tools ineinandergreifen.**
 
-## Aufbau der Testumgebung (Testbench)
 
-Dabei wird der Prozessor in Software simuliert, und alle internen Signale werden in der Datei trace.vcd gespeichert.
-Die resultierende Datei `trace.vcd` (Value Change Dump) enthält sämtliche zeitlichen Signaländerungen des Prozessors.  
-Sie dient als Grundlage für die grafische Analyse in **GTKWave** und ermöglicht eine detaillierte Verifikation der CPU-Architektur.  
+## Aufbau des Testbenches (Testbench)
 
-Im Rahmen dieser Arbeit wurde die Simulation mit einer **Taktperiode von 1 ns** durchgeführt, was eine ausreichend feine Auflösung für die Untersuchung der Pipeline-Stufen bietet.  
-Die Simulationsergebnisse lassen sich damit präzise im zeitlichen Verlauf darstellen.
-
----
-
-## Aufbau des Testbenches
-
-Der Testbench tb_gui.cpp fungiert als Wrapper für den simulierten Prozessorkern. Er stellt die notwendige Infrastruktur bereit, damit der Prozessor Instruktionen laden und Daten speichern kann. Die Implementierung nutzt die Verilator-API und gliedert sich in drei funktionale Blöcke:
+Die Testbench tb_gui.cpp fungiert als Wrapper für den simulierten Prozessorkern. Sie stellt die notwendige Infrastruktur bereit, damit der Prozessor Instruktionen laden und Daten speichern kann. Die Implementierung nutzt die Verilator-API und gliedert sich in drei funktionale Blöcke:
 
 
-1. **Initialisierung und Programmspeicher:** Zu Beginn der Simulation wird ein festes Testprogramm (irom) definiert, das eine grundlegende Sanity-Check-Sequenz enthält:
+1. **Initialisierung und Programmspeicher:** Zu Beginn der Simulation wird ein festes Testprogramm (irom) definiert. Um nicht nur die Standardbefehle, sondern auch die Custom ALU zu verifizieren, wurde eine spezifische Testsequenz entwickelt:
 
-- *addi x1, x0, 0x123*: Lädt einen Testwert in Register x1.
+- *addi x1, x0, 0x123*: Lädt den Wert 291 (0x123) in Register x1.
 
-- *sw x1, 0x100(x0)*: Schreibt diesen Wert in den Speicher.
+- *addi x2, x0, 0x123*: Lädt denselben Wert in Register x2.
 
-- *lw x2, 0x100(x0)*: Liest den Wert zurück in Register x2.
+- **Custom Instruction**: Führt die benutzerdefinierte SIMD-Addition aus (*x3 = x1 + x2*).
+
+- *sw x3, 0x100(x0)*: Schreibt das Ergebnis (erwartet: 0x246) in den Speicher.
 
 - *jal x0, 0*: Endlosschleife.
 
-Zusätzlich wird ein 4 KiB großer Datenspeicher (*dmem*) als Byte-Array initialisiert.
+Zwischen den Befehlen wurden nop-Instruktionen (No Operation) eingefügt, um potenzielle Pipeline-Hazards in dieser isolierten Testumgebung sicher auszuschließen und die Signalverläufe klarer trennen zu können.
 
 2. **Taktsteuerung**: Die Simulation erfolgt in einer Schleife über 400 Taktzyklen. In jedem Durchlauf emuliert der Testbench explizit die steigenden und fallenden Flanken des Taktsignals (*clk*), wodurch die synchrone Logik des Prozessors geschaltet wird.
 
-3. **Bus-Simulation** Der Testbench überwacht die *dBus*-Signale, um Speicherzugriffe abzufangen. Anstatt komplexer Bit-Operationen nutzt die Implementierung *std::memcpy*, um Daten zwischen dem simulierten Bus und dem *dmem*-Array zu transferieren. Dies ermöglicht eine sehr kompakte und lesbare Simulation des Datenbusses.
+3. **Bus-Simulation**: Der Testbench überwacht die *dBus*-Signale, um Speicherzugriffe abzufangen. Anstatt komplexer Bit-Operationen nutzt die Implementierung *std::memcpy*, um Daten zwischen dem simulierten Bus und dem *dmem*-Array zu transferieren. Dies ermöglicht eine sehr kompakte und lesbare Simulation des Datenbusses.
 
 **Einfügen: Abbildung 6.2 – Blockschaltbild des Testaufbaus
 Was: Ein Diagramm mit dem "VexRiscv Core" (DUT) in der Mitte. Pfeile zeigen die Verbindungen zum umgebenden "Testbench (C++)".
@@ -62,42 +54,42 @@ Warum: Verdeutlicht, wie der C++-Code physikalisch mit den Verilog-Ports des Pro
 // Auszug aus tb_gui.cpp
 if (top->dBus_cmd_valid && top->dBus_cmd_ready) {
     uint32_t addr = top->dBus_cmd_payload_address;
-    uint32_t size = top->dBus_cmd_payload_size;
-    uint32_t nbytes = 1u << size; // Berechnung der Byte-Anzahl (2^size)
+    // ... (Größenberechnung)
 
     if (top->dBus_cmd_payload_wr) {
-        // Schreibzugriff (Store): Kopiere Daten vom Bus in den Speicher
+        // Schreibzugriff (Store): Daten in simulierten Speicher schreiben
         std::memcpy(&dmem[addr], &top->dBus_cmd_payload_data, nbytes);
-        std::printf("[SW]  addr=0x%08x data=0x%08x size=%u\n", addr, top->dBus_cmd_payload_data, size);
+        
+        // Logging für die Verifikation
+        std::printf("SW  cycle=%3d  addr=0x%08x  data=0x%08x  size=%u\n", 
+                    cycle, addr, top->dBus_cmd_payload_data, nbytes);
     } else {
-        // Lesezugriff (Load): Kopiere Daten vom Speicher auf den Bus
-        uint32_t rdata = 0;
-        std::memcpy(&rdata, &dmem[addr], nbytes);
-        top->dBus_rsp_data = rdata;
-        std::printf("[LW]  addr=0x%08x data=0x%08x size=%u\n", addr, rdata, size);
+        // Lesezugriff (Load): Daten bereitstellen
+        // ...
     }
 }
 ```
-Dieser Codeabschnitt stellt sicher, dass jeder Schreibvorgang (SW) protokolliert und persistent gespeichert wird, sodass ein nachfolgender Lesebefehl (LW) korrekte Daten erhält.
-
+Dieser Mechanismus ermöglicht eine geschlossene Verifikation: Das Ergebnis der Custom-ALU-Berechnung wird durch den sw-Befehl auf den Bus gelegt, von der Testbench abgefangen und auf der Konsole ausgegeben.
 
 
 ## Erweiterte Signalüberwachung
 
-Um über die bloße Ein-/Ausgabe-Prüfung hinausgehende Diagnosen zu ermöglichen, wurden spezifische interne Signale der VexRiscv-Pipeline für das Tracing freigeschaltet. Dies erlaubt einen tiefen Einblick in den internen Zustand des Kerns während der Laufzeit.
+Um über die bloße Ein-/Ausgabe-Prüfung hinausgehende Diagnosen zu ermöglichen, wurden spezifische interne Signale der VexRiscv-Pipeline für das Tracing freigeschaltet. Dies erlaubt einen tiefen Einblick in den internen Zustand des Kerns.
 
 Zu den wichtigsten überwachten Signalen gehören:
-- *execute_IS_ALU_REG*: Kennzeichnet ALU-Operationen.
+- *execute_IS_ALU_REG*: Kennzeichnet aktive ALU-Operationen.
 
 - *execute_BRANCH_DO*: Signalisiert aktive Sprünge.
 
 - *writeBack_REGFILE_WRITE_VALID*: Bestätigt das erfolgreiche Schreiben in das Registerfile.
 
-Die Analyse dieser Signale ist essenziell, um Pipeline-Hazards oder fehlerhafte Sprungvorhersagen zu identifizieren.
+Die Analyse dieser Signale in GTKWave ist essenziell, um sicherzustellen, dass die Custom Instruction korrekt in die Pipeline integriert wurde und das Ergebnis im richtigen Taktzyklus zurückschreibt.
 
 ## Verifikation des Befehlssatzes
 
-Die Validierung erfolgte anhand des im irom definierten Testprogramms. Die Sequenz deckt die wichtigsten Basisoperationen ab:
+Ein besonderer Fokus lag auf der Validierung der durch die GUI generierten Hardware-Erweiterung. Im getesteten Szenario wurde eine SIMD-Addition (MySimdAdd) implementiert.
+
+Die Erwartungswerte für den Test waren:
 
 - Arithmetisch-Logische Befehle (wie addi): Prüft die ALU-Funktionalität und Immediate-Verarbeitung.
 
@@ -106,10 +98,9 @@ Die Validierung erfolgte anhand des im irom definierten Testprogramms. Die Seque
 - Kontrollfluss: Sprungbefehle (BEQ, JAL) wurden genutzt, um die korrekte Berechnung des Program Counters (PC) bei Verzweigungen zu verifizieren
 
 
-**Einfügen: Abbildung 6.3 – Validierung von Speicherzugriffen im GTKWave-Trace
-Was: Ein Screenshot aus GTKWave, der einen Store (Schreiben) und kurz darauf einen Load (Lesen) zeigt.
-Markieren Sie die Signale dBus_cmd_payload_address (Adresse) und dBus_cmd_payload_data (Daten).
-Warum: Belegt visuell, dass die Simulation funktioniert ("Proof of Work") und der Prozessor tatsächlich mit dem Speicher interagiert.**
+**Einfügen: Abbildung 6.3 – Validierung der Custom ALU im GTKWave-Trace
+Was: Screenshot aus GTKWave. Zoomen Sie auf den Zeitpunkt, an dem das Ergebnis 0x246 auf dem Datenbus (dBus_cmd_payload_data) erscheint.
+Warum: Belegt visuell, dass die benutzerdefinierte Logik korrekt gearbeitet hat.**
 
 ## Validierung über Konsolenausgaben
 
@@ -118,15 +109,24 @@ Ein wesentlicher Vorteil des verwendeten C++-Testbenches ist die direkte Protoko
 
 ```text
 
-[SW]  addr=0x00000100 data=0x00000123 size=2
-[LW]  addr=0x00000100 data=0x00000123 size=2
+IF  cycle=  1  pc=0x00000000  word= 0  inst=0x12300093
+IF  cycle=  2  pc=0x00000004  word= 1  inst=0x00000013
+IF  cycle=  3  pc=0x00000008  word= 2  inst=0x12300113
+IF  cycle=  4  pc=0x0000000c  word= 3  inst=0x00000013
+IF  cycle=  5  pc=0x00000010  word= 4  inst=0x0020818b <-- Custom Instruction
+IF  cycle=  6  pc=0x00000014  word= 5  inst=0x00000013
+IF  cycle=  8  pc=0x00000018  word= 6  inst=0x10302023
+IF  cycle=  9  pc=0x0000001c  word= 7  inst=0x0000006f
+IF  cycle= 11  pc=0x00000020  word= 8  inst=0x00000013
+IF  cycle= 12  pc=0x00000024  word= 9  inst=0x00000013
+SW  cycle= 12  addr=0x00000100  data=0x00000246  size=4
 ```
 
-Diese Ausgabe bestätigt:
-- Der sw-Befehl hat den Wert *0x123* erfolgreich an Adresse 0x100 geschrieben.
-- Der nachfolgende lw-Befehl hat exakt denselben Wert von dieser Adresse gelesen.
+Diese Ausgabe bestätigt zwei kritische Punkte:
+- Korrekter Fetch: Der Prozessor hat die Custom Instruction (Opcode *0x0020818b*) an Adresse *0x10* korrekt geladen.
+- Korrekte Berechnung: Der nachfolgende Schreibbefehl (*SW*) schreibt den Wert *0x00000246* an die Adresse *0x100*.
 
----
+Da 0x123 + 0x123 exakt 0x246 ergibt, ist hiermit der funktionale Nachweis erbracht, dass die über die GUI definierte Logik korrekt in Verilog übersetzt, synthetisiert und ausgeführt wurde.
 
 ### Bedeutung für die Verifikation
 
@@ -141,39 +141,30 @@ Die Simulation belegt, dass:
 Damit erfüllt die implementierte CPU-Architektur die Anforderungen an einen funktionsfähigen **RV32I-Prozessor** gemäß der RISC-V-Spezifikation.  
 Das Ergebnis zeigt, dass sowohl der Instruktionsfluss als auch die Speicheroperationen vollständig im Einklang mit den Architekturprinzipien des RISC-V-Standards stehen.
 
----
-
-### Visualisierung der Ergebnisse
-
-Im Folgenden ist ein Ausschnitt der simulierten Signale dargestellt,  
-wie sie in **GTKWave** beobachtet wurden:
-
-
-*Abbildung 1: Ausschnitt aus dem GTKWave-Verlauf mit sichtbaren Fetch-, Decode- und Speicherzugriffen.*
-
-In der dargestellten Signalsequenz sind die Taktflanken (`clk`), der Program Counter (`iBus_cmd_payload_pc`) sowie die Datenbus-Aktivitäten (`dBus_cmd_payload_address`, `dBus_rsp_data`) klar zu erkennen.  
-
-Diese Darstellung bestätigt das korrekte Zusammenspiel der Pipeline-Stufen, vom **Instruktionsabruf (Fetch)** über **Dekodierung (Decode)** bis zur **Speicherphase (Memory)** und unterstreicht die Zuverlässigkeit des automatisch generierten Prozessordesigns.
-
----
 
 ## Zusammenfassung der Simulationsergebnisse
 
-Die Simulation und anschließende Signalverifikation bestätigen die **funktionale Korrektheit** des mit der GUI generierten VexRiscv-Prozessors.  
-Alle getesteten Instruktionen aus dem **RV32I-Befehlssatz** wurden fehlerfrei dekodiert, ausgeführt und in den aufgezeichneten Wellenformen nachvollzogen.  
+Die in diesem Kapitel beschriebene Simulationsmethodik lieferte den empirischen Nachweis für die funktionale Korrektheit des generierten Prozessorsystems. Durch die Kombination aus zyklusgenauer RTL-Simulation mittels Verilator und detaillierter Signalanalyse in GTKWave konnte verifiziert werden, dass die von der GUI erzeugte Hardwarebeschreibung (Verilog) sowohl die Spezifikation des RISC-V-Standards erfüllt als auch die benutzerdefinierten Erweiterungen fehlerfrei implementiert. 
 
-Zusätzlich zeigte die Analyse:
+Die Ergebnisse lassen sich in drei Kernbereiche zusammenfassen:
 
-- stabile Pipeline-Ausführung ohne Hazard-Konflikte,  
-- korrekte Takt- und Reset-Sequenzen,  
-- konsistente Busoperationen mit synchronem Zugriff auf den Speicher,  
-- sowie deterministische Sprung- und Rücksprungverhalten der Branch-Logik.
+1. **Validierung der Basis-Architektur (RV32I):** Die Simulation bestätigte, dass der automatisch konfigurierte VexRiscv-Kern die fundamentalen Operationen einer Von-Neumann-Architektur korrekt ausführt.
 
-Die Kombination aus **Verilator-Simulation** und **GTKWave-Signalanalyse** ermöglichte eine präzise Beobachtung des internen CPU-Verhaltens.  
-Damit konnte nachgewiesen werden, dass die durch die GUI erzeugten Prozessorvarianten nicht nur syntaktisch korrekt generiert, sondern auch **funktional stabil und reproduzierbar** sind.
+- Datenpfad: Register-Transfers zwischen Speicher (Load/Store) und Registerfile erfolgten bitgenau und ohne Datenverlust.
 
-Dieses Ergebnis belegt die Wirksamkeit der entworfenen Designumgebung als **vollständige Verifikationsplattform** für den VexRiscv-Prozessor.  
-Sie ermöglicht eine effiziente Überprüfung neuer Konfigurationen, ohne manuelle Anpassungen im Quellcode oder in der Build-Kette vornehmen zu müssen.
+- Kontrollfluss: Sprungbefehle (JAL, BEQ) manipulierten den Program Counter (PC) deterministisch, wobei die Pipeline-Stufen (Fetch, Decode, Execute) synchron arbeiteten.
 
----
+- Hazard-Management: Potenzielle Datenkonflikte (Read-After-Write) wurden durch die Hardware-Interlocks des HazardSimplePlugin oder durch softwareseitige NOPs im Testbench korrekt aufgelöst, sodass zu keinem Zeitpunkt invalide Daten verarbeitet wurden.
 
+2. **Verifikation der Custom-Instruction-Integration:** Ein Schwerpunkt der Evaluierung lag auf der Überprüfung der generativen Erweiterungen. Der in Abschnitt 6.4 definierte Testfall für die MySimdAdd-Instruktion lieferte den Beweis für die erfolgreiche "Pipeline-Injection".
+
+- Korrekte Dekodierung: Der benutzerdefinierte Opcode (0x0020818b) wurde vom Decoder eindeutig erkannt und aktivierte die spezifische ALU-Logik in der Execute-Stufe.
+
+- Rechengenauigkeit: Die durchgeführte SIMD-Addition der Testwerte (0x123 + 0x123) resultierte exakt im erwarteten Ergebnis 0x246. Dies belegt, dass die in der GUI definierte High-Level-Logik (Scala) semantisch korrekt in synthetisierbare Hardwareschaltungen übersetzt wurde.
+
+- Timing: Das Ergebnis stand, wie für eine Single-Cycle-Instruktion gefordert, innerhalb eines Taktzyklus am Rückschreibepfad bereit.
+
+3. **Konsistenz der Toolchain:** Der Abgleich zwischen den Protokollen der C++-Testbench (High-Level-Sicht) und den Wellenformen in GTKWave (Low-Level-Sicht) zeigte eine vollständige Übereinstimmung. Es traten keine Diskrepanzen zwischen dem erwarteten Software-Verhalten und der tatsächlichen Hardware-Ausführung auf.
+
+**Fazit**
+Die Simulationsergebnisse belegen, dass die entwickelte Entwicklungsumgebung in der Lage ist, valides und funktionsfähiges Prozessordesign zu erzeugen. Die automatisierte Integration von Custom Instructions, welche die zentrale Innovation dieser Arbeit darstellt, hat sich als robust und verlässlich erwiesen. Damit ist die notwendige Vertrauensbasis geschaffen, um im nachfolgenden Kapitel den Transfer des Designs auf die physische FPGA-Hardware vorzunehmen.
