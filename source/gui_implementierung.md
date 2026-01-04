@@ -300,8 +300,9 @@ Die Funktion write_custom_alu_file baut das Scala-Plugin schrittweise auf. Zunä
 :caption: Generator Teil 1: Decoder-Setup
 
 def write_custom_alu_file(name: str, opcode_suffix: str, logic_body: str):
-   # Einrückung für den Scala-Code vorbereiten
-    indented_logic = "\n          ".join(logic_body.splitlines())
+    # Einrückung für den Scala-Code vorbereiten
+    indented_logic = "\n      ".join(logic_body.splitlines())
+    
     # Template für ein VexRiscv-Plugin (Teil 1: Setup)
     scala_code = f"""
 package vexriscv.demo
@@ -311,23 +312,19 @@ import vexriscv._
 import vexriscv.plugin._
 
 class {name} extends Plugin[VexRiscv] {{
-  object IS_{name.upper()} extends Stageable(Bool)
-
+  // Tell the existing decoder that our instruction:
+  // - reads RS1 and RS2
+  // - writes back to RD
   override def setup(pipeline: VexRiscv): Unit = {{
     import pipeline.config._
-    // Opcode pattern: 0000000----------000-----{opcode_suffix}
-    val instructionPattern = M"0000000----------000-----{opcode_suffix}"
-    val decoderService = pipeline.service(classOf[DecoderService])
+    val decoder = pipeline.service(classOf[DecoderService])
 
-    decoderService.add(
-      key = instructionPattern,
+    decoder.add(
+      key    = M"0000000----------000-----{opcode_suffix}",
       values = List(
-        IS_{name.upper()}        -> True,
-        REGFILE_WRITE_VALID      -> True,
-        BYPASSABLE_EXECUTE_STAGE -> True,
-        BYPASSABLE_MEMORY_STAGE  -> True,
-        RS1_USE                  -> True,
-        RS2_USE                  -> True
+        RS1_USE             -> True,
+        RS2_USE             -> True,
+        REGFILE_WRITE_VALID -> True
       )
     )
   }}
@@ -339,7 +336,6 @@ class {name} extends Plugin[VexRiscv] {{
 ```
 Dieser Abschnitt nutzt den *DecoderService*, um die Pipeline für den neuen Opcode zu konfigurieren. Das *instructionPattern* maskiert die Operanden-Bits (mit -), sodass nur der Opcode und das Suffix gematcht werden. Die Liste *values* definiert das Verhalten der CPU:
 
-- *IS_NAME*: Markiert die Instruktion als aktiv in der Pipeline.
 
 - *REGFILE_WRITE_VALID*: Signalisiert, dass ein Ergebnis in das Registerfile zurückgeschrieben wird.
 
@@ -355,28 +351,47 @@ Im zweiten Schritt wird die eigentliche Hardware-Logik in die Execute-Stufe der 
 :linenos:
 :caption: Generator Teil 2: Logik-Injection und File-IO
 
-    # Fortsetzung des Templates (Teil 2: Build & Injection)
+# Fortsetzung des Templates (Teil 2: Build & Injection)
     scala_code += f"""
   override def build(pipeline: VexRiscv): Unit = {{
-      import pipeline._
-      import pipeline.config._
-      execute plug new Area {{
-          import execute._
-          val rs1 = input(RS1)
-          val rs2 = input(RS2)
-          // Injection der User-Logik
-          {indented_logic}
-          
-          when(input(IS_{name.upper()})) {{
-             output(REGFILE_WRITE_DATA) := result.asBits
-          }}
+    import pipeline._
+    import config._
+
+    execute plug new Area {{
+      import execute._
+      val inst = input(INSTRUCTION)
+
+      // Lokale Dekodierung des Opcodes
+      val isMy = Bool()
+      isMy := False
+      when(
+        inst(31 downto 25) === B"7'b0000000" &&
+        inst(14 downto 12) === B"3'b000"     &&
+        inst(6  downto 0)  === B"7'b{opcode_suffix}"
+      ) {{
+        isMy := True
       }}
+
+      val rs1 = input(RS1).asUInt
+      val rs2 = input(RS2).asUInt
+      
+      // Injection der User-Logik (muss 'result' definieren)
+      val result = Bits(32 bits)
+      result := B(0, 32 bits)
+      {indented_logic}
+
+      // Schreiben des Ergebnisses nur wenn Instruktion aktiv ist
+      when(isMy) {{
+        output(REGFILE_WRITE_DATA) := result
+      }}
+    }}
   }}
 }}
 """
+    # Schreiben der Datei
     demo_dir = os.path.dirname(LAUNCHER)
     filename = os.path.join(demo_dir, f"{name}.scala")
-   
+    
     with open(filename, "w") as f:
         f.write(scala_code)
 ```
@@ -386,7 +401,7 @@ Im zweiten Schritt wird die eigentliche Hardware-Logik in die Execute-Stufe der 
 ```
 
 
-Die eigentliche Rechenlogik wird schließlich über *execute plug new Area* direkt in die Execute-Stufe der CPU injiziert. Dies ist ein „Hardware-Injection“-Pattern: Der Scala-Code der *logic_body*-Variable (z. B. *rs1 + rs2*) wird an dieser Stelle als Hardware-Schaltung instanziiert. Das Ergebnis wird auf den *REGFILE_WRITE_DATA*-Pfad gelegt, wodurch es im WriteBack-Stage im Zielregister landet. Durch diesen Aufbau garantiert der Generator, dass die benutzerdefinierte Logik vollzyklisch in die Pipeline integriert ist, ohne Timing-Probleme oder Ressourcenkonflikte mit der Standard-ALU zu verursachen.
+Die eigentliche Rechenlogik wird schließlich über *execute plug new Area* direkt in die Execute-Stufe der CPU injiziert. Hierbei kommt ein lokales Dekodierungsmuster zum Einsatz: Der injizierte Scala-Code instanziiert nicht nur die Rechenschaltung (z. B. *rs1 + rs2*), sondern prüft anhand der Instruktionsbits (inst) explizit, ob der eigene Opcode anliegt. Nur wenn diese lokale Prüfung positiv ausfällt (Signal *isMy*), wird das Berechnungsergebnis auf den *REGFILE_WRITE_DATA*-Pfad gelegt. Durch diesen Aufbau garantiert der Generator, dass die benutzerdefinierte Logik vollzyklisch in die Pipeline integriert ist und das Zielregister exakt im richtigen Taktzyklus beschreibt, ohne Konflikte mit der Standard-ALU zu verursachen.
 
 ### Generierung der Scala-Topdatei
 
