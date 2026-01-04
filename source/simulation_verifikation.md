@@ -11,13 +11,13 @@ Für die funktionale Verifikation wurde der generierte Verilog-Code (*VexRiscv.v
 Das Testsystem setzt sich aus folgenden Komponenten zusammen:
 
 - Device Under Test (DUT): Der generierte VexRiscv-Prozessorkern. 
-- Testbench: Eine in C++ implementierte Umgebung (minimal_tb.cpp), die den Prozessor instanziiert, Takte generiert und die Peripherie (Speicher, Reset) simuliert.  
+- Testbench: Eine in C++ implementierte Umgebung (tb_gui.cpp), die den Prozessor instanziiert, Takte generiert und die Peripherie (Speicher, Reset) simuliert.  
 - Analysewerkzeug: GTKWave zur grafischen Auswertung der aufgezeichneten Signalverläufe (Waveforms)
 
 Der Simulationsprozess wird direkt aus der GUI angestoßen und durchläuft automatisiert die Schritte Kompilierung, Build und Ausführung . Das Ergebnis ist eine VCD-Datei (*trace.vcd*), die sämtliche internen Signalwechsel protokolliert.
 
 **Einfügen: Abbildung 6.1 – Simulations-Workflow
-Was: Ein Flussdiagramm, das den Weg zeigt: GUI → VexRiscv.v (Verilog) → Verilator Compiler → simv (Executable) → trace.vcd → GTKWave.
+Was: Ein Flussdiagramm, das den Weg zeigt: GUI → VexRiscv.v (Verilog) → Verilator Compiler → simv (Executable) → wave.vcd → GTKWave.
 Warum: Es visualisiert den abstrakten Prozess für den Leser auf einen Blick und zeigt, wie die Tools ineinandergreifen.**
 
 
@@ -148,7 +148,7 @@ Die in diesem Kapitel beschriebene Simulationsmethodik lieferte den empirischen 
 
 Die Ergebnisse lassen sich in drei Kernbereiche zusammenfassen:
 
-1. **Validierung der Basis-Architektur (RV32I):** Die Simulation bestätigte, dass der automatisch konfigurierte VexRiscv-Kern die fundamentalen Operationen einer Von-Neumann-Architektur korrekt ausführt.
+1. **Validierung der Basis-Architektur (RV32I):** Die Simulation bestätigte, dass der automatisch konfigurierte VexRiscv-Kern die fundamentalen Operationen einer RV32I-CPU mit Harvard-Architektur (getrennter Instruktions- und Datenbus) korrekt ausführt.
 
 - Datenpfad: Register-Transfers zwischen Speicher (Load/Store) und Registerfile erfolgten bitgenau und ohne Datenverlust.
 
