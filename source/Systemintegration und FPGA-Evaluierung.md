@@ -1,6 +1,6 @@
 # Systemintegration und FPGA-Evaluierung
 
-Nach der erfolgreichen funktionalen Verifikation auf Komponentenebene (Kapitel 6) befasst sich dieses Kapitel mit der Integration des generierten Prozessors in ein Gesamtsystem und dessen physikalischer Evaluierung. Ziel ist der empirische Nachweis, dass der durch die GUI konfigurierte VexRiscv-Kern in der Lage ist, als zentraler Prozessor in einem System-on-Chip (SoC) zu agieren, komplexe Software-Stacks (BIOS) auszuführen und über standardisierte Bus-Protokolle mit Peripherie sowie Speicher zu kommunizieren.
+Nach der erfolgreichen funktionalen Verifikation auf Komponentenebene (Kapitel 6) befasst sich dieses Kapitel mit der Integration des generierten Prozessors in ein Gesamtsystem und dessen Evaluierung auf FPGA-Systemebene. Ziel ist der empirische Nachweis, dass der durch die GUI konfigurierte VexRiscv-Kern in der Lage ist, als zentraler Prozessor in einem System-on-Chip (SoC) zu agieren, komplexe Software-Stacks (BIOS) auszuführen und über standardisierte Bus-Protokolle mit Peripherie sowie Speicher zu kommunizieren.
 
 ## Integration des generierten Prozessorkerns in ein LiteX-System-on-Chip
 
@@ -72,7 +72,7 @@ Lesevorgang: Der Rückgabewert lautet dd cc bb aa.**
   
 **Analyse der Byte-Reihenfolge (Endianness):** 
 
-Das Ergebnis in Abbildung 7.3 demonstriert eine fundamentale Eigenschaft der RISC-V-Architektur: Little-Endian. Der 32-Bit-Wert 0xAABBCCDD wird byteweise so abgelegt, dass das niedrigstwertige Byte (0xDD) an der niedrigsten Adresse gespeichert wird. Die Konsolenausgabe dd cc bb aa bestätigt, dass die gesamte Kette – vom VexRiscv-Core über den Wishbone-Adapter bis zum Speichercontroller – die Byte-Reihenfolge (Byte Ordering) korrekt handhabt.
+Das Ergebnis in Abbildung 7.3 demonstriert eine fundamentale Eigenschaft der RISC-V-Architektur: Little-Endian. Der 32-Bit-Wert 0xAABBCCDD wird byteweise so abgelegt, dass das niedrigstwertige Byte (0xDD) an der niedrigsten Adresse gespeichert wird. Die Konsolenausgabe dd cc bb aa bestätigt, dass die gesamte Kette, vom VexRiscv-Core über den Wishbone-Adapter bis zum Speichercontroller, die Byte-Reihenfolge (Byte Ordering) korrekt handhabt.
 
 ### Adressraum-Validierung
 
@@ -84,4 +84,6 @@ Ein Lesezugriff auf 0x82001000 (außerhalb des SRAM-Adressraums) liefert ff ff f
 
 ## Fazit der Evaluierung
 
-Die durchgeführte FPGA-basierte Evaluierung lieferte einen umfassenden empirischen Nachweis für die Systemreife des Designs, indem sie bestätigte, dass das System zuverlässig bootet und komplexen BIOS-Code ausführt, was die fundamentale Korrektheit der Instruction-Fetch- und Kontrollfluss-Logik unterstreicht. Darüber hinaus validierte der erfolgreiche Betrieb die im Backend implementierte automatisierte Schnittstellen-Transformation, welche eine nahtlose und fehlerfreie Einbindung des VexRiscv-Kerns in Standard-SoC-Umgebungen wie LiteX ermöglichte. Flankiert werden diese funktionalen Aspekte durch den Nachweis der elektrischen Robustheit, da die Synthese bei einer Taktfrequenz von 125 MHz ohne Timing-Verletzungen gelang und die fehlerfreien Speicherzugriffe die Signalintegrität des generierten Verilog-Codes belegten. Zusammenfassend ist damit das übergeordnete Ziel der Arbeit erreicht, da gezeigt werden konnte, dass die entwickelte GUI nicht bloß als Simulationswerkzeug dient, sondern validen, synthetisierbaren Hardware-Code erzeugt, der in realen System-on-Chip-Szenarien produktiv eingesetzt werden kann.
+Die FPGA-basierte Evaluierung erbrachte den empirischen Nachweis der Systemreife des entwickelten Designs. Das System bootet zuverlässig, führt das LiteX-BIOS aus und demonstriert damit das korrekte Zusammenwirken von Fetch-Pfad, Kontrollfluss-Logik und Speicherzugriff. Gleichzeitig validiert der erfolgreiche Betrieb die im Backend implementierte automatisierte Schnittstellen-Transformation, welche eine nahtlose Einbindung des VexRiscv-Kerns in die Wishbone-basierte LiteX-Systemarchitektur ermöglicht.
+
+Der abgeschlossene Timing-Closure-Prozess bei 125 MHz sowie die konsistenten Speicher-Lese-/Schreibtests bestätigen die funktionale und zeitliche Stabilität des generierten Designs. Insgesamt zeigt die Evaluierung, dass die entwickelte GUI nicht nur als Simulationswerkzeug dient, sondern synthetisierbaren, in realen System-on-Chip-Umgebungen lauffähigen Hardware-Code erzeugt.
