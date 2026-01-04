@@ -1,27 +1,27 @@
 # Simulation und Verifikation
 
-Die Simulation bildet den zentralen Nachweis der Funktionsfähigkeit des mit der GUI erzeugten Prozessors.  
-Sie überprüft, ob der automatisch generierte Verilog-Code die erwarteten Operationen des RISC-V-Befehlssatzes korrekt ausführt.
+Die Simulation bildet den zentralen Nachweis der Funktionsfähigkeit des mit der GUI erzeugten Prozessors. Sie dient der Validierung, ob der automatisch generierte Verilog-Code die erwarteten Operationen des RISC-V-Befehlssatzes sowie die benutzerdefinierten Erweiterungen (Custom Instructions) korrekt ausführt. In diesem Kapitel werden der Testaufbau, die Durchführung der Simulation mittels Verilator und die Analyse der Ergebnisse beschrieben.
 
 ---
 
 ## Testaufbau
 
-Für die Verifikation wurde der erzeugte Verilog-Code mit **Verilator** simuliert.  
-Das Testsystem bestand aus:
+Für die funktionale Verifikation wurde der generierte Verilog-Code (*VexRiscv.v*) mithilfe von Verilator simuliert. Im Gegensatz zu klassischen ereignisbasierten Simulatoren übersetzt Verilator das Hardware-Design in ein optimiertes C++-Modell. Dies ermöglicht eine effiziente, zyklusgenaue Simulation, die sich nahtlos in C++-Testumgebungen integrieren lässt
 
-- dem generierten Prozessor (`VexRiscv.v`),  
-- einem **C++-Testbench** (`minimal_tb.cpp`),  
-- und der grafischen Signalansicht in **GTKWave**.
+Das Testsystem setzt sich aus folgenden Komponenten zusammen:
 
-Die Simulation wurde automatisiert über die GUI gestartet,  
-welche im Hintergrund die folgenden Befehle ausführt:
+- Device Under Test (DUT): Der generierte VexRiscv-Prozessorkern. 
+- Testbench: Eine in C++ implementierte Umgebung (minimal_tb.cpp), die den Prozessor instanziiert, Takte generiert und die Peripherie (Speicher, Reset) simuliert.  
+- Analysewerkzeug: GTKWave zur grafischen Auswertung der aufgezeichneten Signalverläufe (Waveforms)
 
-```bash
-verilator -cc output/gui_build/VexRiscv.v --exe sim/minimal_tb.cpp -Wno-WIDTH --trace
-make -C obj_dir -f VVexRiscv.mk VVexRiscv
-./obj_dir/VVexRiscv
-```
+Der Simulationsprozess wird direkt aus der GUI angestoßen und durchläuft automatisiert die Schritte Kompilierung, Build und Ausführung . Das Ergebnis ist eine VCD-Datei (*trace.vcd*), die sämtliche internen Signalwechsel protokolliert.
+
+**Einfügen: Abbildung 6.1 – Simulations-Workflow
+Was: Ein Flussdiagramm, das den Weg zeigt: GUI → VexRiscv.v (Verilog) → Verilator Compiler → simv (Executable) → trace.vcd → GTKWave.
+Warum: Es visualisiert den abstrakten Prozess für den Leser auf einen Blick und zeigt, wie die Tools ineinandergreifen.**
+
+## Aufbau der Testumgebung (Testbench)
+
 Dabei wird der Prozessor in Software simuliert, und alle internen Signale werden in der Datei trace.vcd gespeichert.
 Die resultierende Datei `trace.vcd` (Value Change Dump) enthält sämtliche zeitlichen Signaländerungen des Prozessors.  
 Sie dient als Grundlage für die grafische Analyse in **GTKWave** und ermöglicht eine detaillierte Verifikation der CPU-Architektur.  
@@ -33,101 +33,98 @@ Die Simulationsergebnisse lassen sich damit präzise im zeitlichen Verlauf darst
 
 ## Aufbau des Testbenches
 
-Der Testbench `minimal_tb.cpp` bildet die Verbindung zwischen dem generierten Verilog-Modul und der Verilator-Simulationsumgebung.  
-Er steuert den Takt, setzt die Reset-Signale, liefert Instruktionen über den `iBus` und verarbeitet Datenzugriffe über den `dBus`.
+Der Testbench tb_gui.cpp fungiert als Wrapper für den simulierten Prozessorkern. Er stellt die notwendige Infrastruktur bereit, damit der Prozessor Instruktionen laden und Daten speichern kann. Die Implementierung nutzt die Verilator-API und gliedert sich in drei funktionale Blöcke:
 
-Der Aufbau des Testbenches lässt sich in drei Hauptbereiche gliedern:
 
-1. **Initialisierung**
-   - Setzen der Eingangssignale (`clk = 0`, `reset = 1`)
-   - Bereitstellung eines kleinen ROMs mit Testinstruktionen
-   - Definition eines simulierten RAMs (z. B. `uint8_t ram[4096]`)
+1. **Initialisierung und Programmspeicher:** Zu Beginn der Simulation wird ein festes Testprogramm (irom) definiert, das eine grundlegende Sanity-Check-Sequenz enthält:
 
-2. **Taktsteuerung**
-   - Die Simulation läuft über eine Schleife von typischerweise 200–400 Zyklen
-   - In jedem Zyklus werden steigende und fallende Flanken ausgewertet
-   - Alle Änderungen werden mit Zeitstempel (`main_time++`) in die VCD-Datei geschrieben
+- *addi x1, x0, 0x123*: Lädt einen Testwert in Register x1.
 
-3. **Buskommunikation**
-   - Der `iBus` liefert die nächsten Instruktionen
-   - Der `dBus` wird für Speichertransaktionen genutzt  
-     (Lesen/Schreiben von Werten bei `lw` und `sw`)
+- *sw x1, 0x100(x0)*: Schreibt diesen Wert in den Speicher.
 
-Der Codeabschnitt für die Busbehandlung im Testbench sieht beispielsweise so aus:
+- *lw x2, 0x100(x0)*: Liest den Wert zurück in Register x2.
+
+- *jal x0, 0*: Endlosschleife.
+
+Zusätzlich wird ein 4 KiB großer Datenspeicher (*dmem*) als Byte-Array initialisiert.
+
+2. **Taktsteuerung**: Die Simulation erfolgt in einer Schleife über 400 Taktzyklen. In jedem Durchlauf emuliert der Testbench explizit die steigenden und fallenden Flanken des Taktsignals (*clk*), wodurch die synchrone Logik des Prozessors geschaltet wird.
+
+3. **Bus-Simulation** Der Testbench überwacht die *dBus*-Signale, um Speicherzugriffe abzufangen. Anstatt komplexer Bit-Operationen nutzt die Implementierung *std::memcpy*, um Daten zwischen dem simulierten Bus und dem *dmem*-Array zu transferieren. Dies ermöglicht eine sehr kompakte und lesbare Simulation des Datenbusses.
+
+**Einfügen: Abbildung 6.2 – Blockschaltbild des Testaufbaus
+Was: Ein Diagramm mit dem "VexRiscv Core" (DUT) in der Mitte. Pfeile zeigen die Verbindungen zum umgebenden "Testbench (C++)".
+Pfeile rein (Inputs): clk, reset, iBus Response, dBus Response.
+Pfeile raus (Outputs): iBus Command (PC), dBus Command (Address/Data).
+Warum: Verdeutlicht, wie der C++-Code physikalisch mit den Verilog-Ports des Prozessors kommuniziert.**
 
 ```cpp
-if (top->dBus_cmd_valid) {
-    uint32_t addr = top->dBus_cmd_payload_address & (sizeof(ram)-1);
+// Auszug aus tb_gui.cpp
+if (top->dBus_cmd_valid && top->dBus_cmd_ready) {
+    uint32_t addr = top->dBus_cmd_payload_address;
+    uint32_t size = top->dBus_cmd_payload_size;
+    uint32_t nbytes = 1u << size; // Berechnung der Byte-Anzahl (2^size)
+
     if (top->dBus_cmd_payload_wr) {
-        ram[addr]     = top->dBus_cmd_payload_data & 0xFF;
-        ram[addr + 1] = (top->dBus_cmd_payload_data >> 8) & 0xFF;
-        ram[addr + 2] = (top->dBus_cmd_payload_data >> 16) & 0xFF;
-        ram[addr + 3] = (top->dBus_cmd_payload_data >> 24) & 0xFF;
+        // Schreibzugriff (Store): Kopiere Daten vom Bus in den Speicher
+        std::memcpy(&dmem[addr], &top->dBus_cmd_payload_data, nbytes);
+        std::printf("[SW]  addr=0x%08x data=0x%08x size=%u\n", addr, top->dBus_cmd_payload_data, size);
     } else {
-        uint32_t rdat = (ram[addr + 3] << 24) | (ram[addr + 2] << 16)
-                      | (ram[addr + 1] << 8)  | (ram[addr + 0] << 0);
-        top->dBus_rsp_data = rdat;
+        // Lesezugriff (Load): Kopiere Daten vom Speicher auf den Bus
+        uint32_t rdata = 0;
+        std::memcpy(&rdata, &dmem[addr], nbytes);
+        top->dBus_rsp_data = rdata;
+        std::printf("[LW]  addr=0x%08x data=0x%08x size=%u\n", addr, rdata, size);
     }
 }
 ```
-Dieser Abschnitt zeigt den simulierten Zugriff auf den Arbeitsspeicher des Prozessors.
-Sobald der Core ein sw (Store Word) ausführt, werden die Daten in das ram[]-Array geschrieben.
-Ein anschließendes lw (Load Word) liest dieselben Werte wieder zurück und prüft somit die Speicherintegrität.
-Durch diesen Mechanismus lässt sich im Verlauf der Simulation eindeutig nachweisen, dass die Speicherzugriffe des Prozessors korrekt funktionieren.  
-Der Abgleich zwischen geschriebenen und gelesenen Werten bildet somit einen wichtigen Teil der funktionalen Verifikation des Designs.
+Dieser Codeabschnitt stellt sicher, dass jeder Schreibvorgang (SW) protokolliert und persistent gespeichert wird, sodass ein nachfolgender Lesebefehl (LW) korrekte Daten erhält.
 
----
+
 
 ## Erweiterte Signalüberwachung
 
-Neben den Standard-Bus-Signalen werden während der Simulation auch interne Signale beobachtet,um ein umfassendes Verständnis des Prozessors zu erhalten.  
-Dazu gehören insbesondere:
+Um über die bloße Ein-/Ausgabe-Prüfung hinausgehende Diagnosen zu ermöglichen, wurden spezifische interne Signale der VexRiscv-Pipeline für das Tracing freigeschaltet. Dies erlaubt einen tiefen Einblick in den internen Zustand des Kerns während der Laufzeit.
 
-| Signalname | Beschreibung |
-|-------------|--------------|
-| **execute_IS_ALU_REG** | Kennzeichnet, ob die aktuelle Instruktion eine ALU-Operation ausführt |
-| **execute_BRANCH_DO** | Zeigt an, ob ein Sprungbefehl (Branch) aktiv ist |
-| **memory_STORE** | Gibt an, dass ein Speicher-Schreibvorgang (Store) aktiv ist |
-| **writeBack_REGFILE_WRITE_VALID** | Bestätigt den erfolgreichen Schreibvorgang in das Registerfile |
-| **csrplugin_inWfi** | Markiert den Low-Power-Wait-Zustand, falls aktiviert |
+Zu den wichtigsten überwachten Signalen gehören:
+- *execute_IS_ALU_REG*: Kennzeichnet ALU-Operationen.
 
-Diese erweiterten Signale bieten tiefe Einblicke in die Pipelineaktivitäten und unterstützen die Identifikation potenzieller Timing- oder Logikfehler.  
-Sie werden ebenfalls in der Datei `trace.vcd` abgelegt und können in GTKWave eingeblendet werden.
+- *execute_BRANCH_DO*: Signalisiert aktive Sprünge.
 
----
+- *writeBack_REGFILE_WRITE_VALID*: Bestätigt das erfolgreiche Schreiben in das Registerfile.
+
+Die Analyse dieser Signale ist essenziell, um Pipeline-Hazards oder fehlerhafte Sprungvorhersagen zu identifizieren.
 
 ## Verifikation des Befehlssatzes
 
-Zur weiteren Überprüfung wurde der Grundbefehlssatz **RV32I** des RISC-V-Standards getestet.  
-Dabei lag der Fokus auf den folgenden Instruktionsgruppen:
+Die Validierung erfolgte anhand des im irom definierten Testprogramms. Die Sequenz deckt die wichtigsten Basisoperationen ab:
 
-| Kategorie | Beispielbefehle | Zweck |
-|------------|----------------|-------|
-| **Arithmetisch-logisch** | `addi`, `sub`, `and`, `or`, `xor` | Test der ALU und Registerlogik |
-| **Sprungbefehle** | `beq`, `jal`, `jalr` | Prüfung der Verzweigungs- und PC-Logik |
-| **Speicherbefehle** | `lw`, `sw` | Kontrolle der Bus- und RAM-Operationen |
-| **Systembefehle** | `ecall`, `ebreak` (optional) | Kontrolle des CSR-Plugins |
+- Arithmetisch-Logische Befehle (wie addi): Prüft die ALU-Funktionalität und Immediate-Verarbeitung.
 
-Alle getesteten Instruktionen zeigten das erwartete Verhalten.  
-Besonders die Speicher- und Sprungbefehle ließen sich im GTKWave-Trace gut nachvollziehen, da sie markante Signaländerungen auf `dBus` und `iBus` verursachen.
+- Speicherzugriffe: Durch Sequenzen von SW (Store Word) und LW (Load Word) wurde überprüft, ob Daten korrekt im emulierten RAM abgelegt und konsistent wiederhergestellt werden.
 
----
+- Kontrollfluss: Sprungbefehle (BEQ, JAL) wurden genutzt, um die korrekte Berechnung des Program Counters (PC) bei Verzweigungen zu verifizieren
+
+
+**Einfügen: Abbildung 6.3 – Validierung von Speicherzugriffen im GTKWave-Trace
+Was: Ein Screenshot aus GTKWave, der einen Store (Schreiben) und kurz darauf einen Load (Lesen) zeigt.
+Markieren Sie die Signale dBus_cmd_payload_address (Adresse) und dBus_cmd_payload_data (Daten).
+Warum: Belegt visuell, dass die Simulation funktioniert ("Proof of Work") und der Prozessor tatsächlich mit dem Speicher interagiert.**
 
 ## Validierung über Konsolenausgaben
 
-Während der Simulation wurden zusätzlich Konsolenausgaben generiert, um wichtige Prozessschritte direkt zu protokollieren.  
-Beispiel:
+Ein wesentlicher Vorteil des verwendeten C++-Testbenches ist die direkte Protokollierung der Speicherzugriffe auf der Konsole. Während der Simulation generiert der Code Ausgaben, die den Datenfluss transparent machen:
+
 
 ```text
-Cycle 1  PC=0x00000000
-Cycle 2  PC=0x00000004
-Cycle 3  PC=0x00000008
-Cycle 4  PC=0x0000000C
-Cycle 5  PC=0x00000000  <-- Sprung zurück (Branch aktiv)
+
+[SW]  addr=0x00000100 data=0x00000123 size=2
+[LW]  addr=0x00000100 data=0x00000123 size=2
 ```
 
-Diese Ausgabe verdeutlicht das korrekte Verhalten des Program Counters und bestätigt die fehlerfreie Auswertung des beq-Befehls.
-Somit wird die Übereinstimmung zwischen Simulation und GTKWave-Darstellung sichergestellt.
+Diese Ausgabe bestätigt:
+- Der sw-Befehl hat den Wert *0x123* erfolgreich an Adresse 0x100 geschrieben.
+- Der nachfolgende lw-Befehl hat exakt denselben Wert von dieser Adresse gelesen.
 
 ---
 
