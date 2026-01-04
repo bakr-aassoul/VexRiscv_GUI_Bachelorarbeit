@@ -65,7 +65,13 @@ Sie besteht aus:
    Die Basis-ISA ist bewusst klein gehalten, um Implementierungen möglichst einfach
    und energieeffizient zu gestalten.
 
-**Abbildung 1: diagram showing the R-Type, I-Type, etc. This proves you understand where the "Opcode" bits are located.**
+```{figure} images/Abb1.png
+:name: fig:gtkwave_trace
+:width: 100%
+:align: center
+
+Abbildung 6.3: Validierung der Custom ALU im GTKWave-Trace
+```
 
 
 2. **Standarderweiterungen (M, A, F, D, C, V usw.)**
