@@ -66,11 +66,11 @@ Sie besteht aus:
    und energieeffizient zu gestalten.
 
 ```{figure} images/Abb1.png
-:name: fig:gtkwave_trace
+:name: fig:riscv_formats
 :width: 100%
 :align: center
 
-Abbildung 6.3: Validierung der Custom ALU im GTKWave-Trace
+Übersicht der RISC-V Basis-Instruktionsformate (RV32I)
 ```
 
 
@@ -143,7 +143,13 @@ Diese Plugins können beim Aufbau des Prozessors dynamisch hinzugefügt, entfern
 Durch das Plugin-System lässt sich der VexRiscv gezielt an unterschiedliche Anforderungen anpassen, von sehr kleinen, ressourcenschonenden Implementierungen bis hin zu leistungsfähigeren Varianten mit Cache, MMU oder Debug-Schnittstellen.
 Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Grundstruktur des Prozessors zu verändern. Somit entsteht eine hochgradig modulare Mikroarchitektur, deren Umfang und Fähigkeiten präzise steuerbar sind.
 
-**Abbildung 2: VexRiscv Pipeline : a block diagram of the 5-stage pipeline. Crucial: You should ideally edit this image (e.g., in Paint or PowerPoint) to draw an arrow pointing to the "Execute" stage labeled "Plugin Injection". This visually explains your text.**
+```{figure} images/Abb2.png
+:name: fig:vex_pipeline
+:width: 100%
+:align: center
+
+Die VexRiscv 5-Stufen-Pipeline
+```
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
@@ -220,7 +226,13 @@ Damit wird die inhärente Modularität des VexRiscv nicht nur sichtbar, sondern 
 
 Im Rahmen dieser Arbeit kamen mehrere Tools zum Einsatz, die für den Build, Simulation und Analyseprozess eines konfigurierbaren VexRiscv-Kerns notwendig sind. Diese Werkzeuge bilden die Grundlage für den Entwicklungsworkflow der GUI sowie für die Validierung des generierten Prozessordesigns.
 
-**Abbildung 3 : Toolchain Flow (Figure 2.3): A simple diagram showing: SpinalHDL -> Verilog -> Verilator -> GTKWave.**
+```{figure} images/Abb3.png
+:name: fig:toolchain_flow
+:width: 100%
+:align: center
+
+Der SpinalHDL Toolchain-Workflow
+```
 
 ### Scala Build Tool (SBT)
 
@@ -310,7 +322,13 @@ Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in 
 
 Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
 
-**Abbildung 4 : Foto des Boards**
+```{figure} images/Abb4.png
+:name: fig:pynq_board
+:width: 80%
+:align: center
+
+Das verwendete Entwicklungsboard Digilent PYNQ-Z1
+```
 
 ### Zynq-Architektur (PS und PL)
 Der Zynq-Chip vereint zwei Welten auf einem Die:
@@ -321,7 +339,13 @@ Der Zynq-Chip vereint zwei Welten auf einem Die:
 Für diese Arbeit ist primär die Programmable Logic (PL) von Bedeutung. Der generierte VexRiscv-Prozessor wird als *Soft-Core* vollständig in diesen FPGA-Bereich synthetisiert.
 Das PS dient dabei lediglich zur Stromversorgung und Konfiguration oder wird ( je nach LiteX-Setup ) komplett umgangen.
 
-**Abbildung 5: (Fügen Sie hier das Blockschaltbild des Zynq-7000 ein)**
+```{figure} images/Abb5.png
+:name: fig:zynq_arch
+:width: 100%
+:align: center
+
+Architektur des Zynq-7000 SoC
+```
 
 ### Verfügbare Ressourcen
 
