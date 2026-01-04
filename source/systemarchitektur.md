@@ -11,7 +11,13 @@ Ein wesentliches Merkmal ist die Fähigkeit zur generativen Erweiterung der Hard
 Die Systemarchitektur basiert dabei auf einem modularen Softcore-Design, das durch eine eigens entwickelte grafische Benutzeroberfläche ergänzt wird. 
 Diese GUI fungiert als zentrale Steuerzentrale, um unterschiedliche Varianten des VexRiscv-Prozessorkerns nicht nur zu konfigurieren, sondern automatisiert zu erzeugen, in eine System-on-Chip-Umgebung (SoC) einzubetten und schließlich auf einer FPGA-Plattform zu evaluieren. Die einzelnen Systemkomponenten, von der GUI über die Codegenerierung und SoC-Integration bis zur Simulation und physischen FPGA-Implementierung, greifen dabei eng ineinander und bilden einen geschlossenen, iterativen Entwicklungs- und Evaluierungsworkflow.
 
-**ABBILDUNG 4.1: Systemarchitektur-Überblick**
+```{figure} images/Abb4.1.png
+:name: fig:system_arch
+:width: 100%
+:align: center
+
+Gesamtsystem-Architektur
+```
 ```{raw} latex
 \clearpage
 ```
@@ -41,7 +47,14 @@ Je nach gewählter Konfiguration können zusätzliche Funktionseinheiten wie Mul
 
 **Integration der Custom ALU (Tight Coupling)** 
 Ein wesentliches Architekturmerkmal dieser Arbeit ist die Art der Integration benutzerdefinierter Befehle. Im Gegensatz zu klassischen Co-Prozessoren, die oft über einen externen Bus angebunden sind, wird die generierte Custom ALU tief in die Pipeline integriert. Sie sitzt architektonisch parallel zur Standard-ALU in der *Execute-Stufe*. Dies ermöglicht einen direkten Zugriff auf die Registerwerte ohne Latenz und erlaubt die Rückführung des Ergebnisses im selben Taktzyklus ("Single Cycle Execution").
-**ABBILDUNG 4.2: Diagramm, das zeigt, wie die Custom ALU parallel zur Standard ALU sitzt**
+
+```{figure} images/Abb4.2.png
+:name: fig:parallel_alu
+:width: 80%
+:align: center
+
+Detailansicht der Execute-Stufe
+```
 
 Auf diese Weise lässt sich der Umfang des Prozessors gezielt an den gewünschten Einsatzzweck anpassen, von einer kompakten, ressourcenschonenden Ausführung bis hin zu einer leistungsfähigeren Variante mit erweitertem Befehlssatz.
 
