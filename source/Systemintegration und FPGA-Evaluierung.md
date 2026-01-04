@@ -84,6 +84,5 @@ Ein Lesezugriff auf 0x82001000 (außerhalb des SRAM-Adressraums) liefert ff ff f
 
 ## Fazit der Evaluierung
 
-Die FPGA-basierte Evaluierung erbrachte den empirischen Nachweis der Systemreife des entwickelten Designs. Das System bootet zuverlässig, führt das LiteX-BIOS aus und demonstriert damit das korrekte Zusammenwirken von Fetch-Pfad, Kontrollfluss-Logik und Speicherzugriff. Gleichzeitig validiert der erfolgreiche Betrieb die im Backend implementierte automatisierte Schnittstellen-Transformation, welche eine nahtlose Einbindung des VexRiscv-Kerns in die Wishbone-basierte LiteX-Systemarchitektur ermöglicht.
-
+Die FPGA-basierte Evaluierung erbrachte den empirischen Nachweis der Systemreife des entwickelten Designs. Das System bootet zuverlässig, führt das LiteX-BIOS aus und demonstriert damit das korrekte Zusammenwirken von Fetch-Pfad, Kontrollfluss-Logik und Speicherzugriff. Gleichzeitig validiert der erfolgreiche Betrieb die im Backend implementierte automatisierte Schnittstellen-Transformation, welche eine nahtlose Einbindung des VexRiscv-Kerns in die Wishbone-basierte LiteX-Systemarchitektur ermöglicht. 
 Der abgeschlossene Timing-Closure-Prozess bei 125 MHz sowie die konsistenten Speicher-Lese-/Schreibtests bestätigen die funktionale und zeitliche Stabilität des generierten Designs. Insgesamt zeigt die Evaluierung, dass die entwickelte GUI nicht nur als Simulationswerkzeug dient, sondern synthetisierbaren, in realen System-on-Chip-Umgebungen lauffähigen Hardware-Code erzeugt.
