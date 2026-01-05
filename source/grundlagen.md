@@ -143,13 +143,6 @@ Diese Plugins können beim Aufbau des Prozessors dynamisch hinzugefügt, entfern
 Durch das Plugin-System lässt sich der VexRiscv gezielt an unterschiedliche Anforderungen anpassen, von sehr kleinen, ressourcenschonenden Implementierungen bis hin zu leistungsfähigeren Varianten mit Cache, MMU oder Debug-Schnittstellen.
 Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Grundstruktur des Prozessors zu verändern. Somit entsteht eine hochgradig modulare Mikroarchitektur, deren Umfang und Fähigkeiten präzise steuerbar sind.
 
-```{figure} images/Abb2.png
-:name: fig:vex_pipeline
-:width: 100%
-:align: center
-
-Die VexRiscv 5-Stufen-Pipeline und Plugin Injection
-```
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
 
@@ -210,8 +203,13 @@ Die Modularität des VexRiscv basiert technisch auf dem *Plugin-Interface* von S
 Besonders relevant für Erweiterungen ist der DecoderService. Plugins können diesem Service spezifische Bitmuster (Instruktions-Opcodes) übergeben. Erkennt der Decoder zur Laufzeit dieses Muster, aktiviert er automatisch die entsprechenden Steuersignale für das Plugin in der Execute-Stufe. 
 Dieser Mechanismus erlaubt es, neue Recheneinheiten (ALUs) hinzuzufügen, ohne den Kern-Decoder manuell umschreiben zu müssen. Die entwickelte GUI nutzt genau diesen Mechanismus zur automatischen Code-Generierung.
 
+```{figure} images/Abb2.png
+:name: fig:vex_pipeline
+:width: 100%
+:align: center
 
-
+Die VexRiscv 5-Stufen-Pipeline und Plugin Injection
+```
 
 Die in dieser Arbeit entwickelte GUI automatisiert genau diesen Konfigurationsprozess.
 Anstatt die einzelnen Plugins manuell im Scala/SpinalHDL-Code zusammenzustellen, ermöglicht die Oberfläche eine intuitive Auswahl der gewünschten Komponenten, beispielsweise ALU-Erweiterungen, Branch-Units, Speicher-Interfaces oder CSR-Optionen.
@@ -254,9 +252,6 @@ Es ermöglicht das Anzeigen, Zoomen und Analysieren von VCD-Dateien (Value Chang
 Dieses Werkzeug ist ein zentraler Bestandteil des Verifikationsprozesses, da es die visuelle Kontrolle des CPU-Verhaltens ermöglicht und somit Fehler und Timing-Probleme direkt sichtbar macht
 Die Kombination aus Verilator und GTKWave bildet somit ein vollständiges Werkzeugpaar für die funktionale Validierung der Hardware.
 
-```{raw} latex
-\clearpage
-```
 ### LiteX
 LiteX ist ein modulares Framework zur Erstellung von System-on-Chip-(SoC) Architekturen auf FPGAs. Es abstrahiert viele der typischen Aufgaben der SoC-Integration (Bus-Infrastruktur, Peripherieanbindung, Speichercontroller oder Simulation) und ermöglicht dadurch einen schnellen Aufbau komplexer Systeme.
 
