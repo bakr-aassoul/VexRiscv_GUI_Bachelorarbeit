@@ -16,10 +16,13 @@ Das Testsystem setzt sich aus folgenden Komponenten zusammen:
 
 Der Simulationsprozess wird direkt aus der GUI angestoßen und durchläuft automatisiert die Schritte Kompilierung, Build und Ausführung . Das Ergebnis ist eine VCD-Datei (*trace.vcd*), die sämtliche internen Signalwechsel protokolliert.
 
-**Einfügen: Abbildung 6.1 – Simulations-Workflow
-Was: Ein Flussdiagramm, das den Weg zeigt: GUI → VexRiscv.v (Verilog) → Verilator Compiler → simv (Executable) → wave.vcd → GTKWave.
-Warum: Es visualisiert den abstrakten Prozess für den Leser auf einen Blick und zeigt, wie die Tools ineinandergreifen.**
+```{figure} images/Abb6.1.png
+:name: fig:sim_workflow
+:width: 100%
+:align: center
 
+Der Simulations-Workflow
+```
 
 ## Aufbau des Testbenches (Testbench)
 
@@ -44,11 +47,14 @@ Zwischen den Befehlen wurden nop-Instruktionen (No Operation) eingefügt, um pot
 
 3. **Bus-Simulation**: Der Testbench überwacht die *dBus*-Signale, um Speicherzugriffe abzufangen. Anstatt komplexer Bit-Operationen nutzt die Implementierung *std::memcpy*, um Daten zwischen dem simulierten Bus und dem *dmem*-Array zu transferieren. Dies ermöglicht eine sehr kompakte und lesbare Simulation des Datenbusses.
 
-**Einfügen: Abbildung 6.2 – Blockschaltbild des Testaufbaus
-Was: Ein Diagramm mit dem "VexRiscv Core" (DUT) in der Mitte. Pfeile zeigen die Verbindungen zum umgebenden "Testbench (C++)".
-Pfeile rein (Inputs): clk, reset, iBus Response, dBus Response.
-Pfeile raus (Outputs): iBus Command (PC), dBus Command (Address/Data).
-Warum: Verdeutlicht, wie der C++-Code physikalisch mit den Verilog-Ports des Prozessors kommuniziert.**
+```{figure} images/Abb6.2.png
+:name: fig:testbench_setup
+:width: 80%
+:align: center
+
+Blockschaltbild des Testaufbaus
+```
+
 
 ```cpp
 // Auszug aus tb_gui.cpp
@@ -98,12 +104,14 @@ Die Erwartungswerte für den Test waren:
 - Kontrollfluss: Sprungbefehle (BEQ, JAL) wurden genutzt, um die korrekte Berechnung des Program Counters (PC) bei Verzweigungen zu verifizieren
 
 
-**Einfügen: Abbildung 6.3 – Validierung der Custom ALU im GTKWave-Trace
-Was: Screenshot aus GTKWave. Zoomen Sie auf den Zeitpunkt, an dem das Ergebnis 0x246 auf dem Datenbus (dBus_cmd_payload_data) erscheint.
-Warum: Belegt visuell, dass die benutzerdefinierte Logik korrekt gearbeitet hat.**
+```{figure} images/abb.6.3.png
+:name: fig:gtkwave_trace
+:width: 100%
+:align: center
 
-## Validierung über Konsolenausgaben
-
+Abbildung 6.3: Validierung der Custom ALU im GTKWave-Trace
+```
+# Validierung über Konsolenausga
 Ein wesentlicher Vorteil des verwendeten C++-Testbenches ist die direkte Protokollierung der Speicherzugriffe auf der Konsole. Während der Simulation generiert der Code Ausgaben, die den Datenfluss transparent machen:
 
 
