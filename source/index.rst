@@ -14,3 +14,13 @@ Bachelorarbeit – VexRiscv GUI
    KAPITEL8
    Zusammenfassung und Ausblick
 .. bibliography:: literatur.bib
+.. raw:: latex
+
+   \clearpage
+   % Erzwingt einen Seitenumbruch
+   
+   % Fügt das Abbildungsverzeichnis ins Inhaltsverzeichnis ein
+   \addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+   
+   % Erstellt das eigentliche Verzeichnis
+   \listoffigures
