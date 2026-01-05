@@ -11,5 +11,5 @@ Bachelorarbeit – VexRiscv GUI
    gui_implementierung
    simulation_verifikation
    Systemintegration und FPGA-Evaluierung
-   Kapitel8
+   KAPITEL8
    Zusammenfassung und Ausblick
