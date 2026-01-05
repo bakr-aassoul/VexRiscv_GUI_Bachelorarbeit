@@ -1,7 +1,17 @@
 # Simulation und Verifikation
 
+```{raw} latex
+\large
+```
 Die Simulation bildet den zentralen Nachweis der Funktionsfähigkeit des mit der GUI erzeugten Prozessors. Sie dient der Validierung, ob der automatisch generierte Verilog-Code die erwarteten Operationen des RISC-V-Befehlssatzes sowie die benutzerdefinierten Erweiterungen (Custom Instructions) korrekt ausführt. In diesem Kapitel werden der Testaufbau, die Durchführung der Simulation mittels Verilator und die Analyse der Ergebnisse beschrieben.
 
+```{raw} latex
+\clearpage
+```
+
+```{raw} latex
+\normalsize
+```
 
 
 ## Testaufbau
