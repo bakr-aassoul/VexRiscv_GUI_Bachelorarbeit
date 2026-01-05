@@ -45,7 +45,11 @@ Die durch die GUI generierte Konfiguration beschreibt einen konkreten VexRiscv-P
 Dazu gehören insbesondere Einheiten für Instruktions- und Datenzugriffe, die arithmetisch-logische Einheit, Shifter und Branch-Logik, das Registerfile, die Hazard-Behandlung sowie die Verwaltung der Control-and-Status-Register. 
 Je nach gewählter Konfiguration können zusätzliche Funktionseinheiten wie Multiplikation und Division oder weitere Spezialfunktionen integriert werden.
 
+```{raw} latex
+\clearpage
+```
 **Integration der Custom ALU (Tight Coupling)** 
+
 Ein wesentliches Architekturmerkmal dieser Arbeit ist die Art der Integration benutzerdefinierter Befehle. Im Gegensatz zu klassischen Co-Prozessoren, die oft über einen externen Bus angebunden sind, wird die generierte Custom ALU tief in die Pipeline integriert. Sie sitzt architektonisch parallel zur Standard-ALU in der *Execute-Stufe*. Dies ermöglicht einen direkten Zugriff auf die Registerwerte ohne Latenz und erlaubt die Rückführung des Ergebnisses im selben Taktzyklus ("Single Cycle Execution").
 
 ```{figure} images/Abb4.2.png
@@ -58,7 +62,12 @@ Detailansicht der Execute-Stufe
 
 Auf diese Weise lässt sich der Umfang des Prozessors gezielt an den gewünschten Einsatzzweck anpassen, von einer kompakten, ressourcenschonenden Ausführung bis hin zu einer leistungsfähigeren Variante mit erweitertem Befehlssatz.
 
+```{raw} latex
+\clearpage
+```
+
 **SoC-Integration mit LiteX**
+
 Um den Prozessor in einem lauffähigen Gesamtsystem zu betreiben, wird er mithilfe von **LiteX** in eine **System-on-Chip-Struktur** eingebettet. 
 LiteX stellt dabei die notwendige Systeminfrastruktur bereit. 
 Es generiert eine einheitliche Busarchitektur, verbindet den Prozessor mit Speicherressourcen wie internem SRAM oder externem DRAM und bindet grundlegende Peripheriefunktionen wie UART, Timer oder GPIO an. 
