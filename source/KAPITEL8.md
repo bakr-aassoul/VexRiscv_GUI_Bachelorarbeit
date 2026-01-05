@@ -35,7 +35,7 @@ Dieser Ansatz stellt den Kernbeitrag der Arbeit dar und bildet die Grundlage fü
 
 Die implementierte Lösung entspricht einem Level-1-Erweiterungsmodell, bei dem benutzerdefinierte Instruktionen als einzyklische ALU-Operationen realisiert werden. Diese Erweiterungsstufe ist besonders geeignet für GUI-gestützte Entwicklungsumgebungen, da sie einen günstigen Kompromiss zwischen Flexibilität und Hardwarekomplexität bietet.
 
-Innerhalb dieses Modells lassen sich bereits zahlreiche sinnvolle ISA-Erweiterungen umsetzen, wie sie auch in aktuellen RISC-V-Spezifikationen definiert sind {cite}`RIS19`. Der funktionale Umfang umfasst dabei insbesondere:
+Innerhalb dieses Modells lassen sich bereits zahlreiche sinnvolle ISA-Erweiterungen umsetzen, wie sie auch in aktuellen RISC-V-Spezifikationen definiert sind {cite}`RISCV19`. Der funktionale Umfang umfasst dabei insbesondere:
 
 1. **Bitmanipulationen:** Operationen wie zyklische Rotationen (ROL/ROR), Bit-Spiegelungen (Reversal) oder Zähloperationen (Population Count, Leading Zero Count), die in der Standard-RISC-V-ISA (RV32I) mehrere Instruktionen erfordern würden.
 2. **Sub-Word-Parallelism (SIMD):** Die gleichzeitige Verarbeitung mehrerer gepackter Datenworte innerhalb eines 32-Bit-Registers (z. B. vier parallele 8-Bit-Additionen für Bildverarbeitungsalgorithmen).
