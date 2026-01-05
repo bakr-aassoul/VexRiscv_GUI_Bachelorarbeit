@@ -148,7 +148,7 @@ Jedes Plugin erweitert den Kern um klar abgegrenzte Funktionalität, ohne die Gr
 :width: 100%
 :align: center
 
-Die VexRiscv 5-Stufen-Pipeline
+Die VexRiscv 5-Stufen-Pipeline und Plugin Injection
 ```
 
 In dieser Arbeit wird eine Konfiguration verwendet, die sich auf die Kernelemente eines klassischen RV32I/M-Prozessors konzentriert. Die folgenden Plugins bilden dabei die funktionale Grundlage des eingesetzten Prozessors:
@@ -324,7 +324,7 @@ Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf
 
 ```{figure} images/Abb4.png
 :name: fig:pynq_board
-:width: 80%
+:width: 70%
 :align: center
 
 Das verwendete Entwicklungsboard Digilent PYNQ-Z1
@@ -341,10 +341,10 @@ Das PS dient dabei lediglich zur Stromversorgung und Konfiguration oder wird ( j
 
 ```{figure} images/Abb5.png
 :name: fig:zynq_arch
-:width: 100%
+:width: 90%
 :align: center
 
-Architektur des Zynq-7000 SoC
+Architektur des Zynq-7000 SoC (PS und PL)
 ```
 
 ### Verfügbare Ressourcen
