@@ -33,6 +33,9 @@ Der Simulationsprozess wird direkt aus der GUI angestoßen und durchläuft autom
 
 Der Simulations-Workflow
 ```
+```{raw} latex
+\clearpage
+```
 
 ## Aufbau des Testbenches (Testbench)
 
@@ -97,6 +100,9 @@ if (top->dBus_cmd_valid && top->dBus_cmd_ready) {
 ```
 Dieser Mechanismus ermöglicht eine geschlossene Verifikation: Das Ergebnis der Custom-ALU-Berechnung wird durch den sw-Befehl auf den Bus gelegt, von der Testbench abgefangen und auf der Konsole ausgegeben.
 
+```{raw} latex
+\clearpage
+```
 
 ## Erweiterte Signalüberwachung
 
@@ -111,6 +117,9 @@ Zu den wichtigsten überwachten Signalen gehören:
 
 Die Analyse dieser Signale in GTKWave ist essenziell, um sicherzustellen, dass die Custom Instruction korrekt in die Pipeline integriert wurde und das Ergebnis im richtigen Taktzyklus zurückschreibt.
 
+```{raw} latex
+\clearpage
+```
 ## Verifikation des Befehlssatzes
 
 Ein besonderer Fokus lag auf der Validierung der durch die GUI generierten Hardware-Erweiterung. Im getesteten Szenario wurde eine SIMD-Addition (MySimdAdd) implementiert.
