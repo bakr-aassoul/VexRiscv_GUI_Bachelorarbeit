@@ -342,6 +342,9 @@ Das PS dient dabei lediglich zur Stromversorgung und Konfiguration oder wird ( j
 Architektur des Zynq-7000 SoC (PS und PL)
 ```
 
+```{raw} latex
+\clearpage
+```
 ### Verfügbare Ressourcen
 
 Der XC7Z020-Chip bietet ausreichende Ressourcen, um auch komplexe VexRiscv-Konfigurationen (z. B. mit Caches, Multipliern und Custom ALUs) zu implementieren. Die wichtigsten Kenndaten sind:
