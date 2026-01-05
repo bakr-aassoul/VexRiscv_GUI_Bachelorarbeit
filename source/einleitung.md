@@ -27,7 +27,7 @@ Ein besonderer Schwerpunkt liegt auf der Integration eines durchgängigen Workfl
 - **Simulation** des resultierenden Prozessors mit Verilator,
 - **Verifikation:** Die direkte Simulation des resultierenden Prozessors mit Verilator sowie die Signalvisualisierung in GTKWave, um interne Abläufe wie Pipeline-Stufen, Speicherzugriffe und die Ausführung der benutzerdefinierten Befehle detailliert analysieren zu können.
 
-Die entwickelte GUI soll insbesondere Studierenden und Forschern den Einstieg in SpinalHDL und das Design domänenspezifischer Architekturen (Domain-Specific Architectures) erleichtern. Sowohl komplexe Konfigurationsschritte als auch die Erweiterung des Befehlssatzes lassen sich damit intuitiv ausführen, ohne die Scala-Quelltexte manuell bearbeiten zu müssen.
+Die entwickelte GUI soll insbesondere Studierenden und Forschern den Einstieg in SpinalHDL und das Design domänenspezifischer Architekturen (Domain-Specific Architectures) erleichtern {cite}`HP17b`. Sowohl komplexe Konfigurationsschritte als auch die Erweiterung des Befehlssatzes lassen sich damit intuitiv ausführen, ohne die Scala-Quelltexte manuell bearbeiten zu müssen.
 
 Darüber hinaus umfasst die Arbeit eine FPGA-basierte Evaluierung der generierten Prozessorkonfigurationen, um deren Funktionsfähigkeit und Effizienz unter realen Hardwarebedingungen zu überprüfen.
 
