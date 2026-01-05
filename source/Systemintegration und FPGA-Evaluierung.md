@@ -66,14 +66,12 @@ Die Projektstruktur in Vivado verdeutlicht die Einbettung des Softcores.
 
 ```{figure} images/Abb7.2.png
 :name: fig:Hierarchie-Ansicht im Vivado-Projekt
-:width: 80%
+:width: 60%
 :align: center
 
 Hierarchie-Ansicht im Vivado-Projekt
 ```
-
-
-Wie in der Abbildung ersichtlich, fungiert das Modul digilent_pynq_z1 als Top-Level-Wrapper, der die physikalischen Pins des FPGAs definiert. Der generierte VexRiscv-Kern ist als Sub-Modul instanziiert. Diese strikte Kapselung ermöglicht es, den Prozessorkern bei Bedarf neu zu generieren (z. B. mit anderen Plugins), ohne das gesamte SoC-Layout in Vivado ändern zu müssen.
+Wie in der Abbildung 7.2 ersichtlich, fungiert das Modul digilent_pynq_z1 als Top-Level-Wrapper, der die physikalischen Pins des FPGAs definiert. Der generierte VexRiscv-Kern ist als Sub-Modul instanziiert. Diese strikte Kapselung ermöglicht es, den Prozessorkern bei Bedarf neu zu generieren (z. B. mit anderen Plugins), ohne das gesamte SoC-Layout in Vivado ändern zu müssen.
 
 ### Timing und Ressourcen
 
