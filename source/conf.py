@@ -10,6 +10,20 @@ extensions = ['myst_parser']
 source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 exclude_patterns = []
 
+# --- NUMMERIERUNGSEINSTELLUNGEN (NEU HINZUGEFÜGT) ---
+# Aktiviert die Nummerierung für Abbildungen, Tabellen und Code
+numfig = True
+
+# 1 = "Kapitel.Bild" (z.B. Abbildung 2.3)
+# 0 = Durchgehend (z.B. Abbildung 15)
+numfig_secnum_depth = 1
+
+# Formatierung der Beschriftung
+numfig_format = {
+    'figure': 'Abbildung %s',
+    'table': 'Tabelle %s',
+    'code-block': 'Listing %s',
+}
 # -- Options for HTML Output -------------------------------------------------
 html_theme = 'alabaster'
 html_static_path = ['_static']
