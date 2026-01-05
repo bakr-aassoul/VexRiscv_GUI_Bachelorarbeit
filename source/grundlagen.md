@@ -20,7 +20,7 @@
 ```
 ## RISC-V
 
-**RISC-V** (Reduced Instruction Set Computer – Fifth Generation) ist eine offene, modulare und lizenzfreie **Befehlssatzarchitektur (ISA)**,  die 2010 an der University of California, Berkeley, entwickelt wurde.  
+**RISC-V** (Reduced Instruction Set Computer – Fifth Generation) ist eine offene, modulare und lizenzfreie **Befehlssatzarchitektur (ISA)**,  die 2010 an der University of California, Berkeley, entwickelt wurde {cite}`RISCV19`.  
 
 Im Gegensatz zu proprietären Architekturen wie **x86** oder **ARM** kann RISC-V frei genutzt, angepasst und erweitert werden.  
 
@@ -37,8 +37,8 @@ Typische Eigenschaften sind:
    
 Dadurch wird ein effizienter Pipeline-Aufbau und eine klare Trennung zwischen **Fetch**, **Decode**, **Execute**, **Memory** und **Write-Back** ermöglicht.
 Durch die geringe Komplexität der Basisinstruktionen lassen sich RISC-V-Prozessoren in sehr unterschiedlichen Leistungs- und Energieklassen realisieren von kleinen Mikrocontrollern bis hin zu High-Performance-Kernen.
-Die Grundmenge des RISC-V-Befehlssatzes, **RV32I**, enthält alle Basisoperationen für arithmetische, logische und Speicherbefehle.  
-Darauf aufbauend existieren optionale Erweiterungen, z.B:
+Die Grundmenge des RISC-V-Befehlssatzes, **RV32I**, enthält alle Basisoperationen für arithmetische, logische und Speicherbefehle {cite}`RISCV19`.  
+Darauf aufbauend existieren optionale Erweiterungen {cite}`PH17a`, z.B:
 
 - Multiplikation und Division (M-Extension),  
 - Atomare Operationen (A),
@@ -72,7 +72,7 @@ Sie besteht aus:
 
 Übersicht der RISC-V Basis-Instruktionsformate (RV32I)
 ```
-
+{cite}`RISCV19`
 
 2. **Standarderweiterungen (M, A, F, D, C, V usw.)**
    - Jede Erweiterung ist vollständig optional, wodurch sich RISC-V besser an
@@ -101,7 +101,8 @@ Diese Offenheit ist die theoretische Grundlage für die in dieser Arbeit entwick
 
 ## Domain-Specific Architectures (DSA)
 
-Die Grenzen der Skalierung klassischer General-Purpose-Prozessoren (Moore’s Law) führen zunehmend zum Einsatz von Domain-Specific Architectures (DSA). Hierbei wird die Hardware-Architektur an die spezifischen Anforderungen einer Anwendungsdomäne (z. B. Signalverarbeitung, Kryptografie oder KI) angepasst.
+Die Grenzen der Skalierung klassischer General-Purpose-Prozessoren (Moore’s Law) führen zunehmend zum Einsatz von Domain-Specific Architectures (DSA) {cite}`HP17b`
+. Hierbei wird die Hardware-Architektur an die spezifischen Anforderungen einer Anwendungsdomäne (z. B. Signalverarbeitung, Kryptografie oder KI) angepasst.
 
 Durch die Implementierung spezialisierter Rechenwerke (Custom Instructions), die häufig benötigte komplexe Operationen in Hardware abbilden, lassen sich signifikante Effizienzgewinne gegenüber einer reinen Softwarelösung erzielen. Der VexRiscv-Prozessor in Kombination mit einem FPGA bietet eine ideale Plattform für das Rapid Prototyping solcher heterogenen Architekturen.
 
@@ -110,7 +111,7 @@ Durch die Implementierung spezialisierter Rechenwerke (Custom Instructions), die
 ```
 ## SpinalHDL
 
-SpinalHDL ist eine moderne HDL (Hardwarebeschreibungssprache), die im Jahr 2014 eingeführt wurde und als Domain-Specific Language (DSL) in Scala implementiert ist. Sie bietet die Möglichkeit, digitale Schaltungen zu entwerfen. 
+SpinalHDL ist eine moderne HDL (Hardwarebeschreibungssprache), die im Jahr 2014 eingeführt wurde und als Domain-Specific Language (DSL) in Scala implementiert ist {cite}`PP19`. Sie bietet die Möglichkeit, digitale Schaltungen zu entwerfen. 
 Danach können diese als Verilog oder VHDL-Code generiert werden, der einsatzbereit und mit FPGA sowie ASIC-Toolchains kompatibel ist.
 
 
@@ -133,7 +134,7 @@ Ein bekanntes Beispiel hierfür ist der **VexRiscv-Prozessor**, der vollständig
 
 ## Der VexRiscv-Prozessor
 
-Der **VexRiscv** ist ein in SpinalHDL geschriebener, **konfigurierbarer RISC-V-Prozessor**, der sich durch seine modulare Struktur und flexible Architektur auszeichnet.  
+Der **VexRiscv** ist ein in SpinalHDL geschriebener, **konfigurierbarer RISC-V-Prozessor**, der sich durch seine modulare Struktur und flexible Architektur auszeichnet {cite}`Pap24a`.  
 Er wird in zahlreichen Forschungs- und Lehrprojekten eingesetzt und dient als Referenzdesign für anpassbare RISC-V-Kerne.
 Das Besondere am VexRiscv ist sein **Plugin-System**. Jede Funktionseinheit (z. B. ALU, Branch-Unit, CSR-Verwaltung oder Speicherinterface) wird als separates Plugin implementiert.  
 Diese Plugins können beim Aufbau des Prozessors dynamisch hinzugefügt, entfernt oder parametrisiert werden.  
@@ -239,7 +240,7 @@ Es wird genutzt, um den SpinalHDL-Code zu kompilieren und den VexRiscv-Codegener
 
 ### Verilator
 
-**Verilator** ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten *C++*-Code übersetzt und als ausführbares Programm simuliert.
+**Verilator** ist ein freies, leistungsstarkes Simulationswerkzeug, das Verilog-Code in optimierten *C++*-Code übersetzt und als ausführbares Programm simuliert {cite}`Sny24`.
 Im Gegensatz zu klassischen eventbasierten Simulatoren arbeitet Verilator mit einem statischen Zeitschritt-Modell, was deutlich höhere Simulationsgeschwindigkeit ermöglicht.
 In dieser Arbeit wird Verilator genutzt, um den mit SpinalHDL erzeugten Verilog-Code zu simulieren und Korrektheitstests in Kombination mit LiteX oder eigenständigen Testbenches auszuführen.
 
@@ -253,7 +254,7 @@ Dieses Werkzeug ist ein zentraler Bestandteil des Verifikationsprozesses, da es 
 Die Kombination aus Verilator und GTKWave bildet somit ein vollständiges Werkzeugpaar für die funktionale Validierung der Hardware.
 
 ### LiteX
-LiteX ist ein modulares Framework zur Erstellung von System-on-Chip-(SoC) Architekturen auf FPGAs. Es abstrahiert viele der typischen Aufgaben der SoC-Integration (Bus-Infrastruktur, Peripherieanbindung, Speichercontroller oder Simulation) und ermöglicht dadurch einen schnellen Aufbau komplexer Systeme.
+LiteX ist ein modulares Framework zur Erstellung von System-on-Chip-(SoC) Architekturen auf FPGAs {cite}`Ker24`. Es abstrahiert viele der typischen Aufgaben der SoC-Integration (Bus-Infrastruktur, Peripherieanbindung, Speichercontroller oder Simulation) und ermöglicht dadurch einen schnellen Aufbau komplexer Systeme.
 
 Im Kontext dieser Arbeit erfüllt LiteX zwei zentrale Funktionen:
 - **Integration des VexRiscv-Prozessors:**
@@ -315,7 +316,7 @@ Auf dieser Hardwarebasis können die durch die GUI erzeugten Konfigurationen in 
 ```
 ## Pynq-Z1 FPGA-Board
 
-Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert.
+Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf dem Xilinx Zynq-7000 SoC (XC7Z020) basiert {cite}`Dig24`.
 
 ```{figure} images/Abb4.png
 :name: fig:pynq_board
@@ -326,7 +327,7 @@ Das verwendete Entwicklungsboard Digilent PYNQ-Z1
 ```
 
 ### Zynq-Architektur (PS und PL)
-Der Zynq-Chip vereint zwei Welten auf einem Die:
+Der Zynq-Chip vereint zwei Welten auf einem Die {cite}`Xil21`:
 
 - **Processing System (PS):** Ein Dual-Core ARM Cortex-A9 Prozessor, der typischerweise ein Betriebssystem (Linux) ausführt.
 - **Programmable Logic (PL):** Ein Artix-7 basierter FPGA-Bereich, in dem benutzerdefinierte digitale Schaltungen realisiert werden können.
