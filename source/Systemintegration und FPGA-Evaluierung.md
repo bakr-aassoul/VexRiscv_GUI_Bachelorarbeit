@@ -56,6 +56,9 @@ Die Konsolenausgabe liefert den Nachweis für das korrekte Zusammenspiel von Har
 
 - Speicher-Initialisierung: Die Anzeige der Speicherbereiche (ROM: 32 KiB, SRAM: 8 KiB) zeigt, dass der Wishbone-Interconnect die Adressräume korrekt mappt.
 
+```{raw} latex
+\clearpage
+```
 ## FPGA-Implementierung mit Vivado
 
 Die physische Umsetzung des Designs erfolgte mit der Xilinx Vivado Design Suite. In diesem Schritt durchläuft der generierte Verilog-Code die Phasen Synthese, Place & Route sowie Bitstream-Generierung.
@@ -72,11 +75,17 @@ Die Projektstruktur in Vivado verdeutlicht die Einbettung des Softcores.
 Hierarchie-Ansicht im Vivado-Projekt
 ```
 Wie in der Abbildung 7.2 ersichtlich, fungiert das Modul digilent_pynq_z1 als Top-Level-Wrapper, der die physikalischen Pins des FPGAs definiert. Der generierte VexRiscv-Kern ist als Sub-Modul instanziiert. Diese strikte Kapselung ermöglicht es, den Prozessorkern bei Bedarf neu zu generieren (z. B. mit anderen Plugins), ohne das gesamte SoC-Layout in Vivado ändern zu müssen.
+```{raw} latex
+\clearpage
+```
 
 ### Timing und Ressourcen
 
 Die Implementierung konnte erfolgreich abgeschlossen werden. Besonders hervorzuheben ist das Timing Closure: Das Design erreichte die Ziel-Systemfrequenz von 125 MHz ohne negative Slack-Werte (Setup/Hold-Time Violations). Dies indiziert, dass die durch SpinalHDL erzeugte Pipeline-Struktur effizient genug ist, um auf dem Artix-7-Fabric des Pynq-Z1 mit hoher Geschwindigkeit betrieben zu werden.
 
+```{raw} latex
+\clearpage
+```
 ## Hardware-Tests und Speicherzugriffe
 Um die Integrität der Datenbus-Anbindung (dBusWishbone) zu verifizieren, wurden manuelle Speicherzugriffe über die LiteX-Konsole durchgeführt. Dabei wurde geprüft, ob Daten korrekt in den SRAM geschrieben und wieder gelesen werden können.
 
@@ -96,7 +105,10 @@ Verifikation der Speicherzugriffe über die Konsole
 - Schreibvorgang: Der Befehl mem_write schrieb den hexadezimalen Wert 0xAABBCCDD an die Speicheradresse 0x10000004. Diese Adresse liegt im Basisbereich des SRAMs (Offset 0x4), wie im Memory-Map des SoCs definiert.
 
 - Lesevorgang: Der Befehl mem_read lieferte die Datenbytes zurück.
-  
+
+ ```{raw} latex
+\clearpage
+``` 
 **Analyse der Byte-Reihenfolge (Endianness):** 
 
 Das Ergebnis in Abbildung 7.3 demonstriert eine fundamentale Eigenschaft der RISC-V-Architektur: Little-Endian. Der 32-Bit-Wert 0xAABBCCDD wird byteweise so abgelegt, dass das niedrigstwertige Byte (0xDD) an der niedrigsten Adresse gespeichert wird. Die Konsolenausgabe dd cc bb aa bestätigt, dass die gesamte Kette, vom VexRiscv-Core über den Wishbone-Adapter bis zum Speichercontroller, die Byte-Reihenfolge (Byte Ordering) korrekt handhabt.
@@ -116,6 +128,9 @@ Zugriff auf undefinierte Speicherbereiche
 
 Ein Lesezugriff auf 0x82001000 (außerhalb des SRAM-Adressraums) liefert ff ff ff ff. Dies entspricht dem erwarteten Verhalten eines offenen Busses (Open Bus) im Wishbone-Standard, da kein Slave das Acknowledge-Signal sendet. Dieser Test bestätigt, dass der Adress-Decoder des SoCs fehlerhafte Zugriffe korrekt isoliert und das System nicht zum Absturz bringt.
 
+```{raw} latex
+\clearpage
+```
 ## Fazit der Evaluierung
 
 Die FPGA-basierte Evaluierung erbrachte den empirischen Nachweis der Systemreife des entwickelten Designs. Das System bootet zuverlässig, führt das LiteX-BIOS aus und demonstriert damit das korrekte Zusammenwirken von Fetch-Pfad, Kontrollfluss-Logik und Speicherzugriff. Gleichzeitig validiert der erfolgreiche Betrieb die im Backend implementierte automatisierte Schnittstellen-Transformation, welche eine nahtlose Einbindung des VexRiscv-Kerns in die Wishbone-basierte LiteX-Systemarchitektur ermöglicht. 
