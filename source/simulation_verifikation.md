@@ -56,8 +56,14 @@ Blockschaltbild des Testaufbaus
 ```
 
 
-```cpp
-// Auszug aus tb_gui.cpp
+```{raw} latex
+\begin{minipage}{\linewidth}
+```
+
+```{code-block} cpp
+:linenos:
+:caption: Auszug aus tb_gui.cpp
+
 if (top->dBus_cmd_valid && top->dBus_cmd_ready) {
     uint32_t addr = top->dBus_cmd_payload_address;
     // ... (Größenberechnung)
@@ -74,6 +80,10 @@ if (top->dBus_cmd_valid && top->dBus_cmd_ready) {
         // ...
     }
 }
+```
+
+```{raw} latex
+\end{minipage}
 ```
 Dieser Mechanismus ermöglicht eine geschlossene Verifikation: Das Ergebnis der Custom-ALU-Berechnung wird durch den sw-Befehl auf den Bus gelegt, von der Testbench abgefangen und auf der Konsole ausgegeben.
 
@@ -109,25 +119,36 @@ Die Erwartungswerte für den Test waren:
 :width: 100%
 :align: center
 
-Abbildung 6.3: Validierung der Custom ALU im GTKWave-Trace
+Validierung der Custom ALU im GTKWave-Trace
 ```
-# Validierung über Konsolenausga
+## Validierung über Konsolenausga
 Ein wesentlicher Vorteil des verwendeten C++-Testbenches ist die direkte Protokollierung der Speicherzugriffe auf der Konsole. Während der Simulation generiert der Code Ausgaben, die den Datenfluss transparent machen:
 
 
-```text
+```{raw} latex
+\begin{minipage}{\linewidth}
+```
+
+```{code-block} text
+:linenos:
+:caption: 
 
 IF  cycle=  1  pc=0x00000000  word= 0  inst=0x12300093
 IF  cycle=  2  pc=0x00000004  word= 1  inst=0x00000013
 IF  cycle=  3  pc=0x00000008  word= 2  inst=0x12300113
 IF  cycle=  4  pc=0x0000000c  word= 3  inst=0x00000013
-IF  cycle=  5  pc=0x00000010  word= 4  inst=0x0020818b <-- Custom Instruction
+IF  cycle=  5  pc=0x00000010  word= 4  inst=0x0020818b
+# Custom Instruction
 IF  cycle=  6  pc=0x00000014  word= 5  inst=0x00000013
 IF  cycle=  8  pc=0x00000018  word= 6  inst=0x10302023
 IF  cycle=  9  pc=0x0000001c  word= 7  inst=0x0000006f
 IF  cycle= 11  pc=0x00000020  word= 8  inst=0x00000013
 IF  cycle= 12  pc=0x00000024  word= 9  inst=0x00000013
 SW  cycle= 12  addr=0x00000100  data=0x00000246  size=4
+```
+
+```{raw} latex
+\end{minipage}
 ```
 
 Diese Ausgabe bestätigt zwei kritische Punkte:
@@ -174,5 +195,6 @@ Die Ergebnisse lassen sich in drei Kernbereiche zusammenfassen:
 
 3. **Konsistenz der Toolchain:** Der Abgleich zwischen den Protokollen der C++-Testbench (High-Level-Sicht) und den Wellenformen in GTKWave (Low-Level-Sicht) zeigte eine vollständige Übereinstimmung. Es traten keine Diskrepanzen zwischen dem erwarteten Software-Verhalten und der tatsächlichen Hardware-Ausführung auf.
 
-**Fazit**
+**Fazit**:
+
 Die Simulationsergebnisse belegen, dass die entwickelte Entwicklungsumgebung in der Lage ist, valides und funktionsfähiges Prozessordesign zu erzeugen. Die automatisierte Integration von Custom Instructions, welche die zentrale Innovation dieser Arbeit darstellt, hat sich als robust und verlässlich erwiesen. Damit ist die notwendige Vertrauensbasis geschaffen, um im nachfolgenden Kapitel den Transfer des Designs auf die physische FPGA-Hardware vorzunehmen.
