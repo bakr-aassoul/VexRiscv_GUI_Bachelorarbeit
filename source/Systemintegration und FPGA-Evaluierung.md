@@ -28,10 +28,13 @@ Das resultierende System wurde für das Pynq-Z1 Board synthetisiert, welches auf
 
 Die erfolgreiche Systemintegration manifestiert sich im Boot-Vorgang des LiteX-BIOS. Abbildung 7.1 zeigt den UART-Output unmittelbar nach dem Reset.
 
-**Abbildung 7.1: Boot-Log des integrierten VexRiscv-SoCs. Der Screenshot zeigt die erfolgreiche Initialisierung des Systems. Zu erkennen sind:
-Die kundenspezifische Begrüßungsmeldung („Hello from Bakr's VexRiscv...“), die belegt, dass der eigene Software-Build ausgeführt wird.
-Die Erkennung der CPU („VexRiscv @ 125MHz“) und des Wishbone-Busses.
-Die Speicherbereiche (ROM: 32 KiB, SRAM: 8 KiB).**
+```{figure} images/Abb7.1.png
+:name: fig:Boot-Log
+:width: 80%
+:align: center
+
+Boot-Log des integrierten VexRiscv-SoCs
+```
 
 Die Konsolenausgabe liefert den Nachweis für das korrekte Zusammenspiel von Hardware und Software:
 
@@ -49,7 +52,14 @@ Die physische Umsetzung des Designs erfolgte mit der Xilinx Vivado Design Suite.
 
 Die Projektstruktur in Vivado verdeutlicht die Einbettung des Softcores.
 
-**Abbildung 7.2: Hierarchie-Ansicht im Vivado-Projekt. Man erkennt, dass der generierte Kern (VexRiscv) als Subkomponente in das Top-Level-Design des Pynq-Z1 eingebettet ist. Dies bestätigt die korrekte strukturelle Integration des Verilog-Codes.**
+```{figure} images/Abb7.2.png
+:name: fig:Hierarchie-Ansicht im Vivado-Projekt
+:width: 80%
+:align: center
+
+Hierarchie-Ansicht im Vivado-Projekt
+```
+
 
 Wie in der Abbildung ersichtlich, fungiert das Modul digilent_pynq_z1 als Top-Level-Wrapper, der die physikalischen Pins des FPGAs definiert. Der generierte VexRiscv-Kern ist als Sub-Modul instanziiert. Diese strikte Kapselung ermöglicht es, den Prozessorkern bei Bedarf neu zu generieren (z. B. mit anderen Plugins), ohne das gesamte SoC-Layout in Vivado ändern zu müssen.
 
@@ -64,9 +74,14 @@ Um die Integrität der Datenbus-Anbindung (dBusWishbone) zu verifizieren, wurden
 
 Zur Überprüfung des Arbeitsspeichers (SRAM) wurden Testmuster geschrieben und zurückgelesen.
 
-**Abbildung 7.3: Verifikation der Speicherzugriffe über die Konsole.
-Schreibvorgang: Es wurde der Wert 0xAABBCCDD an die Adresse 0x10000004 geschrieben.
-Lesevorgang: Der Rückgabewert lautet dd cc bb aa.**
+```{figure} images/Abb7.3.png
+:name: fig:Verifikation der Speicherzugriffe über die Konsole
+:width: 80%
+:align: center
+
+Verifikation der Speicherzugriffe über die Konsole
+```
+
 
 - Schreibvorgang: Der Befehl mem_write schrieb den hexadezimalen Wert 0xAABBCCDD an die Speicheradresse 0x10000004. Diese Adresse liegt im Basisbereich des SRAMs (Offset 0x4), wie im Memory-Map des SoCs definiert.
 
@@ -80,7 +95,14 @@ Das Ergebnis in Abbildung 7.3 demonstriert eine fundamentale Eigenschaft der RIS
 
 Ein ergänzender Test prüfte das Verhalten bei Zugriffen auf nicht definierte Speicherbereiche (Out-of-Bounds Access).
 
-**Abbildung 7.4: Zugriff auf undefinierte Speicherbereiche. Ein Lesezugriff auf die Adresse 0x82001000 (außerhalb des definierten SRAMs) liefert ff ff ff ff. Dies ist das erwartete Verhalten für einen leeren Bus, da keine Komponente antwortet (Open Bus).**
+```{figure} images/Abb7.4.png
+:name: fig:Zugriff auf undefinierte Speicherbereiche
+:width: 80%
+:align: center
+
+Zugriff auf undefinierte Speicherbereiche
+```
+
 
 Ein Lesezugriff auf 0x82001000 (außerhalb des SRAM-Adressraums) liefert ff ff ff ff. Dies entspricht dem erwarteten Verhalten eines offenen Busses (Open Bus) im Wishbone-Standard, da kein Slave das Acknowledge-Signal sendet. Dieser Test bestätigt, dass der Adress-Decoder des SoCs fehlerhafte Zugriffe korrekt isoliert und das System nicht zum Absturz bringt.
 
