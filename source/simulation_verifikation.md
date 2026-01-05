@@ -104,7 +104,7 @@ Die Erwartungswerte für den Test waren:
 - Kontrollfluss: Sprungbefehle (BEQ, JAL) wurden genutzt, um die korrekte Berechnung des Program Counters (PC) bei Verzweigungen zu verifizieren
 
 
-```{figure} images/abb.6.3.png
+```{figure} images/abb6.3.png
 :name: fig:gtkwave_trace
 :width: 100%
 :align: center
