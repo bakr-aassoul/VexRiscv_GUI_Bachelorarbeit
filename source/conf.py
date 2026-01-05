@@ -6,9 +6,18 @@ copyright = '2025, Bakr Aassoul'
 author = 'Bakr Aassoul'
 
 # -- General Configuration ---------------------------------------------------
-extensions = ['myst_parser']
+extensions = [
+    'myst_parser',
+    'sphinxcontrib.bibtex',
+]
 source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 exclude_patterns = []
+
+
+# --- Bibliography Settings ---
+bibtex_bibfiles = ['literatur.bib']  # Name of your BibTeX file
+bibtex_default_style = 'alpha'       # This enables the [OMJ18] style
+bibtex_reference_style = 'label'     # Uses the label for citations in text
 
 # --- NUMMERIERUNGSEINSTELLUNGEN (NEU HINZUGEFÜGT) ---
 # Aktiviert die Nummerierung für Abbildungen, Tabellen und Code
