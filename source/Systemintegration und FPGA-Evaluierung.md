@@ -1,8 +1,20 @@
 # Systemintegration und FPGA-Evaluierung
 
+```{raw} latex
+\large
+```
+
 Die FPGA-basierte Evaluierung wurde ausschließlich mit dem durch die GUI generierten Basis-Prozessorkern ohne aktivierte Custom-ALU-Instruktionen durchgeführt. Ziel war die Bestätigung der generellen Funktionsfähigkeit des GUI-basierten Workflows, der SoC-Integration und der Hardware-Implementierung.
 
 Nach der erfolgreichen funktionalen Verifikation auf Komponentenebene (Kapitel 6) befasst sich dieses Kapitel mit der Integration des generierten Prozessors in ein Gesamtsystem und dessen Evaluierung auf FPGA-Systemebene. Ziel ist der empirische Nachweis, dass der durch die GUI konfigurierte VexRiscv-Kern in der Lage ist, als zentraler Prozessor in einem System-on-Chip (SoC) zu agieren, komplexe Software-Stacks (BIOS) auszuführen und über standardisierte Bus-Protokolle mit Peripherie sowie Speicher zu kommunizieren.
+
+```{raw} latex
+\clearpage
+```
+
+```{raw} latex
+\normalsize
+```
 
 ## Integration des generierten Prozessorkerns in ein LiteX-System-on-Chip
 
