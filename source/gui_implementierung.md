@@ -115,7 +115,7 @@ def append_log(msg: str):
 Dadurch verhält sich der Log ähnlich wie eine klassische Build-Konsole.
 
 
-## Ereignissteuerung und Threading
+### Ereignissteuerung und Threading
 
 Rechenintensive Aufgaben wie SBT-Builds oder Verilator-Simulationen blockieren eine Tkinter-GUI normalerweise vollständig. In dieser Anwendung wird das durch Threading gelöst:
 
