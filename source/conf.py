@@ -31,7 +31,7 @@ numfig_secnum_depth = 1
 numfig_format = {
     'figure': 'Abbildung %s',
     'table': 'Tabelle %s',
-    'code-block': 'Listing %s',
+    'code-block': 'Quellcode %s',
 }
 # -- Options for HTML Output -------------------------------------------------
 html_theme = 'alabaster'
