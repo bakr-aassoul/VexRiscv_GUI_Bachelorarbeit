@@ -27,8 +27,15 @@ Der Aufbau gliedert sich in drei funktionale Bereiche:
 - Custom Instruction Designer: Ein dedizierter Bereich zur Definition eigener Hardware-Erweiterungen. Hier können Opcode, Instruktionsname und die funktionale Logik (z. B. arithmetische Operationen) eingegeben werden.
 
 - Build-Steuerung: Schaltflächen zum Starten der Generierung, Synthese und Simulation sowie Statusanzeigen für den Fortschritt der externen Prozesse (SBT, Verilator).
+- 
+```{figure} images/Abb5.1.png
+:name: fig:gui_configurator
+:width: 80%
+:align: center
 
-**ABBILDUNG 5.1 Screenshot der Benutzeroberfläche mit konfigurierter Custom ALU**
+Die grafische Benutzeroberfläche (GUI) des VexRiscv Configurators zur Generierung der Hardware-Parameter und Plugins
+```
+
 
 ```{raw} latex
 \clearpage
