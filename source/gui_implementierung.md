@@ -27,19 +27,17 @@ Der Aufbau gliedert sich in drei funktionale Bereiche:
 - Custom Instruction Designer: Ein dedizierter Bereich zur Definition eigener Hardware-Erweiterungen. Hier können Opcode, Instruktionsname und die funktionale Logik (z. B. arithmetische Operationen) eingegeben werden.
 
 - Build-Steuerung: Schaltflächen zum Starten der Generierung, Synthese und Simulation sowie Statusanzeigen für den Fortschritt der externen Prozesse (SBT, Verilator).
-- 
+
 ```{figure} images/Abb5.1.png
 :name: fig:gui_configurator
-:width: 80%
+:width: 100%
 :align: center
 
 Die grafische Benutzeroberfläche (GUI) des VexRiscv Configurators zur Generierung der Hardware-Parameter und Plugins
 ```
 
 
-```{raw} latex
-\clearpage
-```
+
 
 ## Frontend-Struktur (main.py)
 
@@ -132,7 +130,8 @@ Rechenintensive Aufgaben wie SBT-Builds oder Verilator-Simulationen blockieren e
 def run_in_thread(fn):
     def target():
         try:
-            with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+            with io.StringIO() as buf,
+                   contextlib.redirect_stdout(buf):
                 fn()
                 out = buf.getvalue()
             append_log(out if out else "[done]\n")
@@ -157,9 +156,7 @@ Wichtige Mechanismen:
 
 Auf diese Weise bleibt die GUI auch während länger laufender Toolchain-Schritte responsiv.
 
-```{raw} latex
-\clearpage
-```
+
 ## Backend-Logik & Plugin-System (gui_backend.py)
 
 ### Plugin-Konstruktor-Registry
@@ -175,7 +172,8 @@ Alle Plugins des VexRiscv werden im Backend als Mapping von Namen zu Scala-Konst
 :caption: Mapping der Plugin-Konstruktoren
 
 PLUGIN_CTORS = {
-    "IBusSimplePlugin": "new IBusSimplePlugin(resetVector=0x00000000l)",
+    "IBusSimplePlugin":
+       "new IBusSimplePlugin(resetVector=0x00000000l)",
     "RegFilePlugin": "new RegFilePlugin(regFileReadyKind=SYNC)",
     "MulPlugin": "new MulPlugin",
     "DivPlugin": "new DivPlugin",
@@ -306,7 +304,8 @@ Die Funktion write_custom_alu_file baut das Scala-Plugin schrittweise auf. Zunä
 :linenos:
 :caption: Generator Teil 1: Decoder-Setup
 
-def write_custom_alu_file(name: str, opcode_suffix: str, logic_body: str):
+def write_custom_alu_file(name: str, opcode_suffix: str,
+                           logic_body: str):
     # Einrückung für den Scala-Code vorbereiten
     indented_logic = "\n      ".join(logic_body.splitlines())
     
@@ -358,7 +357,6 @@ Im zweiten Schritt wird die eigentliche Hardware-Logik in die Execute-Stufe der 
 :linenos:
 :caption: Generator Teil 2: Logik-Injection und File-IO
 
-# Fortsetzung des Templates (Teil 2: Build & Injection)
     scala_code += f"""
   override def build(pipeline: VexRiscv): Unit = {{
     import pipeline._
@@ -378,29 +376,18 @@ Im zweiten Schritt wird die eigentliche Hardware-Logik in die Execute-Stufe der 
       ) {{
         isMy := True
       }}
-
       val rs1 = input(RS1).asUInt
       val rs2 = input(RS2).asUInt
-      
       // Injection der User-Logik (muss 'result' definieren)
       val result = Bits(32 bits)
       result := B(0, 32 bits)
       {indented_logic}
-
-      // Schreiben des Ergebnisses nur wenn Instruktion aktiv ist
       when(isMy) {{
         output(REGFILE_WRITE_DATA) := result
       }}
-    }}
-  }}
-}}
+  }} }}
 """
-    # Schreiben der Datei
-    demo_dir = os.path.dirname(LAUNCHER)
-    filename = os.path.join(demo_dir, f"{name}.scala")
-    
-    with open(filename, "w") as f:
-        f.write(scala_code)
+
 ```
 
 ```{raw} latex
@@ -467,7 +454,8 @@ Im nächsten Schritt wird der Scala-Quellcode zusammengesetzt. Die Standard-Plug
         ordered_keys = order_plugins(list(by_class.keys()))
         standard_plugin_lines = [by_class[p] for p in ordered_keys]
 
-        all_plugin_lines = standard_plugin_lines + custom_alu_constructors
+        all_plugin_lines = standard_plugin_lines +
+                               custom_alu_constructors
         full_plugin_list_str = ",\n      ".join(all_plugin_lines)
 
         body = f"""\
@@ -522,7 +510,8 @@ else:
      body = f"""\
 SpinalConfig(targetDirectory = "{out_dir}" ).generateVerilog {
   val cpuConfig = VexRiscvConfig(plugins = List(
-    /* LITEX\_FIXED Pluginliste, u. a. IBusCachedPlugin, DBusCachedPlugin */
+    /* LITEX\_FIXED Pluginliste,
+               u. a. IBusCachedPlugin, DBusCachedPlugin */
   ))
 
   val cpu = new VexRiscv(cpuConfig)
