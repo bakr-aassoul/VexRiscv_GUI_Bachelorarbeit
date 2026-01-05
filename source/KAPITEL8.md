@@ -16,7 +16,7 @@ Dabei wird klar zwischen der implementierten Lösung und theoretisch möglichen,
 ```
 ## Einordnung der implementierten Lösung
 
-Die in dieser Arbeit entwickelte GUI implementiert einen kontrollierten und parametrisierbaren Ansatz zur Integration benutzerdefinierter ALU-Instruktionen. Konkret wurde ein Erweiterungsmodell realisiert, bei dem Custom Instructions als zusätzliche Funktionseinheiten in der Execute-Stufe des VexRiscv-Prozessors eingebettet werden {cite}`Pap24`.
+Die in dieser Arbeit entwickelte GUI implementiert einen kontrollierten und parametrisierbaren Ansatz zur Integration benutzerdefinierter ALU-Instruktionen. Konkret wurde ein Erweiterungsmodell realisiert, bei dem Custom Instructions als zusätzliche Funktionseinheiten in der Execute-Stufe des VexRiscv-Prozessors eingebettet werden {cite}`Pap24a`.
 
 Charakteristisch für diesen Ansatz sind:
 - eine feste, durch die GUI validierte Instruktionskodierung innerhalb der reservierten RISC-V-Custom-Opcode-Bereiche,
@@ -44,7 +44,7 @@ Innerhalb dieses Modells lassen sich bereits zahlreiche sinnvolle ISA-Erweiterun
 
 Ausgeschlossen sind hingegen Operationen, die sequenzielle Logik (interne Zustände), Speicherzugriffe oder komplexe, mehrzyklische Berechnungspfade (wie Divisionen oder Gleitkomma-Operationen) erfordern.
 
-Da die Ausführung der unterstützten Operationen vollständig innerhalb eines Taktzyklus erfolgt, bleibt das bestehende Pipeline-Steuerungskonzept des VexRiscv unverändert {cite}`Pap24`. Es sind weder zusätzliche Stall-Signale noch erweiterte Hazard-Behandlungen notwendig.
+Da die Ausführung der unterstützten Operationen vollständig innerhalb eines Taktzyklus erfolgt, bleibt das bestehende Pipeline-Steuerungskonzept des VexRiscv unverändert {cite}`Pap24a`. Es sind weder zusätzliche Stall-Signale noch erweiterte Hazard-Behandlungen notwendig.
 Der Verifikationsaufwand beschränkt sich somit auf die funktionale Korrektheit der jeweiligen Operation, was eine effiziente Validierung mittels RTL-Simulation und Wellenformanalyse erlaubt.
 
 Diese Eigenschaften machen Level-1-Custom-ALUs besonders geeignet für den Einsatz in Lehr- und Forschungsumgebungen sowie für reproduzierbare Architektur-Explorationen, wie sie im Rahmen dieser Arbeit angestrebt wurden.
@@ -68,7 +68,7 @@ implementiert werden.
 
 Darüber hinaus steigt der Verifikationsaufwand signifikant, da neben der funktionalen Korrektheit auch das zeitliche Verhalten über mehrere Taktzyklen hinweg überprüft werden muss.
 
-Obwohl der VexRiscv-Plugin-Mechanismus prinzipiell die Implementierung solcher Einheiten erlaubt {cite}`Pap24`, wurde dieser Ansatz im Rahmen der vorliegenden Arbeit bewusst nicht umgesetzt. Der Fokus lag auf der Entwicklung einer stabilen, automatisierten Konfigurations- und Generierungsumgebung, nicht auf der Einführung komplexer Pipeline-Kontrollmechanismen.
+Obwohl der VexRiscv-Plugin-Mechanismus prinzipiell die Implementierung solcher Einheiten erlaubt {cite}`Pap24a`, wurde dieser Ansatz im Rahmen der vorliegenden Arbeit bewusst nicht umgesetzt. Der Fokus lag auf der Entwicklung einer stabilen, automatisierten Konfigurations- und Generierungsumgebung, nicht auf der Einführung komplexer Pipeline-Kontrollmechanismen.
 Level-2-Custom-Units stellen jedoch eine realistische Erweiterungsmöglichkeit für weiterführende Arbeiten dar, etwa im Kontext einer Masterarbeit oder eines vertiefenden Forschungsprojekts.
 
 ```{raw} latex
@@ -94,7 +94,7 @@ Insbesondere im akademischen Kontext wäre eine solche Lösung nur schwer als zu
 
 Die vorangegangene Betrachtung zeigt, dass der Designraum der Custom-ALU-Integration ein breites Spektrum möglicher Erweiterungen umfasst. Die in dieser Arbeit umgesetzte Level-1-Lösung stellt dabei einen bewusst gewählten Punkt in diesem Designraum dar, der eine hohe praktische Relevanz bei gleichzeitig überschaubarem Implementierungs- und Verifikationsaufwand bietet.
 
-Die theoretische Diskussion der Level-2- und Level-3-Ansätze verdeutlicht, dass weitergehende Erweiterungen zwar technisch möglich sind, jedoch mit einem deutlichen Anstieg der Systemkomplexität einhergehen. Wie Hennessy und Patterson darlegen, muss dieser Mehraufwand stets kritisch gegen den zu erwartenden Geschwindigkeitszuwachs (Speedup) abgewogen werden {cite}`HP17`. Die klare Abgrenzung dieser Erweiterungsstufen trägt dazu bei, die getroffenen Designentscheidungen transparent und nachvollziehbar zu machen.
+Die theoretische Diskussion der Level-2- und Level-3-Ansätze verdeutlicht, dass weitergehende Erweiterungen zwar technisch möglich sind, jedoch mit einem deutlichen Anstieg der Systemkomplexität einhergehen. Wie Hennessy und Patterson darlegen, muss dieser Mehraufwand stets kritisch gegen den zu erwartenden Geschwindigkeitszuwachs (Speedup) abgewogen werden {cite}`HP17b`. Die klare Abgrenzung dieser Erweiterungsstufen trägt dazu bei, die getroffenen Designentscheidungen transparent und nachvollziehbar zu machen.
 
 Damit bildet dieses Kapitel die Grundlage für die abschließende Zusammenfassung und den Ausblick im folgenden Kapitel.
 
