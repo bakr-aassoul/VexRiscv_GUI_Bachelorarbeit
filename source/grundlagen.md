@@ -339,7 +339,7 @@ Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf
 :width: 70%
 :align: center
 
-Das verwendete Entwicklungsboard Digilent PYNQ-Z1 [Digilent PYNQ-Z1](https://digilent.com/reference/programmable-logic/pynq-z1/start)
+Das verwendete Entwicklungsboard [Digilent PYNQ-Z1](https://digilent.com/reference/programmable-logic/pynq-z1/start)
 ```
 
 ### Zynq-Architektur (PS und PL)
