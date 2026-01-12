@@ -121,7 +121,7 @@ Die GUI abstrahiert dabei die Komplexität der zugrunde liegenden Hardwarebeschr
 Anwender werden so schrittweise durch den gesamten Entwicklungsprozess geführt, von der Definition eigener Recheneinheiten über die Generierung des Prozessordesigns bis zur Simulation.
 
 Zur funktionalen Überprüfung der erzeugten Konfigurationen und Erweiterungen wird eine RTL-Simulation mit Verilator durchgeführt. Die Signalverläufe, einschließlich der internen Abläufe der generierten Custom ALUs, werden anschließend mit GTKWave analysiert und verifiziert.
-Aufbauend darauf erfolgt die Integration des Prozessors in ein LiteX-System-on-Chip sowie die Implementierung auf einem Pynq-Z1-FPGA, wodurch eine Evaluierung der Leistungsfähigkeit unter realen Hardwarebedingungen möglich wird.
+Aufbauend darauf erfolgt die Integration des Prozessors in ein LiteX-System-on-Chip sowie die Implementierung auf einem Pynq-Z1-FPGA, wodurch eine Validierung der Systemfunktionalität und Integrationsfähigkeit unter realen Hardwarebedingungen möglich wird.
 
 Die Ergebnisse zeigen, dass sich der VexRiscv durch die entwickelte GUI und den integrierten Code-Generator nicht nur effizient konfigurieren, sondern gezielt um anwendungsspezifische Instruktionen erweitern lässt. Das System weist dabei sowohl in der Simulation als auch auf der Hardware ein reproduzierbares Verhalten auf.
 
