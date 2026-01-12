@@ -206,7 +206,7 @@ Dieser Mechanismus erlaubt es, neue Recheneinheiten (ALUs) hinzuzufügen, ohne d
 
 ```{figure} images/Abb2.png
 :name: fig:vex_pipeline
-:width: 100%
+:width: 120%
 :align: center
 
 Die VexRiscv 5-Stufen-Pipeline und Plugin Injection
@@ -323,7 +323,7 @@ Das Pynq-Z1 ist ein kostengünstiges, aber leistungsfähiges FPGA-Board, das auf
 :width: 70%
 :align: center
 
-Das verwendete Entwicklungsboard Digilent PYNQ-Z1
+Das verwendete Entwicklungsboard Digilent PYNQ-Z1 {cite}`Dig24`
 ```
 
 ### Zynq-Architektur (PS und PL)
