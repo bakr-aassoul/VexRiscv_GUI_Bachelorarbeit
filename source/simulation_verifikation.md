@@ -140,7 +140,7 @@ Die Erwartungswerte für den Test waren:
 
 Validierung der Custom ALU im GTKWave-Trace
 ```
-## Validierung über Konsolenausga
+## Validierung über Konsolenausgabe
 Ein wesentlicher Vorteil des verwendeten C++-Testbenches ist die direkte Protokollierung der Speicherzugriffe auf der Konsole. Während der Simulation generiert der Code Ausgaben, die den Datenfluss transparent machen:
 
 
