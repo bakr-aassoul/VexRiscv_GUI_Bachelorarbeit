@@ -206,7 +206,7 @@ Dieser Mechanismus erlaubt es, neue Recheneinheiten (ALUs) hinzuzufügen, ohne d
 
 ```{figure} images/Abb2.png
 :name: fig:vex_pipeline
-:width: 120%
+:width: 100%
 :align: center
 
 Die VexRiscv 5-Stufen-Pipeline und Plugin Injection
