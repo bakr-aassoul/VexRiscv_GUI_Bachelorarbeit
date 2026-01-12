@@ -292,6 +292,22 @@ Die wichtigsten Aufgaben von Vivado in dieser Arbeit sind:
 Vivado bildet damit den letzten Schritt im Hardware-Workflow:
 Nach Konfiguration (GUI), Code-Generierung (SpinalHDL/SBT) und Simulation (Verilator/GTKWave) erfolgt über Vivado die physische Implementierung auf dem FPGA.
 
+
+**Tabelle 2.1: Übersicht der verwendeten Software-Versionen und Bibliotheken**
+| Software / Komponente    | Version   | Verwendungszweck                     |
+| :----------------------- | :-------- | :----------------------------------- |
+| **SBT** | 1.6.0     | Build-System für Scala               |
+| **Scala** | 2.12.18   | Programmiersprache für SpinalHDL     |
+| **SpinalHDL (Core/Lib)** | 1.12.0    | Hardwarebeschreibungssprache         |
+| **VexRiscv** | 2.0.0     | RISC-V Prozessorkern (Basis)         |
+| **Verilator** | 4.038     | Simulation und C++ Transpilierung    |
+| **LiteX** | 10c52e742 | SoC-Builder und BIOS (Git SHA1)      |
+| **Xilinx Vivado** | 2023.1    | Synthese und Implementierung         |
+| **Python** | 3.10.12   | Laufzeitumgebung für die GUI         |
+| **GTKWave** | 3.3.104   | Visualisierung der Signalverläufe    |
+| **sbt-bloop** | 2.0.10    | Build Server Integration             |
+| **ScalaTest** | 3.2.17    | Unit-Testing Framework               |
+
 ```{raw} latex
 \clearpage
 ```
