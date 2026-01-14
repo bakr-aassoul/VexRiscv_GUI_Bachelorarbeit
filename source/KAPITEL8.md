@@ -125,7 +125,7 @@ Für pädagogische Zwecke existieren Tools wie **Ripes**, die eine visuelle Simu
 
 ## Vergleich der Konfigurationsmethodik
 
-Der etablierte Workflow zur Erstellung eines **VexRiscv-Prozessors** basiert traditionell auf der manuellen Modifikation von Scala-Quelltexten {cite}`Pap24`, bei der Entwickler Konfigurationsklassen im Code instanziieren und Plugins programmatisch verknüpfen müssen. Der Beitrag dieser Arbeit besteht darin, diese fehleranfällige manuelle Konfiguration durch eine validierende GUI-Schicht zu ersetzen. Insbesondere die Integration von **Custom Instructions** wurde signifikant vereinfacht. Der entwickelte **Custom ALU Generator** schreibt den notwendigen SpinalHDL-Code, wie den Decoder-Service und die Pipeline-Injection, vollautomatisch. Anwender müssen lediglich die logische Operation definieren, was die Einstiegshürde für ISA-Erweiterungen erheblich senkt.
+Der etablierte Workflow zur Erstellung eines **VexRiscv-Prozessors** basiert traditionell auf der manuellen Modifikation von Scala-Quelltexten {cite}`Pap24a`, bei der Entwickler Konfigurationsklassen im Code instanziieren und Plugins programmatisch verknüpfen müssen. Der Beitrag dieser Arbeit besteht darin, diese fehleranfällige manuelle Konfiguration durch eine validierende GUI-Schicht zu ersetzen. Insbesondere die Integration von **Custom Instructions** wurde signifikant vereinfacht. Der entwickelte **Custom ALU Generator** schreibt den notwendigen SpinalHDL-Code, wie den Decoder-Service und die Pipeline-Injection, vollautomatisch. Anwender müssen lediglich die logische Operation definieren, was die Einstiegshürde für ISA-Erweiterungen erheblich senkt.
 
 ## Methodische Limitationen
 
