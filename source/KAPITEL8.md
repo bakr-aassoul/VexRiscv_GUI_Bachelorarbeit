@@ -98,9 +98,35 @@ Die theoretische Diskussion der Level-2- und Level-3-Ansätze verdeutlicht, dass
 
 Damit bildet dieses Kapitel die Grundlage für die abschließende Zusammenfassung und den Ausblick im folgenden Kapitel.
 
+# Einordnung und Diskussion der Arbeitsergebnisse
 
+```{raw} latex
+\large
+```
+Um den wissenschaftlichen Beitrag dieser Arbeit abschließend zu bewerten, ist ein direkter Vergleich mit existierenden Entwicklungsmethoden im RISC-V-Ökosystem sowie eine kritische Diskussion der methodischen Grenzen notwendig. Dieses Kapitel ordnet die entwickelte Lösung in den aktuellen Forschungsstand ein, grenzt sie von reinen Simulationswerkzeugen ab und beleuchtet die getroffenen Designentscheidungen hinsichtlich ihrer Limitationen.
 
+```{raw} latex
+\clearpage
+```
 
+```{raw} latex
+\normalsize
+```
 
+## Einordnung in den Forschungsstand
 
+Der Ansatz, Hardware durch Software-Generatoren zu beschreiben, ist in der RISC-V-Forschung fest etabliert. Ein prominentes Beispiel hierfür ist der **Rocket Chip Generator** der UC Berkeley {cite}`Asanovic16` . Ähnlich wie die in dieser Arbeit verwendete Kombination aus VexRiscv und SpinalHDL nutzt auch Rocket Chip eine in Scala eingebettete Sprache (Chisel), um Hardware parametrisch zu beschreiben. Ein wesentlicher Unterschied besteht jedoch in der Zielsetzung und Zugänglichkeit. Während Rocket Chip primär auf High-Performance-Kerne abzielt und für seine hohe Komplexität sowie eine steile Lernkurve bekannt ist, demokratisiert die vorliegende Arbeit den Generator-Ansatz. Durch die Abstraktion der textbasierten Komplexität mittels einer grafischen Oberfläche (GUI) wird auch Einsteigern ohne tiefgehende Code-Kenntnisse die Generierung valider Hardware ermöglicht.
 
+Im industriellen Kontext werden vergleichbare Werkzeuge wie **Codasip Studio** eingesetzt, um anwendungsspezifische Prozessoren (ASIPs) zu entwerfen {cite}`Codasip` . Diese kommerziellen Tools verfolgen im Kern dasselbe Ziel wie die vorliegende Arbeit, nämlich die Automatisierung von Hardware-Design (RTL) und Software-Tools (Compiler) aus einer High-Level-Beschreibung. Die Abgrenzung liegt hierbei vor allem im Lizenzmodell und der Zielgruppe. Während Codasip eine kostenintensive Enterprise-Lösung darstellt, bietet die entwickelte GUI einen Open-Source-basierten Zugang. Dieser ist speziell für die Lehre und Rapid Prototyping optimiert und erfordert keinerlei proprietäre Lizenzgebühren.
+
+## Abgrenzung zu Simulatoren
+
+Für pädagogische Zwecke existieren Tools wie **Ripes**, die eine visuelle Simulation von RISC-V-Pipelines ermöglichen und den Datenfluss grafisch darstellen {cite}`Ripes`. Die hier vorgestellte Lösung grenzt sich davon deutlich ab, da Ripes rein auf die Software-Simulation auf PC-Ebene beschränkt ist. Im Gegensatz dazu erzeugt der entwickelte Ansatz synthetisierbare Hardware. Der generierte Prozessor läuft folglich nicht nur im Simulator, sondern wurde, wie in Kapitel 7 demonstriert, physisch auf einem FPGA (Pynq-Z1) in ein SoC integriert und unter realen Taktbedingungen validiert.
+
+## Vergleich der Konfigurationsmethodik
+
+Der etablierte Workflow zur Erstellung eines **VexRiscv-Prozessors** basiert traditionell auf der manuellen Modifikation von Scala-Quelltexten {cite}`Pap24`, bei der Entwickler Konfigurationsklassen im Code instanziieren und Plugins programmatisch verknüpfen müssen. Der Beitrag dieser Arbeit besteht darin, diese fehleranfällige manuelle Konfiguration durch eine validierende GUI-Schicht zu ersetzen. Insbesondere die Integration von **Custom Instructions** wurde signifikant vereinfacht. Der entwickelte **Custom ALU Generator** schreibt den notwendigen SpinalHDL-Code, wie den Decoder-Service und die Pipeline-Injection, vollautomatisch. Anwender müssen lediglich die logische Operation definieren, was die Einstiegshürde für ISA-Erweiterungen erheblich senkt.
+
+## Methodische Limitationen
+
+Um den Fokus der Bachelorarbeit zu wahren, wurden spezifische Einschränkungen gegenüber dem vollen Funktionsumfang des VexRiscv vorgenommen. Hinsichtlich der Komplexität der Recheneinheiten werden ausschließlich Single-Cycle-Instruktionen unterstützt (Level 1), während Multi-Cycle-Operationen oder Einheiten mit internem Zustand von der GUI nicht generiert werden. Ein weiterer Fokus lag auf Bare-Metal-Anwendungen (RV32I/M). Die komplexe Konfiguration einer Memory Management Unit (MMU) für Linux-Support ist im VexRiscv zwar möglich, wurde in der GUI jedoch nicht abgebildet. Schließlich fixiert die Generierung die Schnittstelle auf den Wishbone-Standard, um die Kompatibilität mit dem verwendeten LiteX-SoC sicherzustellen, obwohl VexRiscv nativ auch andere Bus-Protokolle wie AXI oder Avalon unterstützen würde.
